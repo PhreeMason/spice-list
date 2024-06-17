@@ -1,31 +1,33 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { Text, View, Image, FlatList } from 'react-native';
+import { useScanList } from '@/providers/ScanListProvider';
 
 export default function TabOneScreen() {
+    const { scanList } = useScanList();
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Tab One</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-            <EditScreenInfo path="app/(tabs)/index.tsx" />
-        </View>
+        <FlatList
+            data={scanList}
+            renderItem={({ item }) => (
+                <View className="flex flex-row background-white w-full py-2">
+                    <Image
+                        source={{
+                            uri: item.book.volumeInfo.imageLinks?.thumbnail
+                        }}
+                        resizeMode="contain"
+                        className="w-20 h-20"
+                    />
+                    <View className="w-11/12">
+                        <Text className="text-xl text-bold overflow-wrap">
+                            {item.book.volumeInfo.title}
+                        </Text>
+                        <Text className="text-md text-gray text-bold overflow-wrap ">
+                            {item.book.volumeInfo.authors}
+                        </Text>
+                    </View>
+                </View>
+            )}
+            ItemSeparatorComponent={() => (
+                <View className="h-2 w-11/12 bg-gray border-b" />
+            )}
+        />
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
-});
