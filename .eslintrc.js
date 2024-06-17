@@ -14,9 +14,9 @@ module.exports = {
         "import/resolver": {
             "alias": {
                 "map": [
-                    ["@", "."]
+                    ["@", "./"]
                 ],
-                "extensions": [".js", ".jsx"]
+                "extensions": [".ts", ".tsx"]
             }
         }
     }
