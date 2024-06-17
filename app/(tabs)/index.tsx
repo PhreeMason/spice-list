@@ -1,7 +1,7 @@
 import { Text, View, Image, FlatList } from 'react-native';
 import { useScanList } from '@/providers/ScanListProvider';
 
-export default function TabOneScreen() {
+export default function HistoryScreen() {
     const { scanList } = useScanList();
     return (
         <FlatList
@@ -22,6 +22,12 @@ export default function TabOneScreen() {
                         <Text className="text-md text-gray text-bold overflow-wrap ">
                             {item.book.volumeInfo.authors}
                         </Text>
+                        <View className="flex flex-row">
+                            <Text className="text-lg text-gray text-bold">
+                                {Math.floor(Math.random() * 4 + 1)}{' '}
+                            </Text>
+                            <Text className="text-sm align-end">🌶️</Text>
+                        </View>
                     </View>
                 </View>
             )}
