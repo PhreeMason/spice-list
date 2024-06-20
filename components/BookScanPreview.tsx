@@ -3,8 +3,6 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { GoogleBooksAPIResponse, BookVolume } from '@/types/index';
 
-// import { useScanList } from '@/providers/ScanListProvider';
-
 const searchGoogleBooksApi = async (
     isbn: string
 ): Promise<BookVolume | null> => {
@@ -39,7 +37,7 @@ const BookScanPreview = ({ scanData }: BookScanPreviewProps) => {
         return <Text>No Data</Text>;
     }
 
-    // TODO: book to scanlist history
+    // TODO: book to scanList history
     return (
         <View className="flex flex-row background-white w-full py-2">
             <Image

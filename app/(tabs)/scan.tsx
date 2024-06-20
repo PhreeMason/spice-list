@@ -2,7 +2,6 @@ import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useState } from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
 
-// import { useScanList } from '@/providers/ScanListProvider';
 import BookScanPreview from '@/components/BookScanPreview';
 
 export default function ScanScreen() {
