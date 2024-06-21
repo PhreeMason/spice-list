@@ -52,11 +52,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         });
     }, []);
 
-    console.log({
-        session,
-        loading,
-        profile
-    });
     return (
         <AuthContext.Provider
             value={{
