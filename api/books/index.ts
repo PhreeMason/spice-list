@@ -3,8 +3,8 @@ import { useAuth } from '@/providers/AuthProvider';
 import {
     Book,
     InsertBook,
-    BookScan,
-    InsertBookScan,
+    UserScan,
+    InsertUserScan,
     BookVolume,
     GoogleBooksAPIResponse
 } from '@/types';
@@ -16,9 +16,7 @@ const getBookDetails = (googleBook: BookVolume): InsertBook => {
         description: googleBook.volumeInfo.description || '',
         google_books_id: googleBook.id,
         google_details_link: googleBook.selfLink,
-        google_rating: null,
         publisher: googleBook.volumeInfo.publisher,
-        series_name: googleBook.volumeInfo.subtitle || null,
         title: googleBook.volumeInfo.title
     };
 };
@@ -42,16 +40,15 @@ export const useGoogleBooks = (isbn: string) => {
     });
 };
 
-export const useUpsertBook = () => {
-    const queryClient = useQueryClient();
-    const { profile } = useAuth();
-    const userId = profile?.id;
+export const useUpsertGoogleBook = () => {
     return useMutation({
-        async mutationFn(data: InsertBook) {
-            if (!userId) throw new Error('User not found');
+        async mutationFn(isbn: string) {
+            const googleBook = await searchGoogleBooksApi(isbn);
+            if (!googleBook) throw new Error('Book not found');
+            const data = getBookDetails(googleBook);
             const { data: book, error } = await supabase
                 .from('books')
-                .upsert(data)
+                .upsert(data, { onConflict: 'google_books_id' })
                 .select('*')
                 .single();
 

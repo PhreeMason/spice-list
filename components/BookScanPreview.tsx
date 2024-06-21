@@ -1,7 +1,5 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { GoogleBooksAPIResponse, BookVolume } from '@/types/index';
 import { useGoogleBooks } from '@/api/books';
 
 type BookScanPreviewProps = {

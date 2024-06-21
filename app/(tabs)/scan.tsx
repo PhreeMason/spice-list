@@ -3,20 +3,23 @@ import { useState } from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
+import { useUpsertGoogleBook } from '@/api/books';
+import { useInsertScanItems } from '@/api/book-scans';
+import { StatusBar } from 'expo-status-bar';
 
 export default function ScanScreen() {
     const [facing, setFacing] = useState<CameraType>('back');
     const [permission, requestPermission] = useCameraPermissions();
 
     const [isbn, setIsbn] = useState<string>('');
+    const { mutate: upsertBook } = useUpsertGoogleBook();
+    const { mutate: insertScan } = useInsertScanItems();
 
     if (!permission) {
-        // Camera permissions are still loading.
         return <View />;
     }
 
     if (!permission.granted) {
-        // Camera permissions are not granted yet.
         return (
             <View className="flex-1 justify-center">
                 <Text className="text-center">
@@ -33,6 +36,11 @@ export default function ScanScreen() {
 
     const onBarcodeScanned = async ({ data }: { data: string }) => {
         if (!data || data === isbn) return;
+        upsertBook(data, {
+            onSuccess: (data) => {
+                insertScan(data.id);
+            }
+        });
         setIsbn(data);
     };
 
@@ -58,6 +66,7 @@ export default function ScanScreen() {
                 </View>
                 {isbn && <BookScanPreview isbn={isbn} />}
             </CameraView>
+            <StatusBar style="light" />
         </View>
     );
 }
