@@ -8,7 +8,7 @@ export default function ScanScreen() {
     const [facing, setFacing] = useState<CameraType>('back');
     const [permission, requestPermission] = useCameraPermissions();
 
-    const [scanData, setScanData] = useState<string>('');
+    const [isbn, setIsbn] = useState<string>('');
 
     if (!permission) {
         // Camera permissions are still loading.
@@ -32,8 +32,8 @@ export default function ScanScreen() {
     }
 
     const onBarcodeScanned = async ({ data }: { data: string }) => {
-        if (!data || data === scanData) return;
-        setScanData(data);
+        if (!data || data === isbn) return;
+        setIsbn(data);
     };
 
     return (
@@ -56,7 +56,7 @@ export default function ScanScreen() {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {scanData && <BookScanPreview scanData={scanData} />}
+                {isbn && <BookScanPreview isbn={isbn} />}
             </CameraView>
         </View>
     );
