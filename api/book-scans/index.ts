@@ -24,6 +24,7 @@ export const useMyScanList = () => {
                 throw new Error(error.message);
             }
             // @ts-ignore
+            // TODO: fix types
             return data;
         }
     });

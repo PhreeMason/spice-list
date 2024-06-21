@@ -27,7 +27,6 @@ export default function HistoryScreen() {
         );
     }
 
-    console.log(JSON.stringify(scans, null, 2));
     return (
         <FlatList
             data={scans}
