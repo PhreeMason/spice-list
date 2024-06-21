@@ -90,6 +90,10 @@ export type PanelizationSummary = {
 export type ImageLinks = {
     smallThumbnail: string;
     thumbnail: string;
+    small: string;
+    medium: string;
+    large: string;
+    extraLarge: string;
 };
 
 export type ListPrice = {

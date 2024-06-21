@@ -1,25 +1,29 @@
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
-import { UserScan } from '@/types';
+import { Book, UserScan } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+type ScanBook = UserScan & { book: Book };
 
 export const useMyScanList = () => {
     const { profile } = useAuth();
     const user_id = profile?.id;
 
-    return useQuery<UserScan[]>({
+    return useQuery({
         queryKey: ['user_scans', { user_id }],
-        queryFn: async () => {
-            if (!profile) return [];
+        queryFn: async (): Promise<ScanBook[]> => {
+            if (!user_id) return [];
 
             const { data, error } = await supabase
                 .from('user_scans')
-                .select('*, book(*)')
-                .eq('user_id', profile.id)
+                .select('id, user_id, created_at, book:book_id(*)')
+                .filter('user_id', 'eq', user_id)
                 .order('created_at', { ascending: false });
+
             if (error) {
                 throw new Error(error.message);
             }
+            // @ts-ignore
             return data;
         }
     });

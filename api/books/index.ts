@@ -33,6 +33,23 @@ const searchGoogleBooksApi = async (
     return book;
 };
 
+const getGoogleBook = async (bookId: string): Promise<BookVolume | null> => {
+    const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes/${bookId}`
+    );
+    if (!response.ok) return null;
+    const book: BookVolume = await response.json();
+    return book;
+};
+
+export const useGetGoogleBook = (bookId: string) => {
+    return useQuery({
+        queryKey: ['googleBooks', bookId],
+        queryFn: () => getGoogleBook(bookId),
+        retry: false
+    });
+};
+
 export const useGoogleBooks = (isbn: string) => {
     return useQuery({
         queryKey: ['googleBooks', isbn],
