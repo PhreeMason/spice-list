@@ -98,6 +98,29 @@ export const useGoodReadsBooks = (isbn: string) => {
     });
 };
 
+export const useBookById = (bookId: number) => {
+    return useQuery({
+        queryKey: ['books', { bookId }],
+        queryFn: async () => {
+            const { error, data, count, status, statusText } = await supabase
+                .from('books')
+                .select(
+                    `*, genres:book_genres(
+                            genre:genre_id(name)
+                        )`
+                )
+                .eq('id', bookId)
+                .single();
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            return data;
+        }
+    });
+};
+
 export const useUpsertGoodReadsBook = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -226,8 +249,6 @@ export const useUploadBookAndGenres = () => {
                 genre_id: genre.id,
                 book_id_genre_id: `${book.id}_${genre.id}`
             }));
-
-            console.log(JSON.stringify(bookGenreLinks, null, 2));
 
             const { error: linkError } = await supabase
                 .from('book_genres')

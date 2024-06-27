@@ -3,8 +3,6 @@ import { useAuth } from '@/providers/AuthProvider';
 import { Book, UserScan } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-type ScanBook = UserScan & { book: Book };
-
 export const useMyScanList = () => {
     const { profile } = useAuth();
     const user_id = profile?.id;
