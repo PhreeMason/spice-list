@@ -151,3 +151,28 @@ export type PdfAccessInfo = {
 export type SearchInfo = {
     textSnippet: string;
 };
+
+export type GoodReadsBookResult = {
+    status: string;
+    scrapeURL: string;
+    searchType: string;
+    numberOfResults: string;
+    result: {
+        title: string;
+        authors: Array<{
+            name: string;
+            webUrl: string;
+        }>;
+        description: string;
+        publisher: string;
+        publishedDate: string;
+        numPages: number;
+        averageRating: number;
+        ratingsCount: number;
+        imageUrl: string;
+        book_id: string;
+        genres: string[];
+        isbn: string;
+    };
+    lastScraped: string;
+};

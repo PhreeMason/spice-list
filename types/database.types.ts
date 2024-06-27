@@ -9,6 +9,102 @@ export type Json =
 export type Database = {
     public: {
         Tables: {
+            authors: {
+                Row: {
+                    created_at: string;
+                    id: number;
+                    name: string;
+                    url: string;
+                };
+                Insert: {
+                    created_at?: string;
+                    id?: number;
+                    name: string;
+                    url: string;
+                };
+                Update: {
+                    created_at?: string;
+                    id?: number;
+                    name?: string;
+                    url?: string;
+                };
+                Relationships: [];
+            };
+            book_authors: {
+                Row: {
+                    author_id: number | null;
+                    book_id: number | null;
+                    created_at: string;
+                    id: number;
+                };
+                Insert: {
+                    author_id?: number | null;
+                    book_id?: number | null;
+                    created_at?: string;
+                    id?: number;
+                };
+                Update: {
+                    author_id?: number | null;
+                    book_id?: number | null;
+                    created_at?: string;
+                    id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'book_authors_author_id_fkey';
+                        columns: ['author_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'authors';
+                        referencedColumns: ['id'];
+                    },
+                    {
+                        foreignKeyName: 'book_authors_book_id_fkey';
+                        columns: ['book_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'books';
+                        referencedColumns: ['id'];
+                    }
+                ];
+            };
+            book_genres: {
+                Row: {
+                    book_id: number | null;
+                    book_id_genre_id: string;
+                    created_at: string;
+                    genre_id: number | null;
+                    id: number;
+                };
+                Insert: {
+                    book_id?: number | null;
+                    book_id_genre_id: string;
+                    created_at?: string;
+                    genre_id?: number | null;
+                    id?: number;
+                };
+                Update: {
+                    book_id?: number | null;
+                    book_id_genre_id?: string;
+                    created_at?: string;
+                    genre_id?: number | null;
+                    id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'book_genere_book_id_fkey';
+                        columns: ['book_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'books';
+                        referencedColumns: ['id'];
+                    },
+                    {
+                        foreignKeyName: 'book_genere_genre_id_fkey';
+                        columns: ['genre_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'genres';
+                        referencedColumns: ['id'];
+                    }
+                ];
+            };
             book_tags: {
                 Row: {
                     book_id: number;
@@ -50,10 +146,18 @@ export type Database = {
                     authors: string;
                     created_at: string;
                     description: string | null;
-                    google_books_id: string;
+                    good_reads_book_id: string | null;
+                    good_reads_description: string | null;
+                    good_reads_image_url: string | null;
+                    good_reads_rating: number | null;
+                    good_reads_rating_count: number | null;
+                    google_books_id: string | null;
                     google_details_link: string | null;
                     google_rating: number | null;
                     id: number;
+                    isbn: string;
+                    num_pages: number | null;
+                    published_date: string | null;
                     publisher: string | null;
                     series_name: string | null;
                     title: string;
@@ -62,10 +166,18 @@ export type Database = {
                     authors: string;
                     created_at?: string;
                     description?: string | null;
-                    google_books_id: string;
+                    good_reads_book_id?: string | null;
+                    good_reads_description?: string | null;
+                    good_reads_image_url?: string | null;
+                    good_reads_rating?: number | null;
+                    good_reads_rating_count?: number | null;
+                    google_books_id?: string | null;
                     google_details_link?: string | null;
                     google_rating?: number | null;
                     id?: number;
+                    isbn: string;
+                    num_pages?: number | null;
+                    published_date?: string | null;
                     publisher?: string | null;
                     series_name?: string | null;
                     title: string;
@@ -74,13 +186,39 @@ export type Database = {
                     authors?: string;
                     created_at?: string;
                     description?: string | null;
-                    google_books_id?: string;
+                    good_reads_book_id?: string | null;
+                    good_reads_description?: string | null;
+                    good_reads_image_url?: string | null;
+                    good_reads_rating?: number | null;
+                    good_reads_rating_count?: number | null;
+                    google_books_id?: string | null;
                     google_details_link?: string | null;
                     google_rating?: number | null;
                     id?: number;
+                    isbn?: string;
+                    num_pages?: number | null;
+                    published_date?: string | null;
                     publisher?: string | null;
                     series_name?: string | null;
                     title?: string;
+                };
+                Relationships: [];
+            };
+            genres: {
+                Row: {
+                    created_at: string;
+                    id: number;
+                    name: string;
+                };
+                Insert: {
+                    created_at?: string;
+                    id?: number;
+                    name: string;
+                };
+                Update: {
+                    created_at?: string;
+                    id?: number;
+                    name?: string;
                 };
                 Relationships: [];
             };

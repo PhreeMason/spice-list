@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
-import { useUpsertGoogleBook } from '@/api/books';
+import { useUploadBookAndGenres } from '@/api/books';
 import { useInsertScanItems } from '@/api/book-scans';
 import { StatusBar } from 'expo-status-bar';
 
@@ -12,7 +12,7 @@ export default function ScanScreen() {
     const [permission, requestPermission] = useCameraPermissions();
 
     const [isbn, setIsbn] = useState<string>('');
-    const { mutate: upsertBook } = useUpsertGoogleBook();
+    const { mutate: upsertBook } = useUploadBookAndGenres();
     const { mutate: insertScan } = useInsertScanItems();
 
     if (!permission) {
@@ -36,16 +36,21 @@ export default function ScanScreen() {
 
     const onBarcodeScanned = async ({ data }: { data: string }) => {
         if (!data || data === isbn) return;
+        console.log('isbn', data);
         upsertBook(data, {
             onSuccess: (data) => {
                 insertScan(data.id);
+                console.log('success', JSON.stringify(data, null, 2));
+            },
+            onError: (error) => {
+                console.log('error', error);
             }
         });
         setIsbn(data);
     };
 
     return (
-        <View className="flex-1 justify-center">
+        <View className="flex-1">
             <CameraView
                 barcodeScannerSettings={{
                     barcodeTypes: ['ean13']
@@ -54,17 +59,15 @@ export default function ScanScreen() {
                 className="flex-1"
                 facing={facing}
             >
-                <View className="flex-1 flex-row background-transparent align-center">
-                    <TouchableOpacity
-                        className="flex-1 self-end align-center"
-                        onPress={toggleCameraFacing}
-                    >
-                        <Text className="font-bold text-white text-xl">
-                            Flip Camera
-                        </Text>
-                    </TouchableOpacity>
+                <View className="flex-1 items-center justify-center">
+                    {/* Transparent box with white border */}
+                    <View className="w-96 h-64 border-2 border-white bg-opacity-10 rounded-3xl" />
                 </View>
-                {isbn && <BookScanPreview isbn={isbn} />}
+
+                {/* Container for BookScanPreview at the bottom */}
+                <View className="absolute bottom-0 left-0 right-0">
+                    {isbn && <BookScanPreview isbn={isbn} />}
+                </View>
             </CameraView>
             <StatusBar style="light" />
         </View>

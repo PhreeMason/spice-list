@@ -11,12 +11,24 @@ export const useMyScanList = () => {
 
     return useQuery({
         queryKey: ['user_scans', { user_id }],
-        queryFn: async (): Promise<ScanBook[]> => {
+        queryFn: async () => {
             if (!user_id) return [];
 
             const { data, error } = await supabase
                 .from('user_scans')
-                .select('id, user_id, created_at, book:book_id(*)')
+                .select(
+                    `
+                    id, 
+                    user_id, 
+                    created_at, 
+                    book:book_id(
+                        *,
+                        genres:book_genres(
+                            genre:genre_id(name)
+                        )
+                    )
+                `
+                )
                 .filter('user_id', 'eq', user_id)
                 .order('created_at', { ascending: false });
 
