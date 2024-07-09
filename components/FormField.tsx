@@ -29,13 +29,13 @@ const FormField = ({
 
     return (
         <View className={`space-y-2 ${containerStyles}`}>
-            <Text className="text-base text-gray-100 font-slice-medium">
+            <Text className="text-base text-gray-100 font-spice-medium">
                 {title}
             </Text>
 
             <View className="w-full h-16 bg-black-100 px-4 border-2 border-black-200 rounded-2xl focus:border-secondary items-center flex-row">
                 <TextInput
-                    className="flex-1 text-white font-slice-semibold text-base"
+                    className="flex-1 text-white font-spice-semibold text-base"
                     value={value}
                     placeholder={placeholder || ''}
                     placeholderTextColor="#7b7b8b"

@@ -5,7 +5,7 @@ import { Link, Stack } from 'expo-router';
 
 import { supabase } from '@/lib/supabase';
 import FormField from '@/components/FormField';
-import { images } from '../../constants';
+import { logo } from '@/constants/images';
 
 const SignIn = () => {
     const [errors, setErrors] = useState('');
@@ -38,12 +38,12 @@ const SignIn = () => {
             <Stack.Screen options={{ headerShown: false }} />
             <View className="w-full min-h-[85vh] my-6 justify-center px-4">
                 <Image
-                    source={images.logo}
+                    source={logo}
                     className="w-[115px] h-[35px]"
                     resizeMode="contain"
                 />
 
-                <Text className="text-2xl text-white text-semibold mt-10 font-slice-semibold">
+                <Text className="text-2xl text-white text-semibold mt-10 font-spice-semibold">
                     Log In to Spice
                 </Text>
                 <Text className="text-red-500">{errors}</Text>
@@ -79,7 +79,7 @@ const SignIn = () => {
                     </Text>
                     <Link
                         href="./sign-up"
-                        className="text-lg font-slice-semibold text-secondary"
+                        className="text-lg font-spice-semibold text-secondary"
                     >
                         Sign up
                     </Link>

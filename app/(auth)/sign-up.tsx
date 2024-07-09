@@ -1,10 +1,10 @@
 import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import React, { useState } from 'react';
 
-import { images } from '@/constants';
+import { logo } from '@/constants/images';
 import FormField from '@/components/FormField';
 import Button from '@/components/Button';
-import { Link, router } from 'expo-router';
+import { Link } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 
 const SignUp = () => {
@@ -43,7 +43,7 @@ const SignUp = () => {
         <ScrollView className="bg-primary h-full">
             <View className="w-full min-h-[85vh] my-6 justify-center px-4">
                 <Image
-                    source={images.logo}
+                    source={logo}
                     className="w-[115px] h-[35px]"
                     resizeMode="contain"
                 />
