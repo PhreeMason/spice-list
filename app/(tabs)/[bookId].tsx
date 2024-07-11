@@ -7,7 +7,7 @@ import RenderStars from '@/components/RenderStars';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const formatTitle = (title: string) => {
-    // if title has : split at : and take the first part
+    // these titles are too long to show in the header
     if (title.includes(':')) {
         return title.split(':')[0];
     }
