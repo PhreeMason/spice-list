@@ -111,6 +111,7 @@ const Profile = () => {
                     <TouchableOpacity>
                         <Text className="font-spice-semibold">Feed</Text>
                     </TouchableOpacity>
+                    {/* TODO: Setup stack navigator screen and remove this */}
                     <TabItem listTitle="Books" countForList={profileData.books} />
                     <TabItem listTitle="Lists" countForList={profileData.lists} />
                     <TabItem listTitle="Quotes" countForList={profileData.quotes} />
