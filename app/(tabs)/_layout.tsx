@@ -1,5 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Ionicons  from '@expo/vector-icons/Ionicons';
 import { Link, Redirect, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
@@ -29,6 +30,15 @@ export default function TabLayout() {
                 headerShown: useClientOnlyValue(false, true)
             }}
         >
+          <Tabs.Screen
+                name="library"
+                options={{
+                  title: "Library",
+                    tabBarIcon: ({ color }) => (
+                      <Ionicons name="library-outline" size={24} color={color} />
+                    )
+                }}
+            />
             <Tabs.Screen
                 name="index"
                 options={{
