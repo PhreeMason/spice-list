@@ -59,12 +59,14 @@ const searchGoodReadsApi = async (
     isbn: string
 ): Promise<GoodReadsBookResult['result'] | null> => {
     if (!isbn) return null;
-    const response = await fetch(
-        `https://magical-swift-maximum.ngrok-free.app/isbn?isbn=${isbn}`
-    );
-    const json: GoodReadsBookResult = await response.json();
-    const book = json?.result || null;
-    return book;
+    const { data, error } = await supabase.functions.invoke('search-book', {
+      body: { isbn }
+    })
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    return data.result;
 };
 
 const getGoogleBook = async (bookId: string): Promise<BookVolume | null> => {
