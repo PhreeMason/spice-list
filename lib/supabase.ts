@@ -60,10 +60,17 @@ class LargeSecureStore {
     }
 }
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL_DEV || '';
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_DEV || '';
+const NODE_ENV = process.env.NODE_ENV
+const EXPO_PUBLIC_SUPABASE_URL_DEV = process.env.EXPO_PUBLIC_SUPABASE_URL_DEV
+const EXPO_PUBLIC_SUPABASE_ANON_DEV = process.env.EXPO_PUBLIC_SUPABASE_ANON_DEV
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+const EXPO_PUBLIC_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL
+const EXPO_PUBLIC_SUPABASE_ANON = process.env.EXPO_PUBLIC_SUPABASE_ANON
+
+const supabaseUrl = NODE_ENV === "development" ? EXPO_PUBLIC_SUPABASE_URL_DEV : EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = NODE_ENV === "development" ? EXPO_PUBLIC_SUPABASE_ANON_DEV : EXPO_PUBLIC_SUPABASE_ANON;
+
+export const supabase = createClient<Database>(supabaseUrl || '', supabaseAnonKey || '', {
     auth: {
         storage: new LargeSecureStore(),
         autoRefreshToken: true,

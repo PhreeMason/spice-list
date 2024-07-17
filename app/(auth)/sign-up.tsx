@@ -1,10 +1,10 @@
 import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import React, { useState } from 'react';
+import { Link, Stack } from 'expo-router';
 
 import { logo } from '@/constants/images';
 import FormField from '@/components/FormField';
 import Button from '@/components/Button';
-import { Link } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 
 const SignUp = () => {
@@ -19,7 +19,16 @@ const SignUp = () => {
 
     const signUpWithEmail = async () => {
         setLoading(true);
-        const { error } = await supabase.auth.signUp(form);
+        const { email, username, password } = form
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    username
+                }
+            }
+        });
         if (error) {
             Alert.alert(error.message);
         }
@@ -33,14 +42,15 @@ const SignUp = () => {
         }
         setErrors('');
         signUpWithEmail();
-        setForm({
-            email: '',
-            password: '',
-            username: ''
-        });
+        // setForm({
+        //     email: '',
+        //     password: '',
+        //     username: ''
+        // });
     };
     return (
         <ScrollView className="bg-primary h-full">
+            <Stack.Screen options={{ headerShown: false }} />
             <View className="w-full min-h-[85vh] my-6 justify-center px-4">
                 <Image
                     source={logo}
