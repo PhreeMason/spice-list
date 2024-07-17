@@ -2,11 +2,22 @@ import "@supabase/functions-js"
 import * as cheerio from "cheerio";
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 
-import { fakeUserAgent, extractBookInfo, generateUrl } from "../_shared/utils.ts";
+import {
+  fakeUserAgent,
+  generateUrl,
+} from "../_shared/utils.ts";
+
+import {
+  isbnScraper,
+  bookPathScraper,
+  bookSearchScraper
+} from "../_shared/scrapers.ts";
 
 Deno.serve(async (req) => {
-  const { isbn } = await req.json()
-  const scrapeURL = generateUrl(isbn);
+  const { isbn, bookSearch, bookPath } = await req.json()
+  console.log(`isbn: ${isbn}, bookSearch: ${bookSearch}, bookPath: ${bookPath}`);
+  const scrapeURL = bookPath ? bookPath : generateUrl(isbn);
+  const scraper = isbn ? isbnScraper : bookSearch ? bookSearchScraper : bookPathScraper;
 
   try {
     const response = await fetch(`${scrapeURL}`, {
@@ -18,7 +29,7 @@ Deno.serve(async (req) => {
     const htmlString = await response.text();
     const $ = cheerio.load(htmlString);
     const numberOfResults = $('.leftContainer > h3').text();
-    const result = extractBookInfo($);
+    const result = scraper($);
 
     const lastScraped = new Date().toISOString();
     const responseData = {
@@ -55,15 +66,3 @@ Deno.serve(async (req) => {
     });
   }
 })
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/search-book' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"isbn":"9780671212094"}'
-
-*/
