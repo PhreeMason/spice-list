@@ -13,6 +13,7 @@ Open a terminal to supabase-functions
     bunx supabase functions serve
 ```
 
+## Optional step for builds on WSL2
 In a different terminal run 
 ```bash
     ngrok http --domain=magical-swift-maximum.ngrok-free.app 54321
@@ -25,4 +26,10 @@ Open a terminal to `client` aka `frontend` and run the following to install depe
 ```bash
     bun install
     bun start -c
+```
+
+## Make a new function
+
+```bash
+bunx supabase functions new hello-world
 ```

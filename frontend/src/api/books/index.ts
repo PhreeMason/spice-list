@@ -59,7 +59,7 @@ const searchGoodReadsApi = async (
     isbn: string
 ): Promise<GoodReadsBookResult['result'] | null> => {
     if (!isbn) return null;
-    const { data, error } = await supabase.functions.invoke('search-book', {
+    const { data, error } = await supabase.functions.invoke('book-search', {
       body: { isbn }
     })
     if (error) {
