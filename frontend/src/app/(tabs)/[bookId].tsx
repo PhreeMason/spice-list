@@ -2,7 +2,7 @@ import { View, Text, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { Tabs, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { useBookById } from '@/src/api/books';
+import { useBookById } from '@//api/books';
 import RenderStars from '@/components/RenderStars';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 

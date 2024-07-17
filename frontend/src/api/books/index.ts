@@ -1,5 +1,5 @@
-import { supabase } from '@/src/lib/supabase';
-import { useAuth } from '@/src/providers/AuthProvider';
+import { supabase } from '@//lib/supabase';
+import { useAuth } from '@//providers/AuthProvider';
 import {
     Book,
     BookVolume,
@@ -8,7 +8,7 @@ import {
     InsertBook,
     InsertUserScan,
     UserScan
-} from '@/src/types';
+} from '@//types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const getBookDetailsFromGoogleBooks = (googleBook: BookVolume): InsertBook => {

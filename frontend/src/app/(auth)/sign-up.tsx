@@ -2,10 +2,10 @@ import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { Link, Stack } from 'expo-router';
 
-import { logo } from '@/src/constants/images';
+import { logo } from '@//constants/images';
 import FormField from '@/components/FormField';
 import Button from '@/components/Button';
-import { supabase } from '@/src/lib/supabase';
+import { supabase } from '@//lib/supabase';
 
 const SignUp = () => {
     const [errors, setErrors] = useState('');

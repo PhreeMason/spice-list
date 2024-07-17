@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { EvilIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { profile2 } from '@/src/constants/images';
+import { profile2 } from '@//constants/images';
 
 const Settings = ({ className }: { className?: string }) => (
     <MaterialCommunityIcons

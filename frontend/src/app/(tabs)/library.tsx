@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   TouchableOpacity
 } from 'react-native';
-import { useMyScanList } from '@/src/api/book-scans';
+import { useMyScanList } from '@//api/book-scans';
 import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';

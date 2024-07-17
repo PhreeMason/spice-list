@@ -1,4 +1,4 @@
-import { useGetGoogleBook } from '@/src/api/books';
+import { useGetGoogleBook } from '@//api/books';
 import { Image } from 'react-native';
 
 const placeholderImage = 'http://lgimages.s3.amazonaws.com/gc-md.gif';

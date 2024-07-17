@@ -5,7 +5,7 @@ import { Link, Redirect, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import { useAuth } from '@/src/providers/AuthProvider';
+import { useAuth } from '@//providers/AuthProvider';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {

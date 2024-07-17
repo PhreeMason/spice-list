@@ -1,5 +1,5 @@
-import { supabase } from '@/src/lib/supabase';
-import { Profile } from '@/src/types/index';
+import { supabase } from '@//lib/supabase';
+import { Profile } from '@//types/index';
 import { Session } from '@supabase/supabase-js';
 import {
     PropsWithChildren,

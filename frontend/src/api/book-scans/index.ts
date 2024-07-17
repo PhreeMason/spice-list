@@ -1,6 +1,6 @@
-import { supabase } from '@/src/lib/supabase';
-import { useAuth } from '@/src/providers/AuthProvider';
-import { Book, UserScan } from '@/src/types';
+import { supabase } from '@//lib/supabase';
+import { useAuth } from '@//providers/AuthProvider';
+import { Book, UserScan } from '@//types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useMyScanList = () => {

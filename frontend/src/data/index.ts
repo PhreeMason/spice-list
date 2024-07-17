@@ -1,4 +1,4 @@
-import { ScanItem, BookVolume } from '@/src/types';
+import { ScanItem, BookVolume } from '@//types';
 
 const books: BookVolume[] = [
     {

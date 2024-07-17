@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
-import { useUploadBookAndGenres } from '@/src/api/books';
-import { useInsertScanItems } from '@/src/api/book-scans';
+import { useUploadBookAndGenres } from '@//api/books';
+import { useInsertScanItems } from '@//api/book-scans';
 import { StatusBar } from 'expo-status-bar';
 
 export default function ScanScreen() {

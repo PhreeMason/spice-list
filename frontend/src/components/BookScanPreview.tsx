@@ -1,6 +1,6 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
-import { useGoodReadsBooks } from '@/src/api/books';
+import { useGoodReadsBooks } from '@//api/books';
 import RenderStars from '@/components/RenderStars';
 
 type BookScanPreviewProps = {
