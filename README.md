@@ -1,20 +1,28 @@
-# spice-list-server
+# Setup
+clone project
+open the workspace using visual studio
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To run:
+Open a terminal to supabase-functions
 
 ```bash
-bun run index.ts
+    bunx supabase init
+    bunx supabase link project-ref
+    bunx supabase db pull
+    bunx supabase db pull --schema auth,storage
+    bunx supabase start
+    bunx supabase functions serve
 ```
 
 In a different terminal run 
 ```bash
-ngrok http --domain=magical-swift-maximum.ngrok-free.app 54321
+    ngrok http --domain=magical-swift-maximum.ngrok-free.app 54321
 ```
 
-This project was created using `bun init` in bun v1.1.12. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+rename `env.example` inside the client folder named `frontend` to `.env` and update the values.
+
+Open a terminal to `client` aka `frontend` and run the following to install dependencies
+
+```bash
+    bun install
+    bun start -c
+```
