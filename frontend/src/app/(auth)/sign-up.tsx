@@ -2,32 +2,32 @@ import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { Link, Stack } from 'expo-router';
 
-import { logo } from '@//constants/images';
+import { logo } from '@/constants/images';
 import FormField from '@/components/FormField';
 import Button from '@/components/Button';
-import { supabase } from '@//lib/supabase';
+import { supabase } from '@/lib/supabase';
 
-const SignUp = () => {
+function SignUp() {
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
 
     const [form, setForm] = useState({
         email: '',
         password: '',
-        username: ''
+        username: '',
     });
 
     const signUpWithEmail = async () => {
         setLoading(true);
-        const { email, username, password } = form
+        const { email, username, password } = form;
         const { error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
-                    username
-                }
-            }
+                    username,
+                },
+            },
         });
         if (error) {
             Alert.alert(error.message);
@@ -66,17 +66,13 @@ const SignUp = () => {
                 <FormField
                     title="Username"
                     value={form.username}
-                    handleChangeText={(text) =>
-                        setForm({ ...form, username: text })
-                    }
+                    handleChangeText={text => setForm({ ...form, username: text })}
                     containerStyles="mt-10"
                 />
                 <FormField
                     title="Email"
                     value={form.email}
-                    handleChangeText={(text) =>
-                        setForm({ ...form, email: text })
-                    }
+                    handleChangeText={text => setForm({ ...form, email: text })}
                     containerStyles="mt-7"
                     keyboardType="email-address"
                 />
@@ -84,16 +80,14 @@ const SignUp = () => {
                 <FormField
                     title="Password"
                     value={form.password}
-                    handleChangeText={(text) =>
-                        setForm({ ...form, password: text })
-                    }
+                    handleChangeText={text => setForm({ ...form, password: text })}
                     containerStyles="mt-7"
                 />
 
                 <Button
                     title="Sign Up"
                     handlePress={onSubmit}
-                    containerStyles={'mt-7'}
+                    containerStyles="mt-7"
                     isLoading={loading}
                 />
                 <View className="justify-center pt-5 flex-row gap-2">
@@ -110,6 +104,6 @@ const SignUp = () => {
             </View>
         </ScrollView>
     );
-};
+}
 
 export default SignUp;

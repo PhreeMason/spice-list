@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
-import { useUploadBookAndGenres } from '@//api/books';
-import { useInsertScanItems } from '@//api/book-scans';
+import { useUploadBookAndGenres } from '@/api/books';
+import { useInsertScanItems } from '@/api/book-scans';
 import { StatusBar } from 'expo-status-bar';
 
 export default function ScanScreen() {
@@ -31,20 +31,23 @@ export default function ScanScreen() {
     }
 
     function toggleCameraFacing() {
-        setFacing((current) => (current === 'back' ? 'front' : 'back'));
+        setFacing(current => (current === 'back' ? 'front' : 'back'));
     }
 
     const onBarcodeScanned = async ({ data }: { data: string }) => {
         if (!data || data === isbn) return;
         console.log('onBarcodeScanned : isbn', data);
         upsertBook(data, {
-            onSuccess: (data) => {
+            onSuccess: data => {
                 insertScan(data.id);
-                console.log('onBarcodeScanned : success', JSON.stringify(data, null, 2));
+                console.log(
+                    'onBarcodeScanned : success',
+                    JSON.stringify(data, null, 2),
+                );
             },
-            onError: (error) => {
+            onError: error => {
                 console.log('onBarcodeScanned : error', error);
-            }
+            },
         });
         setIsbn(data);
     };
@@ -53,7 +56,7 @@ export default function ScanScreen() {
         <View className="flex-1">
             <CameraView
                 barcodeScannerSettings={{
-                    barcodeTypes: ['ean13']
+                    barcodeTypes: ['ean13'],
                 }}
                 onBarcodeScanned={onBarcodeScanned}
                 className="flex-1"

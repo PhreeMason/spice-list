@@ -1,13 +1,13 @@
-import { supabase } from '@//lib/supabase';
-import { Profile } from '@//types/index';
+import { supabase } from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import {
     PropsWithChildren,
     createContext,
     useEffect,
     useState,
-    useContext
+    useContext,
 } from 'react';
+import { Profile } from '@/types/index';
 
 type AuthData = {
     session: Session | null;
@@ -18,7 +18,7 @@ type AuthData = {
 const AuthContext = createContext<AuthData>({
     loading: false,
     session: null,
-    profile: null
+    profile: null,
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -29,7 +29,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     useEffect(() => {
         const fetchSession = async () => {
             const {
-                data: { session }
+                data: { session },
             } = await supabase.auth.getSession();
             setSession(session);
 
@@ -57,7 +57,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
             value={{
                 session,
                 loading,
-                profile
+                profile,
             }}
         >
             {children}

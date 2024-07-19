@@ -3,16 +3,16 @@ import { View, Text, ScrollView, Alert, Image } from 'react-native';
 import Button from '@/components/Button';
 import { Link, Stack } from 'expo-router';
 
-import { supabase } from '@//lib/supabase';
+import { supabase } from '@/lib/supabase';
 import FormField from '@/components/FormField';
-import { logo } from '@//constants/images';
+import { logo } from '@/constants/images';
 
-const SignIn = () => {
+function SignIn() {
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         email: '',
-        password: ''
+        password: '',
     });
 
     const signInWithEmail = async () => {
@@ -51,9 +51,7 @@ const SignIn = () => {
                 <FormField
                     title="Email"
                     value={form.email}
-                    handleChangeText={(text) =>
-                        setForm({ ...form, email: text })
-                    }
+                    handleChangeText={text => setForm({ ...form, email: text })}
                     containerStyles="mt-7"
                     keyboardType="email-address"
                 />
@@ -61,16 +59,14 @@ const SignIn = () => {
                 <FormField
                     title="Password"
                     value={form.password}
-                    handleChangeText={(text) =>
-                        setForm({ ...form, password: text })
-                    }
+                    handleChangeText={text => setForm({ ...form, password: text })}
                     containerStyles="mt-7"
                 />
 
                 <Button
                     title="Sign In"
                     handlePress={onSubmit}
-                    containerStyles={'mt-7'}
+                    containerStyles="mt-7"
                     isLoading={loading}
                 />
                 <View className="justify-center pt-5 flex-row gap-2">
@@ -87,6 +83,6 @@ const SignIn = () => {
             </View>
         </ScrollView>
     );
-};
+}
 
 export default SignIn;

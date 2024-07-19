@@ -1,13 +1,13 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
-import { useGoodReadsBooks } from '@//api/books';
+import { useGoodReadsBooks } from '@/api/books';
 import RenderStars from '@/components/RenderStars';
 
 type BookScanPreviewProps = {
     isbn: string;
 };
 
-const BookScanPreview = ({ isbn }: BookScanPreviewProps) => {
+function BookScanPreview({ isbn }: BookScanPreviewProps) {
     const { data: book, isLoading, error } = useGoodReadsBooks(isbn);
 
     if (isLoading) {
@@ -26,17 +26,15 @@ const BookScanPreview = ({ isbn }: BookScanPreviewProps) => {
         <View className="flex flex-row bg-white w-full p-2">
             <Image
                 source={{
-                    uri: book.imageUrl
+                    uri: book.imageUrl,
                 }}
                 resizeMode="contain"
                 className="w-20 h-30 object-cover rounded-md mr-4 "
             />
             <View className="flex-1 bg-white">
-                <Text className="text-lg font-spice-semibold">
-                    {book.title}
-                </Text>
+                <Text className="text-lg font-spice-semibold">{book.title}</Text>
                 <Text className="text-sm text-gray-600 mb-1">
-                    {book.authors.map((a) => a.name).join(', ')}
+                    {book.authors.map(a => a.name).join(', ')}
                 </Text>
                 <View className="flex mb-1">
                     <RenderStars rating={book.averageRating} />
@@ -54,6 +52,6 @@ const BookScanPreview = ({ isbn }: BookScanPreviewProps) => {
             </View>
         </View>
     );
-};
+}
 
 export default BookScanPreview;

@@ -25,5 +25,5 @@ export default {
     rightArrow,
     logout,
     eyeHide,
-    eye
+    eye,
 };

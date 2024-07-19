@@ -1,7 +1,7 @@
-import { supabase } from '@//lib/supabase';
-import { useAuth } from '@//providers/AuthProvider';
-import { Book, UserScan } from '@//types';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/providers/AuthProvider';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Book, UserScan } from '@/types';
 
 export const useMyScanList = () => {
     const { profile } = useAuth();
@@ -25,7 +25,7 @@ export const useMyScanList = () => {
                             genre:genre_id(name)
                         )
                     )
-                `
+                `,
                 )
                 .filter('user_id', 'eq', user_id)
                 .order('created_at', { ascending: false });
@@ -36,7 +36,7 @@ export const useMyScanList = () => {
             // @ts-ignore
             // TODO: fix types
             return data;
-        }
+        },
     });
 };
 
@@ -61,6 +61,6 @@ export const useInsertScanItems = () => {
         },
         async onSuccess() {
             await queryClient.invalidateQueries({ queryKey: ['user_scans'] });
-        }
+        },
     });
 };

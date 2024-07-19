@@ -1,11 +1,11 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Ionicons  from '@expo/vector-icons/Ionicons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link, Redirect, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import { useAuth } from '@//providers/AuthProvider';
+import { useAuth } from '@/providers/AuthProvider';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -19,7 +19,7 @@ export default function TabLayout() {
     const { session } = useAuth();
 
     if (!session) {
-        return <Redirect href={'/sign-in'} />;
+        return <Redirect href="/sign-in" />;
     }
     return (
         <Tabs
@@ -27,16 +27,16 @@ export default function TabLayout() {
                 tabBarActiveTintColor: 'pink',
                 // Disable the static render of the header on web
                 // to prevent a hydration error in React Navigation v6.
-                headerShown: useClientOnlyValue(false, true)
+                headerShown: useClientOnlyValue(false, true),
             }}
         >
-          <Tabs.Screen
+            <Tabs.Screen
                 name="library"
                 options={{
-                  title: "Library",
+                    title: 'Library',
                     tabBarIcon: ({ color }) => (
-                      <Ionicons name="library-outline" size={24} color={color} />
-                    )
+                        <Ionicons name="library-outline" size={24} color={color} />
+                    ),
                 }}
             />
             <Tabs.Screen
@@ -53,34 +53,30 @@ export default function TabLayout() {
                                     <FontAwesome
                                         name="info-circle"
                                         size={25}
-                                        color={'pink'}
+                                        color="pink"
                                         style={{
                                             marginRight: 15,
-                                            opacity: pressed ? 0.5 : 1
+                                            opacity: pressed ? 0.5 : 1,
                                         }}
                                     />
                                 )}
                             </Pressable>
                         </Link>
-                    )
+                    ),
                 }}
             />
             <Tabs.Screen
                 name="scan"
                 options={{
                     title: 'Scan',
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="search" color={color} />
-                    )
+                    tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
                 }}
             />
             <Tabs.Screen name="[bookId]" options={{ href: null }} />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="user" color={color} />
-                    )
+                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
                 }}
             />
         </Tabs>

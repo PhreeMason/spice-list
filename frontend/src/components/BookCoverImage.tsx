@@ -1,15 +1,15 @@
-import { useGetGoogleBook } from '@//api/books';
+import { useGetGoogleBook } from '@/api/books';
 import { Image } from 'react-native';
 
 const placeholderImage = 'http://lgimages.s3.amazonaws.com/gc-md.gif';
 
-const BookCoverImage = ({
+function BookCoverImage({
     bookId,
-    otherStyles
+    otherStyles,
 }: {
     bookId: string;
     otherStyles: string;
-}) => {
+}) {
     const { data: book, error } = useGetGoogleBook(bookId);
 
     if (error) {
@@ -33,7 +33,7 @@ const BookCoverImage = ({
     }
 
     const {
-        volumeInfo: { imageLinks }
+        volumeInfo: { imageLinks },
     } = book;
 
     const { smallThumbnail, thumbnail, small, medium, large, extraLarge } =
@@ -54,6 +54,6 @@ const BookCoverImage = ({
             className={`w-20 h-20 ${otherStyles}`}
         />
     );
-};
+}
 
 export default BookCoverImage;

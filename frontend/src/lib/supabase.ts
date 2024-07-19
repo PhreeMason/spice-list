@@ -1,24 +1,26 @@
 import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '@//types/database.types';
+import { Database } from '@/types/database.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import * as aesjs from 'aes-js';
 import 'react-native-get-random-values';
+import { Platform } from 'react-native';
 
+// code came from here https://supabase.com/docs/guides/getting-started/tutorials/with-expo-react-native?queryGroups=auth-store&auth-store=secure-store
 class LargeSecureStore {
     private async _encrypt(key: string, value: string) {
         const encryptionKey = crypto.getRandomValues(new Uint8Array(256 / 8));
 
         const cipher = new aesjs.ModeOfOperation.ctr(
             encryptionKey,
-            new aesjs.Counter(1)
+            new aesjs.Counter(1),
         );
         const encryptedBytes = cipher.encrypt(aesjs.utils.utf8.toBytes(value));
 
         await SecureStore.setItemAsync(
             key,
-            aesjs.utils.hex.fromBytes(encryptionKey)
+            aesjs.utils.hex.fromBytes(encryptionKey),
         );
 
         return aesjs.utils.hex.fromBytes(encryptedBytes);
@@ -32,7 +34,7 @@ class LargeSecureStore {
 
         const cipher = new aesjs.ModeOfOperation.ctr(
             aesjs.utils.hex.toBytes(encryptionKeyHex),
-            new aesjs.Counter(1)
+            new aesjs.Counter(1),
         );
         const decryptedBytes = cipher.decrypt(aesjs.utils.hex.toBytes(value));
 
@@ -60,21 +62,31 @@ class LargeSecureStore {
     }
 }
 
-const NODE_ENV = process.env.NODE_ENV
-const EXPO_PUBLIC_SUPABASE_URL_DEV = process.env.EXPO_PUBLIC_SUPABASE_URL_DEV
-const EXPO_PUBLIC_SUPABASE_ANON_DEV = process.env.EXPO_PUBLIC_SUPABASE_ANON_DEV
+const { NODE_ENV } = process.env;
+const { EXPO_PUBLIC_SUPABASE_URL_DEV } = process.env;
+const { EXPO_PUBLIC_SUPABASE_ANON_DEV } = process.env;
 
-const EXPO_PUBLIC_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL
-const EXPO_PUBLIC_SUPABASE_ANON = process.env.EXPO_PUBLIC_SUPABASE_ANON
+const { EXPO_PUBLIC_SUPABASE_URL } = process.env;
+const { EXPO_PUBLIC_SUPABASE_ANON } = process.env;
 
-const supabaseUrl = NODE_ENV === "development" ? EXPO_PUBLIC_SUPABASE_URL_DEV : EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = NODE_ENV === "development" ? EXPO_PUBLIC_SUPABASE_ANON_DEV : EXPO_PUBLIC_SUPABASE_ANON;
+const supabaseUrl =
+    NODE_ENV === 'development'
+        ? EXPO_PUBLIC_SUPABASE_URL_DEV
+        : EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey =
+    NODE_ENV === 'development'
+        ? EXPO_PUBLIC_SUPABASE_ANON_DEV
+        : EXPO_PUBLIC_SUPABASE_ANON;
 
-export const supabase = createClient<Database>(supabaseUrl || '', supabaseAnonKey || '', {
-    auth: {
-        storage: new LargeSecureStore(),
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: false
-    }
-});
+export const supabase = createClient<Database>(
+    supabaseUrl || '',
+    supabaseAnonKey || '',
+    {
+        auth: {
+            ...(Platform.OS !== 'web' ? { storage: new LargeSecureStore() } : {}),
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: false,
+        },
+    },
+);
