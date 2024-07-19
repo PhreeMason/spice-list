@@ -1,4 +1,4 @@
-import { ScanItem, BookVolume } from '@/types';
+import { ScanItem, BookVolume, BookTag } from '@/types';
 
 const books: BookVolume[] = [
     {
@@ -1013,3 +1013,5 @@ export const bookScans: ScanItem[] = [
         bookId: books[7].id,
     },
 ];
+
+export const bookTags: BookTag[] = [];

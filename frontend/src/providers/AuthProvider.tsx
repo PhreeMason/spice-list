@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import supabase from '@/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import {
     PropsWithChildren,
@@ -6,6 +6,7 @@ import {
     useEffect,
     useState,
     useContext,
+    useMemo,
 } from 'react';
 import { Profile } from '@/types/index';
 
@@ -28,38 +29,38 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
     useEffect(() => {
         const fetchSession = async () => {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-            setSession(session);
+            const { data } = await supabase.auth.getSession();
+            const sess = data.session;
+            setSession(sess);
 
-            if (session) {
+            if (sess) {
                 // fetch profile
-                const { data } = await supabase
+                const response = await supabase
                     .from('profiles')
                     .select('*')
-                    .eq('id', session.user.id)
+                    .eq('id', sess.user.id)
                     .single();
-                setProfile(data || null);
+                setProfile(response.data || null);
             }
 
             setLoading(false);
         };
         fetchSession();
 
-        supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
+        supabase.auth.onAuthStateChange((_event, authSession) => {
+            setSession(authSession);
         });
     }, []);
-
+    const providerValue = useMemo(
+        () => ({
+            session,
+            loading,
+            profile,
+        }),
+        [loading, profile, session],
+    );
     return (
-        <AuthContext.Provider
-            value={{
-                session,
-                loading,
-                profile,
-            }}
-        >
+        <AuthContext.Provider value={providerValue}>
             {children}
         </AuthContext.Provider>
     );

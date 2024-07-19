@@ -17,6 +17,9 @@ module.exports = {
         "project": "./tsconfig.json"
     },
     "rules": {
+        "no-nested-ternary": 0,
+        "import/prefer-default-export": 0,
+        "class-methods-use-this": 0,
         "react/react-in-jsx-scope": 0,
         "import/no-unresolved": 0,
         "react/jsx-filename-extension": [1, {

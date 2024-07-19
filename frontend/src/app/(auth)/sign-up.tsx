@@ -5,7 +5,7 @@ import { Link, Stack } from 'expo-router';
 import { logo } from '@/constants/images';
 import FormField from '@/components/FormField';
 import Button from '@/components/Button';
-import { supabase } from '@/lib/supabase';
+import supabase from '@/lib/supabase';
 
 function SignUp() {
     const [errors, setErrors] = useState('');

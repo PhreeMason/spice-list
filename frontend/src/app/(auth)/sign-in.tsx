@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Alert, Image } from 'react-native';
 import Button from '@/components/Button';
 import { Link, Stack } from 'expo-router';
 
-import { supabase } from '@/lib/supabase';
+import supabase from '@/lib/supabase';
 import FormField from '@/components/FormField';
 import { logo } from '@/constants/images';
 

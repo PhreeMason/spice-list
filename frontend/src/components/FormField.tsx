@@ -19,11 +19,10 @@ type FromFieldProps = {
 function FormField({
     title,
     value,
-    placeholder,
     handleChangeText,
-    containerStyles,
+    placeholder = '',
+    containerStyles = '',
     keyboardType = 'default',
-    ...props
 }: FromFieldProps) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -37,10 +36,11 @@ function FormField({
                 <TextInput
                     className="flex-1 text-white font-spice-semibold text-base"
                     value={value}
-                    placeholder={placeholder || ''}
+                    placeholder={placeholder}
                     placeholderTextColor="#7b7b8b"
                     onChangeText={handleChangeText}
                     secureTextEntry={title === 'Password' && !showPassword}
+                    keyboardType={keyboardType}
                 />
 
                 {title === 'Password' && (

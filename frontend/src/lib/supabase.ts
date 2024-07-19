@@ -1,3 +1,6 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable new-cap */
 import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/database.types';
@@ -47,7 +50,7 @@ class LargeSecureStore {
             return encrypted;
         }
 
-        return await this._decrypt(key, encrypted);
+        return this._decrypt(key, encrypted);
     }
 
     async removeItem(key: string) {
@@ -78,7 +81,7 @@ const supabaseAnonKey =
         ? EXPO_PUBLIC_SUPABASE_ANON_DEV
         : EXPO_PUBLIC_SUPABASE_ANON;
 
-export const supabase = createClient<Database>(
+const supabase = createClient<Database>(
     supabaseUrl || '',
     supabaseAnonKey || '',
     {
@@ -92,3 +95,5 @@ export const supabase = createClient<Database>(
         },
     },
 );
+
+export default supabase;
