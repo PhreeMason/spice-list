@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import { Database } from './database.types';
 
 export type Tables<T extends keyof Database['public']['Tables']> =

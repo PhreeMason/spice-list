@@ -17,6 +17,7 @@ module.exports = {
         "project": "./tsconfig.json"
     },
     "rules": {
+        "no-use-before-define": 0,
         "no-nested-ternary": 0,
         "import/prefer-default-export": 0,
         "class-methods-use-this": 0,
@@ -38,7 +39,6 @@ module.exports = {
                 "tabWidth": 4,
             }
         ],
-        "@typescript-eslint/no-use-before-define": ["error"],
         "import/extensions": ["error", "never"],
         "react/prop-types": 0,
         "no-shadow": 0,

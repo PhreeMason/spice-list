@@ -4,7 +4,7 @@ import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { profile2 } from '@/constants/images';
 
-function Settings({ className }: { className?: string }) {
+function Settings({ className }: { className: string }) {
     return (
         <MaterialCommunityIcons
             name="cog-outline"
@@ -13,11 +13,8 @@ function Settings({ className }: { className?: string }) {
         />
     );
 }
-function Share({ className }: { className?: string }) {
+function Share({ className }: { className: string }) {
     return <EvilIcons className={className} name="share-google" size={24} />;
-}
-function Star({ className }: { className?: string }) {
-    return <FontAwesome name="star" size={24} className={className} />;
 }
 
 function TabItem({

@@ -2,6 +2,7 @@ import { View, Text, Image } from 'react-native';
 import React from 'react';
 import { useGoodReadsBooks } from '@/api/books';
 import RenderStars from '@/components/RenderStars';
+import { v4 as uuidv4 } from 'uuid';
 
 type BookScanPreviewProps = {
     isbn: string;
@@ -44,7 +45,7 @@ function BookScanPreview({ isbn }: BookScanPreviewProps) {
                 <View className="flex flex-row flex-wrap gap-1 mb-1">
                     {book.genres.map((trope, index) => (
                         <Text
-                            key={index}
+                            key={uuidv4()}
                             className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
                         >
                             {trope}

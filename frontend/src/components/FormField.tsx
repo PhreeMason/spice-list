@@ -20,9 +20,9 @@ function FormField({
     title,
     value,
     handleChangeText,
-    placeholder = '',
-    containerStyles = '',
-    keyboardType = 'default',
+    placeholder,
+    containerStyles,
+    keyboardType,
 }: FromFieldProps) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -58,5 +58,11 @@ function FormField({
         </View>
     );
 }
+
+FormField.defaultProps = {
+    placeholder: '',
+    containerStyles: '',
+    keyboardType: 'default',
+};
 
 export default FormField;
