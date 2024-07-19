@@ -50,9 +50,13 @@ function BookDetailsScreen() {
                     />
                 )}
 
-                <Text className="text-2xl font-spice-bold mb-1">{book.title}</Text>
+                <Text className="text-2xl font-spice-bold mb-1">
+                    {book.title}
+                </Text>
                 {book.series_name && (
-                    <Text className="text-sm text-gray-600 mb-2">{book.series_name}</Text>
+                    <Text className="text-sm text-gray-600 mb-2">
+                        {book.series_name}
+                    </Text>
                 )}
                 <Text className="text-lg mb-2">{book.authors}</Text>
 
@@ -79,7 +83,8 @@ function BookDetailsScreen() {
                         className="ml-4"
                     />
                     <Text className="ml-2 text-sm text-gray-600">
-                        Published: {new Date(book.published_date).toLocaleDateString()}
+                        Published:{' '}
+                        {new Date(book.published_date).toLocaleDateString()}
                     </Text>
                 </View>
 
@@ -90,13 +95,20 @@ function BookDetailsScreen() {
                             key={index}
                             className="px-2 py-1 bg-gray-200 rounded-full mr-2 mb-2"
                         >
-                            <Text className="text-xs">{genreObj.genre.name}</Text>
+                            <Text className="text-xs">
+                                {genreObj.genre.name}
+                            </Text>
                         </View>
                     ))}
                 </View>
 
-                <Text className="text-lg font-spice-semibold mb-2">Description</Text>
-                <Text numberOfLines={showFullDescription ? 0 : 3} className="text-lg">
+                <Text className="text-lg font-spice-semibold mb-2">
+                    Description
+                </Text>
+                <Text
+                    numberOfLines={showFullDescription ? 0 : 3}
+                    className="text-lg"
+                >
                     {book.description}
                 </Text>
                 <Text

@@ -25,7 +25,9 @@ function CustomButton({
             activeOpacity={0.7}
             disabled={isLoading}
         >
-            <Text className={`text-primary font-semibold text-lg ${textStyles}`}>
+            <Text
+                className={`text-primary font-semibold text-lg ${textStyles}`}
+            >
                 {title}
             </Text>
         </TouchableOpacity>

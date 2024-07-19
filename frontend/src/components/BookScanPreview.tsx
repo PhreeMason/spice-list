@@ -32,7 +32,9 @@ function BookScanPreview({ isbn }: BookScanPreviewProps) {
                 className="w-20 h-30 object-cover rounded-md mr-4 "
             />
             <View className="flex-1 bg-white">
-                <Text className="text-lg font-spice-semibold">{book.title}</Text>
+                <Text className="text-lg font-spice-semibold">
+                    {book.title}
+                </Text>
                 <Text className="text-sm text-gray-600 mb-1">
                     {book.authors.map(a => a.name).join(', ')}
                 </Text>

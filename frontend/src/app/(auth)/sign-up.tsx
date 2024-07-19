@@ -66,7 +66,9 @@ function SignUp() {
                 <FormField
                     title="Username"
                     value={form.username}
-                    handleChangeText={text => setForm({ ...form, username: text })}
+                    handleChangeText={text =>
+                        setForm({ ...form, username: text })
+                    }
                     containerStyles="mt-10"
                 />
                 <FormField
@@ -80,7 +82,9 @@ function SignUp() {
                 <FormField
                     title="Password"
                     value={form.password}
-                    handleChangeText={text => setForm({ ...form, password: text })}
+                    handleChangeText={text =>
+                        setForm({ ...form, password: text })
+                    }
                     containerStyles="mt-7"
                 />
 

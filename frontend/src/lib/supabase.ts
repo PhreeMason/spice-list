@@ -83,7 +83,9 @@ export const supabase = createClient<Database>(
     supabaseAnonKey || '',
     {
         auth: {
-            ...(Platform.OS !== 'web' ? { storage: new LargeSecureStore() } : {}),
+            ...(Platform.OS !== 'web'
+                ? { storage: new LargeSecureStore() }
+                : {}),
             autoRefreshToken: true,
             persistSession: true,
             detectSessionInUrl: false,

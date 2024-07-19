@@ -9,11 +9,11 @@ type FromFieldProps = {
     handleChangeText: (text: string) => void;
     containerStyles?: string;
     keyboardType?:
-    | 'default'
-    | 'number-pad'
-    | 'numeric'
-    | 'email-address'
-    | 'phone-pad';
+        | 'default'
+        | 'number-pad'
+        | 'numeric'
+        | 'email-address'
+        | 'phone-pad';
 };
 
 function FormField({
@@ -44,7 +44,9 @@ function FormField({
                 />
 
                 {title === 'Password' && (
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <TouchableOpacity
+                        onPress={() => setShowPassword(!showPassword)}
+                    >
                         <Image
                             source={!showPassword ? icons.eye : icons.eyeHide}
                             className="w-6 h-6"

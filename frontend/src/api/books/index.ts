@@ -174,7 +174,9 @@ export const useUploadBookAndGenres = () => {
 
             // 2. Prepare book data for insertion
             const bookData: InsertBook = {
-                authors: goodReadsBook.authors.map(author => author.name).join(', '),
+                authors: goodReadsBook.authors
+                    .map(author => author.name)
+                    .join(', '),
                 description: goodReadsBook.description,
                 google_books_id: null,
                 good_reads_book_id: goodReadsBook.book_id,
@@ -201,16 +203,21 @@ export const useUploadBookAndGenres = () => {
             const genres = goodReadsBook.genres || [];
 
             // 4a. Check existing genres
-            const { data: existingGenres, error: genreCheckError } = await supabase
-                .from('genres')
-                .select('id, name')
-                .in('name', genres);
+            const { data: existingGenres, error: genreCheckError } =
+                await supabase
+                    .from('genres')
+                    .select('id, name')
+                    .in('name', genres);
 
             if (genreCheckError)
-                throw new Error(`Error checking genres: ${genreCheckError.message}`);
+                throw new Error(
+                    `Error checking genres: ${genreCheckError.message}`,
+                );
             // 4b. Determine new genres
             const existingGenreNames = existingGenres.map(g => g.name);
-            const newGenres = genres.filter(g => !existingGenreNames.includes(g));
+            const newGenres = genres.filter(
+                g => !existingGenreNames.includes(g),
+            );
 
             // 4c. Insert new genres
             if (newGenres.length > 0) {
@@ -219,7 +226,9 @@ export const useUploadBookAndGenres = () => {
                     .insert(newGenres.map(name => ({ name })));
 
                 if (insertError)
-                    throw new Error(`Error inserting new genres: ${insertError.message}`);
+                    throw new Error(
+                        `Error inserting new genres: ${insertError.message}`,
+                    );
             }
 
             // 4d. Fetch all genre IDs (including newly inserted ones)
@@ -229,7 +238,9 @@ export const useUploadBookAndGenres = () => {
                 .in('name', genres);
 
             if (allGenresError)
-                throw new Error(`Error fetching all genres: ${allGenresError.message}`);
+                throw new Error(
+                    `Error fetching all genres: ${allGenresError.message}`,
+                );
 
             // 4e. Link book to genres
             const bookGenreLinks = allGenres.map(genre => ({
@@ -246,7 +257,9 @@ export const useUploadBookAndGenres = () => {
                 });
 
             if (linkError)
-                throw new Error(`Error linking book to genres: ${linkError.message}`);
+                throw new Error(
+                    `Error linking book to genres: ${linkError.message}`,
+                );
 
             return book;
         },

@@ -80,7 +80,9 @@ function Profile() {
                         className="w-60 h-60 rounded-full mr-4"
                     />
                     <View>
-                        <Text className="text-3xl font-bold mt-4">{profileData.name}</Text>
+                        <Text className="text-3xl font-bold mt-4">
+                            {profileData.name}
+                        </Text>
                         <Text className="text-gray-500 text-base text-center mt-2">
                             {profileData.username}
                         </Text>
@@ -92,13 +94,17 @@ function Profile() {
                         <Text className="font-bold self-center">
                             {profileData.followers}
                         </Text>
-                        <Text className="text-sm text-gray-500 self-center">Followers</Text>
+                        <Text className="text-sm text-gray-500 self-center">
+                            Followers
+                        </Text>
                     </View>
                     <View className="flex flex-row space-x-1 p-2 bg-slate-100 rounded-md">
                         <Text className="font-bold self-center">
                             {profileData.following}
                         </Text>
-                        <Text className="text-sm text-gray-500 self-center">Following</Text>
+                        <Text className="text-sm text-gray-500 self-center">
+                            Following
+                        </Text>
                     </View>
                     <TouchableOpacity className="text-blue-500 p-2 border-2 border-blue-300 rounded-md">
                         <Text className="text-blue-500">Edit Profile</Text>
@@ -110,9 +116,18 @@ function Profile() {
                         <Text className="font-spice-semibold">Feed</Text>
                     </TouchableOpacity>
                     {/* TODO: Setup stack navigator screen and remove this */}
-                    <TabItem listTitle="Books" countForList={profileData.books} />
-                    <TabItem listTitle="Lists" countForList={profileData.lists} />
-                    <TabItem listTitle="Quotes" countForList={profileData.quotes} />
+                    <TabItem
+                        listTitle="Books"
+                        countForList={profileData.books}
+                    />
+                    <TabItem
+                        listTitle="Lists"
+                        countForList={profileData.lists}
+                    />
+                    <TabItem
+                        listTitle="Quotes"
+                        countForList={profileData.quotes}
+                    />
                 </View>
             </View>
         </View>

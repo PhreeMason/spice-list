@@ -35,7 +35,11 @@ export default function TabLayout() {
                 options={{
                     title: 'Library',
                     tabBarIcon: ({ color }) => (
-                        <Ionicons name="library-outline" size={24} color={color} />
+                        <Ionicons
+                            name="library-outline"
+                            size={24}
+                            color={color}
+                        />
                     ),
                 }}
             />
@@ -69,14 +73,18 @@ export default function TabLayout() {
                 name="scan"
                 options={{
                     title: 'Scan',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+                    tabBarIcon: ({ color }) => (
+                        <TabBarIcon name="search" color={color} />
+                    ),
                 }}
             />
             <Tabs.Screen name="[bookId]" options={{ href: null }} />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+                    tabBarIcon: ({ color }) => (
+                        <TabBarIcon name="user" color={color} />
+                    ),
                 }}
             />
         </Tabs>

@@ -166,7 +166,8 @@ const books: BookVolume[] = [
         selfLink: 'https://www.googleapis.com/books/v1/volumes/S6o-L_lCH7QC',
         volumeInfo: {
             title: 'TYPO3-Extensions entwickeln',
-            subtitle: 'Der Entwicklerleitfaden für Extensions mit der TYPO3-API',
+            subtitle:
+                'Der Entwicklerleitfaden für Extensions mit der TYPO3-API',
             authors: ['Dmitry Dulepov'],
             publisher: 'Pearson Deutschland GmbH',
             publishedDate: '2009',

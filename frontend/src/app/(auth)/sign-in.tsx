@@ -59,7 +59,9 @@ function SignIn() {
                 <FormField
                     title="Password"
                     value={form.password}
-                    handleChangeText={text => setForm({ ...form, password: text })}
+                    handleChangeText={text =>
+                        setForm({ ...form, password: text })
+                    }
                     containerStyles="mt-7"
                 />
 

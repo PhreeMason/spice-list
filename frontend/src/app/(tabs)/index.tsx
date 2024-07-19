@@ -56,18 +56,22 @@ export default function HistoryScreen() {
                             </Text>
                             <View className="flex mb-1">
                                 {item.book.good_reads_rating && (
-                                    <RenderStars rating={item.book.good_reads_rating} />
+                                    <RenderStars
+                                        rating={item.book.good_reads_rating}
+                                    />
                                 )}
                             </View>
                             <View className="flex flex-row flex-wrap gap-1 mb-1">
-                                {item.book.genres.slice(0, 3).map((genre, index) => (
-                                    <Text
-                                        key={JSON.stringify(genre)}
-                                        className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
-                                    >
-                                        {genre.genre.name}
-                                    </Text>
-                                ))}
+                                {item.book.genres
+                                    .slice(0, 3)
+                                    .map((genre, index) => (
+                                        <Text
+                                            key={JSON.stringify(genre)}
+                                            className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
+                                        >
+                                            {genre.genre.name}
+                                        </Text>
+                                    ))}
                             </View>
                             <Text className="text-xs text-gray-500">
                                 {dayjs(item.created_at).fromNow()}
@@ -76,7 +80,9 @@ export default function HistoryScreen() {
                     </TouchableOpacity>
                 </Link>
             )}
-            ItemSeparatorComponent={() => <View className="h-2 w-full border-b" />}
+            ItemSeparatorComponent={() => (
+                <View className="h-2 w-full border-b" />
+            )}
         />
     );
 }
