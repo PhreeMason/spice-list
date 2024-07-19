@@ -54,10 +54,6 @@ export const useInsertScanItems = () => {
                 .upsert({ book_id, user_id })
                 .select();
             // TODO: handle duplicates
-            console.log({
-                error,
-                data
-            });
             if (error) {
                 throw new Error(error.message);
             }

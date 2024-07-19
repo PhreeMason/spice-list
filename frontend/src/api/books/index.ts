@@ -1,13 +1,9 @@
 import { supabase } from '@//lib/supabase';
-import { useAuth } from '@//providers/AuthProvider';
 import {
-    Book,
     BookVolume,
     GoodReadsBookResult,
     GoogleBooksAPIResponse,
     InsertBook,
-    InsertUserScan,
-    UserScan
 } from '@//types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -63,7 +59,7 @@ const searchGoodReadsApi = async (
       body: { isbn }
     })
     if (error) {
-      console.error(error);
+      console.error('searchGoodReadsApi', error);
       return null;
     }
     return data.result;

@@ -36,14 +36,14 @@ export default function ScanScreen() {
 
     const onBarcodeScanned = async ({ data }: { data: string }) => {
         if (!data || data === isbn) return;
-        console.log('isbn', data);
+        console.log('onBarcodeScanned : isbn', data);
         upsertBook(data, {
             onSuccess: (data) => {
                 insertScan(data.id);
-                console.log('success', JSON.stringify(data, null, 2));
+                console.log('onBarcodeScanned : success', JSON.stringify(data, null, 2));
             },
             onError: (error) => {
-                console.log('error', error);
+                console.log('onBarcodeScanned : error', error);
             }
         });
         setIsbn(data);

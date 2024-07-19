@@ -33,3 +33,13 @@ Open a terminal to `client` aka `frontend` and run the following to install depe
 ```bash
 bunx supabase functions new hello-world
 ```
+
+# Tables
+## New ReadingGoals Table:
+      goal_id (Primary Key)
+      user_id (Foreign Key to Users)
+      goal_type (e.g., "pages", "books", "time")
+      goal_value
+      start_date
+      end_date
+      status (e.g., "in progress", "completed", "failed")

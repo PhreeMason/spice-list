@@ -7,21 +7,6 @@ type BookScanPreviewProps = {
     isbn: string;
 };
 
-// const renderSpiceLevel = (level) => {
-//     return (
-//         <View className="flex items-center">
-//             {[...Array(5)].map((_, i) => (
-//                 <FontAwesome
-//                     name="heart"
-//                     size={24}
-//                     key={i}
-//                     className={`w-3 h-3 ${i < level ? 'text-red-500 fill-red-500' : 'text-gray-300'}`}
-//                 />
-//             ))}
-//         </View>
-//     );
-// };
-
 const BookScanPreview = ({ isbn }: BookScanPreviewProps) => {
     const { data: book, isLoading, error } = useGoodReadsBooks(isbn);
 
