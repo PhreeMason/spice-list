@@ -43,7 +43,7 @@ function BookScanPreview({ isbn }: BookScanPreviewProps) {
                     <RenderStars rating={book.averageRating} />
                 </View>
                 <View className="flex flex-row flex-wrap gap-1 mb-1">
-                    {book.genres.map((trope, index) => (
+                    {book.genres.map(trope => (
                         <Text
                             key={uuidv4()}
                             className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"

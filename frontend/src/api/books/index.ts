@@ -101,7 +101,7 @@ export const useBookById = (bookId: number) => {
     return useQuery({
         queryKey: ['books', { bookId }],
         queryFn: async () => {
-            const { error, data, count, status, statusText } = await supabase
+            const { error, data } = await supabase
                 .from('books')
                 .select(
                     `*, genres:book_genres(

@@ -17,7 +17,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
     const { session } = useAuth();
-
+    const headerShown = useClientOnlyValue(false, true);
     if (!session) {
         return <Redirect href="/sign-in" />;
     }
@@ -27,7 +27,7 @@ export default function TabLayout() {
                 tabBarActiveTintColor: 'pink',
                 // Disable the static render of the header on web
                 // to prevent a hydration error in React Navigation v6.
-                headerShown: useClientOnlyValue(false, true),
+                headerShown: headerShown,
             }}
         >
             <Tabs.Screen

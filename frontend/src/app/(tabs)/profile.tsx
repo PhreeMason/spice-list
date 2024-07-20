@@ -1,5 +1,4 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { profile2 } from '@/constants/images';

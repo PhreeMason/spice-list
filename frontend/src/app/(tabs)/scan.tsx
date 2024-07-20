@@ -1,6 +1,6 @@
-import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useState } from 'react';
-import { Button, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
 import { useUploadBookAndGenres } from '@/api/books';
@@ -8,7 +8,6 @@ import { useInsertScanItems } from '@/api/book-scans';
 import { StatusBar } from 'expo-status-bar';
 
 export default function ScanScreen() {
-    const [facing, setFacing] = useState<CameraType>('back');
     const [permission, requestPermission] = useCameraPermissions();
 
     const [isbn, setIsbn] = useState<string>('');
@@ -28,10 +27,6 @@ export default function ScanScreen() {
                 <Button onPress={requestPermission} title="grant permission" />
             </View>
         );
-    }
-
-    function toggleCameraFacing() {
-        setFacing(current => (current === 'back' ? 'front' : 'back'));
     }
 
     const onBarcodeScanned = async ({ data }: { data: string }) => {
@@ -60,7 +55,7 @@ export default function ScanScreen() {
                 }}
                 onBarcodeScanned={onBarcodeScanned}
                 className="flex-1"
-                facing={facing}
+                facing="back"
             >
                 <View className="flex-1 items-center justify-center">
                     {/* Transparent box with white border */}

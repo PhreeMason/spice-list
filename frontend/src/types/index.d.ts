@@ -159,10 +159,10 @@ export type GoodReadsBookResult = {
     numberOfResults: string;
     result: {
         title: string;
-        authors: Array<{
+        authors: {
             name: string;
             webUrl: string;
-        }>;
+        }[];
         description: string;
         publisher: string;
         publishedDate: string;

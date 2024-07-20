@@ -34,4 +34,9 @@ function CustomButton({
     );
 }
 
+CustomButton.defaultProps = {
+    containerStyles: '',
+    textStyles: '',
+    isLoading: false,
+};
 export default CustomButton;
