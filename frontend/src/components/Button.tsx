@@ -12,9 +12,9 @@ type ButtonProps = {
 function CustomButton({
     title,
     handlePress,
-    containerStyles,
-    textStyles,
-    isLoading,
+    containerStyles = '',
+    textStyles = '',
+    isLoading = false,
 }: ButtonProps) {
     return (
         <TouchableOpacity
@@ -34,9 +34,4 @@ function CustomButton({
     );
 }
 
-CustomButton.defaultProps = {
-    containerStyles: '',
-    textStyles: '',
-    isLoading: false,
-};
 export default CustomButton;
