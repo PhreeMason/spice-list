@@ -22,6 +22,9 @@ export type InsertBookTag = TablesInsert<'book_tags'>;
 export type Tag = Tables<'tags'>;
 export type InsertTag = TablesInsert<'tags'>;
 export type Profile = Tables<'profiles'>;
+export type ExclusiveSelf = 'to-read' | 'read' | 'reading' | 'did-not-finish';
+export type UserBook = Tables<'user_books'>;
+export type UserBookWithBook = UserBook & { book: Book };
 
 export type ScanItem = {
     book: BookVolume;

@@ -312,6 +312,38 @@ export type Database = {
                 };
                 Relationships: [];
             };
+            notes: {
+                Row: {
+                    created_at: string;
+                    id: number;
+                    page_number: number | null;
+                    text: string;
+                    user_book_id: number | null;
+                };
+                Insert: {
+                    created_at?: string;
+                    id?: number;
+                    page_number?: number | null;
+                    text: string;
+                    user_book_id?: number | null;
+                };
+                Update: {
+                    created_at?: string;
+                    id?: number;
+                    page_number?: number | null;
+                    text?: string;
+                    user_book_id?: number | null;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'notes_user_book_id_fkey';
+                        columns: ['user_book_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user_books';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             profiles: {
                 Row: {
                     avatar_url: string | null;
@@ -347,6 +379,98 @@ export type Database = {
                     },
                 ];
             };
+            reading_goals: {
+                Row: {
+                    created_at: string;
+                    deadline: string | null;
+                    end_date: string | null;
+                    goal_type: string | null;
+                    id: number;
+                    start_date: string | null;
+                    status: string | null;
+                    user_book_id: number | null;
+                    user_id: string;
+                };
+                Insert: {
+                    created_at?: string;
+                    deadline?: string | null;
+                    end_date?: string | null;
+                    goal_type?: string | null;
+                    id?: number;
+                    start_date?: string | null;
+                    status?: string | null;
+                    user_book_id?: number | null;
+                    user_id: string;
+                };
+                Update: {
+                    created_at?: string;
+                    deadline?: string | null;
+                    end_date?: string | null;
+                    goal_type?: string | null;
+                    id?: number;
+                    start_date?: string | null;
+                    status?: string | null;
+                    user_book_id?: number | null;
+                    user_id?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'reading_goals_user_book_id_fkey';
+                        columns: ['user_book_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user_books';
+                        referencedColumns: ['id'];
+                    },
+                    {
+                        foreignKeyName: 'reading_goals_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'profiles';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
+            reading_sessions: {
+                Row: {
+                    created_at: string;
+                    end_page: number | null;
+                    id: number;
+                    notes: string | null;
+                    pages_read: number | null;
+                    start_page: number | null;
+                    time_spent: number | null;
+                    user_book_id: number;
+                };
+                Insert: {
+                    created_at?: string;
+                    end_page?: number | null;
+                    id?: number;
+                    notes?: string | null;
+                    pages_read?: number | null;
+                    start_page?: number | null;
+                    time_spent?: number | null;
+                    user_book_id: number;
+                };
+                Update: {
+                    created_at?: string;
+                    end_page?: number | null;
+                    id?: number;
+                    notes?: string | null;
+                    pages_read?: number | null;
+                    start_page?: number | null;
+                    time_spent?: number | null;
+                    user_book_id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'reading_sessions_user_book_id_fkey';
+                        columns: ['user_book_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'user_books';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             tags: {
                 Row: {
                     created_at: string;
@@ -369,40 +493,40 @@ export type Database = {
                 Row: {
                     book_id: number;
                     created_at: string;
-                    date_added: string | null;
-                    date_read: string | null;
+                    end_date: string | null;
                     exclusive_shelf: string;
                     id: number;
                     my_rating: number | null;
                     my_review: string | null;
                     owned_copies: number | null;
                     read_count: number | null;
+                    start_date: string | null;
                     user_id: string;
                 };
                 Insert: {
                     book_id: number;
                     created_at?: string;
-                    date_added?: string | null;
-                    date_read?: string | null;
+                    end_date?: string | null;
                     exclusive_shelf?: string;
                     id?: number;
                     my_rating?: number | null;
                     my_review?: string | null;
                     owned_copies?: number | null;
                     read_count?: number | null;
+                    start_date?: string | null;
                     user_id: string;
                 };
                 Update: {
                     book_id?: number;
                     created_at?: string;
-                    date_added?: string | null;
-                    date_read?: string | null;
+                    end_date?: string | null;
                     exclusive_shelf?: string;
                     id?: number;
                     my_rating?: number | null;
                     my_review?: string | null;
                     owned_copies?: number | null;
                     read_count?: number | null;
+                    start_date?: string | null;
                     user_id?: string;
                 };
                 Relationships: [
