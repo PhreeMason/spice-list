@@ -29,7 +29,7 @@ function ExclusiveSelfItem({
                                             '',
                                     }}
                                     resizeMode="contain"
-                                    className="min-w-20 min-h-30 object-cover rounded-md"
+                                    className="min-w-20 min-h-30"
                                 />
                             </View>
                         </TouchableOpacity>
