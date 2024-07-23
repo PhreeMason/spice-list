@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { profile2 } from '@/constants/images';
+import { useAuth } from '@/providers/AuthProvider';
+
 
 function Settings({ className }: { className: string }) {
     return (
@@ -61,6 +63,7 @@ const profileData = {
 };
 
 function Profile() {
+    const { profile } = useAuth();
     return (
         <View className="bg-white min-h-screen font-sans">
             <View className="p-4">
@@ -77,10 +80,14 @@ function Profile() {
                     />
                     <View>
                         <Text className="text-3xl font-bold mt-4">
-                            {profileData.name}
+                            {profile?.full_name || profileData.name}
                         </Text>
                         <Text className="text-gray-500 text-base text-center mt-2">
-                            {profileData.username}
+                            {
+                                profile?.id ||
+                                profile?.username
+                                || profileData.username
+                            }
                         </Text>
                     </View>
                 </View>

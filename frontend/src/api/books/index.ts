@@ -97,7 +97,7 @@ export const useGoodReadsBooks = (isbn: string) => {
     });
 };
 
-export const useBookById = (bookId: number) => {
+export const useGetBookById = (bookId: number) => {
     return useQuery({
         queryKey: ['books', { bookId }],
         queryFn: async () => {

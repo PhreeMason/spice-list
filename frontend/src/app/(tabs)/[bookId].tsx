@@ -2,9 +2,10 @@ import { View, Text, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { Tabs, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { useBookById } from '@/api/books';
+import { useGetBookById } from '@/api/books';
 import RenderStars from '@/components/RenderStars';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import BookPageButtons from '@/components/BookPageButtons';
 
 const formatTitle = (title: string) => {
     // these titles are too long to show in the header
@@ -17,7 +18,7 @@ const formatTitle = (title: string) => {
 function BookDetailsScreen() {
     const { bookId } = useLocalSearchParams();
     const bookIdNumber = Number(bookId);
-    const { data, isLoading, error } = useBookById(bookIdNumber);
+    const { data, isLoading, error } = useGetBookById(bookIdNumber);
 
     const [showFullDescription, setShowFullDescription] = useState(false);
 
@@ -87,6 +88,7 @@ function BookDetailsScreen() {
                         {new Date(book.published_date).toLocaleDateString()}
                     </Text>
                 </View>
+                <BookPageButtons bookId={book.id} />
 
                 <Text className="text-lg font-spice-semibold mb-2">Genres</Text>
                 <View className="flex-row flex-wrap mb-6">
