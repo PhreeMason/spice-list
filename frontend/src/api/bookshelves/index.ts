@@ -36,7 +36,7 @@ export const useAddToExclusiveShelf = () => {
         },
         async onSuccess() {
             await queryClient.invalidateQueries({
-                queryKey: ['user_books', user_id]
+                queryKey: ['user_books', user_id],
             });
         },
     });
@@ -70,7 +70,7 @@ export const useAddToBookShelf = () => {
         },
         async onSuccess() {
             await queryClient.invalidateQueries({
-                queryKey: ['user_books', user_id]
+                queryKey: ['user_books', user_id],
             });
         },
     });

@@ -4,7 +4,6 @@ import { EvilIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { profile2 } from '@/constants/images';
 import { useAuth } from '@/providers/AuthProvider';
 
-
 function Settings({ className }: { className: string }) {
     return (
         <MaterialCommunityIcons
@@ -83,11 +82,9 @@ function Profile() {
                             {profile?.full_name || profileData.name}
                         </Text>
                         <Text className="text-gray-500 text-base text-center mt-2">
-                            {
-                                profile?.id ||
-                                profile?.username
-                                || profileData.username
-                            }
+                            {profile?.id ||
+                                profile?.username ||
+                                profileData.username}
                         </Text>
                     </View>
                 </View>

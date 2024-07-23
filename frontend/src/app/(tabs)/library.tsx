@@ -1,10 +1,8 @@
 import {
     Text,
     View,
-    Image,
     FlatList,
     ActivityIndicator,
-    TouchableOpacity,
 } from 'react-native';
 import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -35,18 +33,24 @@ export default function LibraryScreen() {
         );
     }
 
-    const booksGroupedByShelf = myBooks.reduce((acc: { [key: string]: UserBookWithBook[] }, userBook) => {
-        if (!acc[userBook.exclusive_shelf]) {
-            acc[userBook.exclusive_shelf] = [];
-        }
-        // @ts-ignore
-        acc[userBook.exclusive_shelf].push(userBook);
-        return acc;
-    }, {});
+    const booksGroupedByShelf = myBooks.reduce(
+        (acc: { [key: string]: UserBookWithBook[] }, userBook) => {
+            if (!acc[userBook.exclusive_shelf]) {
+                acc[userBook.exclusive_shelf] = [];
+            }
+            // @ts-ignore
+            acc[userBook.exclusive_shelf].push(userBook);
+            return acc;
+        },
+        {},
+    );
 
-    const shelves = Object.keys(booksGroupedByShelf).map(shelf => ({ shelfName: shelf, userBooks: booksGroupedByShelf[shelf] }))
+    const shelves = Object.keys(booksGroupedByShelf).map(shelf => ({
+        shelfName: shelf,
+        userBooks: booksGroupedByShelf[shelf],
+    }));
     return (
-        <View className='flex-1 flex-col w-full'>
+        <View className="flex-1 flex-col w-full">
             <FlatList
                 data={shelves}
                 renderItem={({ item }) => (
@@ -54,11 +58,9 @@ export default function LibraryScreen() {
                         shelfName={item.shelfName}
                         userBooks={item.userBooks}
                     />
-
                 )}
-                keyExtractor={(item) => item.shelfName}
+                keyExtractor={item => item.shelfName}
             />
         </View>
-
     );
 }
