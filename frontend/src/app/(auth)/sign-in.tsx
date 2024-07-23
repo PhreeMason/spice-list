@@ -6,7 +6,8 @@ import { Link, Stack } from 'expo-router';
 import supabase from '@/lib/supabase';
 import FormField from '@/components/FormField';
 import { logo } from '@/constants/images';
-
+// TODO: check if user has an account
+// TODO: show message if invalid credentials
 function SignIn() {
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);

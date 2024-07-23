@@ -6,7 +6,7 @@ import { logo } from '@/constants/images';
 import FormField from '@/components/FormField';
 import Button from '@/components/Button';
 import supabase from '@/lib/supabase';
-
+// TODO: check if user has an account
 function SignUp() {
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
