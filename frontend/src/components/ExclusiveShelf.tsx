@@ -1,6 +1,13 @@
 import { UserBookWithBook } from '@/types';
 import { Link } from 'expo-router';
-import { View, FlatList, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+
+const shelfNameMap: { [key: string]: string } = {
+    reading: 'Currently reading',
+    'to-read': 'Want to read',
+    read: 'Read',
+    'did-not-finish': 'Did not finish',
+};
 
 function ExclusiveSelfItem({
     userBooks,
@@ -11,31 +18,27 @@ function ExclusiveSelfItem({
 }) {
     console.log('ExclusiveSelfItem : ', userBooks[0].book.good_reads_image_url);
     return (
-        <View className="">
-            <Text className="text-xl text-center font-spice-semibold">
-                {shelfName}
+        <View className="m-4">
+            <Text className="text-xl font-spice-semibold capitalize">
+                {shelfNameMap[shelfName]}
             </Text>
-            <FlatList
-                data={userBooks}
-                horizontal
-                renderItem={({ item }) => (
-                    <Link href={`/(tabs)/${item.book_id}`} asChild>
-                        <TouchableOpacity className="p-2">
-                            <View className="h-60 w-40 border-2 border-black-200 rounded-2xl">
-                                <Image
-                                    source={{
-                                        uri:
-                                            item.book.good_reads_image_url ||
-                                            '',
-                                    }}
-                                    resizeMode="contain"
-                                    className="min-w-20 min-h-30"
-                                />
-                            </View>
+            <View className="flex flex-row flex-wrap justify-start gap-2">
+                {userBooks.map(userBook => (
+                    <Link href={`/books/${userBook.book_id}`} asChild>
+                        <TouchableOpacity className="min-w-[100px] min-h-[100px]">
+                            <Image
+                                source={{
+                                    uri:
+                                        userBook.book.good_reads_image_url ||
+                                        '',
+                                }}
+                                resizeMode="contain"
+                                style={{ width: '100%', height: '100%' }}
+                            />
                         </TouchableOpacity>
                     </Link>
-                )}
-            />
+                ))}
+            </View>
         </View>
     );
 }
