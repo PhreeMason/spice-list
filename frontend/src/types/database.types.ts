@@ -587,7 +587,14 @@ export type Database = {
             [_ in never]: never;
         };
         Functions: {
-            [_ in never]: never;
+            add_book_to_new_shelf: {
+                Args: {
+                    p_book_id: number;
+                    p_shelf_name: string;
+                    p_user_id: string;
+                };
+                Returns: undefined;
+            };
         };
         Enums: {
             [_ in never]: never;
