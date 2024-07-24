@@ -38,7 +38,7 @@ export default function HistoryScreen() {
         <FlatList
             data={scans}
             renderItem={({ item }) => (
-                <Link href={`/(tabs)/${item.book.id}`} asChild>
+                <Link href={`/books/${item.book.id}`} asChild>
                     <TouchableOpacity className="flex flex-row bg-white w-full p-2">
                         <Image
                             source={{

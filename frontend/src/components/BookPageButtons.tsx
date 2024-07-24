@@ -1,10 +1,10 @@
 import { View } from 'react-native';
 import CustomButton from './Button';
 import { useAddToExclusiveShelf, useAddToBookShelf } from '@/api/bookshelves';
+import { router } from 'expo-router';
 
 const BookPageButtons = ({ bookId }: { bookId: number }) => {
     const { mutate: addToExclusiveShelf } = useAddToExclusiveShelf();
-    const { mutate: addToBookShelf } = useAddToBookShelf();
 
     return (
         <View className="flex-row">
@@ -23,7 +23,7 @@ const BookPageButtons = ({ bookId }: { bookId: number }) => {
                 containerStyles="bg-[#0065ff] rounded-l-none rounded-r-lg border-l-2 border-white"
                 title="v"
                 textStyles="text-white px-6"
-                handlePress={() => console.log('+')}
+                handlePress={() => router.push(`/shelves/${bookId}`)}
             />
         </View>
     );
