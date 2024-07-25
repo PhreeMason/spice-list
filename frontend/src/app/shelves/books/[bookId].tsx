@@ -5,10 +5,14 @@ import {
     useGetBookShelvesForBook,
     useRemoveBookFromShelf,
 } from '@/api/bookshelves';
+import Animated, { useSharedValue } from 'react-native-reanimated';
+
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Text, View, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Checkbox } from 'react-native-paper';
+import BottomSheet from '@/components/BottomSheet';
+import CreateShelfComponent from '@/components/CreateNewShelf';
 
 type ShelfListItem = {
     isSelected: boolean;
@@ -31,9 +35,9 @@ export default function ShelvesScreen() {
 
     const shelvesList: ShelfListItem[] = useMemo(() => {
         if (!bookShelves) return [];
-        
+
         return bookShelves.map(shelf => {
-            const selectedBookShelf = bookShelvesForBook?.find(item => item.bookshelfId ===shelf.id)
+            const selectedBookShelf = bookShelvesForBook?.find(item => item.bookshelfId === shelf.id)
             return {
                 ...shelf,
                 bookShelfBookId: selectedBookShelf?.bookShelfBookId,
@@ -64,6 +68,12 @@ export default function ShelvesScreen() {
         </TouchableOpacity>
     );
 
+    const isOpen = useSharedValue(false);
+
+    const toggleSheet = () => {
+        isOpen.value = !isOpen.value;
+    };
+
     if (isLoadingShelves || isLoadingBookShelves) {
         return (
             <View className="flex-1 justify-center items-center">
@@ -75,11 +85,64 @@ export default function ShelvesScreen() {
     return (
         <View className="flex-1 bg-white">
             <Stack.Screen options={{ headerTitle: 'Add to Shelves' }} />
+
+            <TouchableOpacity
+                className="p-4 border-b border-gray-200"
+                onPress={toggleSheet}
+            >
+                <Text className="text-lg">+ New Shelf</Text>
+            </TouchableOpacity>
             <FlashList
                 data={shelvesList}
                 renderItem={renderShelfItem}
                 estimatedItemSize={50}
             />
+            <BottomSheet isOpen={isOpen} toggleSheet={toggleSheet}>
+                <CreateShelfComponent bookId={bookIdNumber} onClose={toggleSheet} />
+            </BottomSheet>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    flex: {
+      flex: 1,
+    },
+    container: {
+      flex: 1,
+      height: 250,
+    },
+    buttonContainer: {
+      marginTop: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      justifyContent: 'space-around',
+    },
+    toggleButton: {
+      backgroundColor: '#b58df1',
+      padding: 12,
+      borderRadius: 48,
+    },
+    toggleButtonText: {
+      color: 'white',
+      padding: '0.5rem',
+    },
+    safeArea: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+    },
+    bottomSheetButton: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      paddingBottom: 2,
+    },
+    bottomSheetButtonText: {
+      fontWeight: 600,
+      textDecorationLine: 'underline',
+    },
+  });
+  

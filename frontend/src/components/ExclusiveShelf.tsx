@@ -16,15 +16,15 @@ function ExclusiveSelfItem({
     userBooks: UserBookWithBook[];
     shelfName: string;
 }) {
-    console.log('ExclusiveSelfItem : ', userBooks[0].book.good_reads_image_url);
+    if (!userBooks || userBooks.length === 0) return null;
     return (
-        <View className="m-4">
+        <>
             <Text className="text-xl font-spice-semibold capitalize">
                 {shelfNameMap[shelfName]}
             </Text>
-            <View className="flex flex-row flex-wrap justify-start gap-2">
+            <View className="flex flex-row flex-wrap justify-start">
                 {userBooks.map(userBook => (
-                    <Link href={`/books/${userBook.book_id}`} asChild>
+                    <Link key={userBook.id} href={`/books/${userBook.book_id}`} asChild>
                         <TouchableOpacity className="min-w-[100px] min-h-[100px]">
                             <Image
                                 source={{
@@ -39,7 +39,7 @@ function ExclusiveSelfItem({
                     </Link>
                 ))}
             </View>
-        </View>
+        </>
     );
 }
 

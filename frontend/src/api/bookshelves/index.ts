@@ -241,6 +241,9 @@ export const useAddBookToNewShelf = () => {
             queryClient.invalidateQueries({
                 queryKey: ['user_books', user_id],
             });
+            queryClient.invalidateQueries({
+                queryKey: ['book_shelves', user_id],
+            });
         },
     });
 };

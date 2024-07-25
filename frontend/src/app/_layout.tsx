@@ -72,7 +72,7 @@ function RootLayoutNav() {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen name="books/[bookId]" />
-                    <Stack.Screen name="shelves/[bookId]" />
+                    <Stack.Screen name="shelves" />
                     <Stack.Screen
                         name="modal"
                         options={{ presentation: 'modal' }}
