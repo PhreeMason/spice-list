@@ -20,11 +20,14 @@ export const useAddToExclusiveShelf = () => {
             if (!user_id) throw new Error('User not found');
             const { error, data } = await supabase
                 .from('user_books')
-                .upsert({
-                    book_id,
-                    user_id,
-                    exclusive_shelf,
-                })
+                .upsert(
+                    {
+                        book_id,
+                        user_id,
+                        exclusive_shelf,
+                    },
+                    { onConflict: 'user_id,book_id', ignoreDuplicates: false },
+                )
                 .select('*')
                 .single();
 
@@ -76,11 +79,11 @@ export const useAddToBookShelf = () => {
     });
 };
 
-export const useGetUserBooks = () => {
+export const useGetUserBooks = (bookId?: number) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
     return useQuery({
-        queryKey: ['user_books', user_id],
+        queryKey: ['user_books', user_id, bookId],
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
             const { data, error } = await supabase
@@ -90,6 +93,10 @@ export const useGetUserBooks = () => {
                 .order('created_at', { ascending: false });
             if (error) {
                 throw new Error(error.message);
+            }
+
+            if (bookId) {
+                return data.filter((book: any) => book.book.id === bookId);
             }
             return data;
         },
@@ -131,7 +138,8 @@ export const useGetBookShelvesForBook = (bookId: number) => {
                     id,
                     bookshelf_id,
                     user_book_id,
-                    user_books!inner(book_id)`)
+                    user_books!inner(book_id, exclusive_shelf)`,
+                )
                 .eq('user_books.book_id', bookId)
                 .eq('user_books.user_id', user_id);
 
@@ -141,7 +149,7 @@ export const useGetBookShelvesForBook = (bookId: number) => {
 
             return data.map(item => ({
                 bookshelfId: item.bookshelf_id,
-                bookShelfBookId: item.id
+                bookShelfBookId: item.id,
             }));
         },
         enabled: !!user_id && !!bookId,
@@ -241,6 +249,9 @@ export const useAddBookToNewShelf = () => {
             queryClient.invalidateQueries({
                 queryKey: ['user_books', user_id],
             });
+            queryClient.invalidateQueries({
+                queryKey: ['book_shelves', user_id],
+            });
         },
     });
 };
@@ -251,17 +262,13 @@ export const useRemoveBookFromShelf = () => {
     const user_id = profile?.id;
 
     return useMutation({
-        async mutationFn({
-            bookShelfBookId,
-        }: {
-            bookShelfBookId: number;
-        }) {
+        async mutationFn({ bookShelfBookId }: { bookShelfBookId: number }) {
             if (!user_id) throw new Error('User not found');
 
             const { data, error } = await supabase
                 .from('bookshelf_books')
                 .delete()
-                .eq('id', bookShelfBookId)
+                .eq('id', bookShelfBookId);
 
             if (error) throw new Error(error.message);
 

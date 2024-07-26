@@ -1,9 +1,4 @@
-import {
-    Text,
-    View,
-    FlatList,
-    ActivityIndicator,
-} from 'react-native';
+import { Text, View, FlatList, ActivityIndicator } from 'react-native';
 import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
@@ -50,7 +45,7 @@ export default function LibraryScreen() {
         userBooks: booksGroupedByShelf[shelf],
     }));
     return (
-        <View className="flex-1 flex-col w-full">
+        <View className="flex-1">
             <FlatList
                 data={shelves}
                 renderItem={({ item }) => (
