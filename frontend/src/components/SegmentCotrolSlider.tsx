@@ -112,4 +112,5 @@ const styles = StyleSheet.create({
     },
 });
 
+SegmentCotrolSlider.displayName = 'SegmentCotrolSlider';
 export default SegmentCotrolSlider;
