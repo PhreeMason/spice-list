@@ -54,16 +54,16 @@ const CreateShelfComponent = ({
                 <Text className="text-red-500 mb-4 text-center">{error}</Text>
             ) : null}
             <View className="flex-row justify-between gap-6">
-       
-                <Text onPress={onClose} className="text-gray-800 font-semibold underline self-center">
+                <Text
+                    onPress={onClose}
+                    className="text-gray-800 font-semibold underline self-center"
+                >
                     Cancel
                 </Text>
- 
+
                 <TouchableOpacity
                     className={`py-1 px-4 rounded-md ${
-                        isCreating
-                            ? 'bg-blue-300'
-                            : 'bg-blue-500'
+                        isCreating ? 'bg-blue-300' : 'bg-blue-500'
                     }`}
                     onPress={handleCreate}
                     disabled={isCreating}

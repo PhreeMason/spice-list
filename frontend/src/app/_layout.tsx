@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { NativeWindStyleSheet } from 'nativewind';
 import AuthProvider from '@/providers/AuthProvider';
 import QueryProvider from '@/providers/QueryProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 NativeWindStyleSheet.setOutput({
     default: 'native',
@@ -62,22 +63,27 @@ function RootLayoutNav() {
     return (
         <AuthProvider>
             <QueryProvider>
-                <Stack>
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="(auth)"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="books/[bookId]" />
-                    <Stack.Screen name="shelves" />
-                    <Stack.Screen
-                        name="modal"
-                        options={{ presentation: 'modal' }}
-                    />
-                </Stack>
+                <GestureHandlerRootView>
+                    <Stack>
+                        <Stack.Screen
+                            name="(tabs)"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="(auth)"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen name="books/[bookId]" />
+                        <Stack.Screen
+                            name="shelves"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="modal"
+                            options={{ presentation: 'modal' }}
+                        />
+                    </Stack>
+                </GestureHandlerRootView>
             </QueryProvider>
         </AuthProvider>
     );

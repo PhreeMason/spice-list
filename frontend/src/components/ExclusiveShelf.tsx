@@ -1,30 +1,28 @@
-import { UserBookWithBook } from '@/types';
+import { ExclusiveSelf, UserBookWithBook } from '@/types';
 import { Link } from 'expo-router';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-
-const shelfNameMap: { [key: string]: string } = {
-    reading: 'Currently reading',
-    'to-read': 'Want to read',
-    read: 'Read',
-    'did-not-finish': 'Did not finish',
-};
+import { ExclusiveSelfNameMap } from '@/constants';
 
 function ExclusiveSelfItem({
     userBooks,
     shelfName,
 }: {
     userBooks: UserBookWithBook[];
-    shelfName: string;
+    shelfName: ExclusiveSelf;
 }) {
     if (!userBooks || userBooks.length === 0) return null;
     return (
         <>
             <Text className="text-xl font-spice-semibold capitalize">
-                {shelfNameMap[shelfName]}
+                {ExclusiveSelfNameMap[shelfName]}
             </Text>
             <View className="flex flex-row flex-wrap justify-start">
                 {userBooks.map(userBook => (
-                    <Link key={userBook.id} href={`/books/${userBook.book_id}`} asChild>
+                    <Link
+                        key={userBook.id}
+                        href={`/books/${userBook.book_id}`}
+                        asChild
+                    >
                         <TouchableOpacity className="min-w-[100px] min-h-[100px]">
                             <Image
                                 source={{

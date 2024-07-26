@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import CustomButton from './Button';
-import { useAddToExclusiveShelf, useAddToBookShelf } from '@/api/bookshelves';
+import { useAddToExclusiveShelf } from '@/api/bookshelves';
 import { router } from 'expo-router';
 
 const BookPageButtons = ({ bookId }: { bookId: number }) => {

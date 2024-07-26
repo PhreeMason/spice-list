@@ -179,3 +179,12 @@ export type GoodReadsBookResult = {
     };
     lastScraped: string;
 };
+
+export type ShelfListItem = {
+    isSelected: boolean;
+    created_at: string;
+    id: number;
+    name: string;
+    user_id: string;
+    bookShelfBookId?: number;
+};
