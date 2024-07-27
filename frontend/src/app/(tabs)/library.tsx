@@ -3,7 +3,7 @@ import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { useGetUserBooks } from '@/api/bookshelves';
-import { UserBookWithBook } from '@/types';
+import { ExclusiveSelf, UserBookWithBook } from '@/types';
 import ExclusiveSelfItem from '@/components/ExclusiveShelf';
 
 dayjs.extend(relativeTime);
@@ -41,7 +41,7 @@ export default function LibraryScreen() {
     );
 
     const shelves = Object.keys(booksGroupedByShelf).map(shelf => ({
-        shelfName: shelf,
+        shelfName: shelf as ExclusiveSelf,
         userBooks: booksGroupedByShelf[shelf],
     }));
     return (
