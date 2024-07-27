@@ -2,6 +2,7 @@ import { ExclusiveSelf, UserBookWithBook } from '@/types';
 import { Link } from 'expo-router';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { ExclusiveSelfNameMap } from '@/constants';
+import { FlashList } from '@shopify/flash-list';
 
 function ExclusiveSelfItem({
     userBooks,
@@ -16,26 +17,31 @@ function ExclusiveSelfItem({
             <Text className="text-xl font-spice-semibold capitalize">
                 {ExclusiveSelfNameMap[shelfName]}
             </Text>
-            <View className="flex flex-row flex-wrap justify-start">
-                {userBooks.map(userBook => (
-                    <Link
-                        key={userBook.id}
-                        href={`/books/${userBook.book_id}`}
-                        asChild
-                    >
-                        <TouchableOpacity className="min-w-[100px] min-h-[100px]">
-                            <Image
-                                source={{
-                                    uri:
-                                        userBook.book.good_reads_image_url ||
-                                        '',
-                                }}
-                                resizeMode="contain"
-                                style={{ width: '100%', height: '100%' }}
-                            />
-                        </TouchableOpacity>
-                    </Link>
-                ))}
+            <View style={{ height: 200, width: '100%' }}>
+                <FlashList
+                    data={userBooks}
+                    renderItem={({ item }) => (
+                        <Link
+                            href={`/books/${item.book_id}`}
+                            asChild
+                        >
+                            <TouchableOpacity>
+                                <Image
+                                    source={{
+                                        uri:
+                                            item.book.good_reads_image_url ||
+                                            '',
+                                    }}
+                                    resizeMode="contain"
+                                    style={{ width: 100, height: 100 }}
+                                />
+                            </TouchableOpacity>
+                        </Link>
+                    )}
+                    numColumns={2}
+                    keyExtractor={(item) => `${item.id}-${item.book_id}`}
+                    estimatedItemSize={100}
+                />
             </View>
         </>
     );
