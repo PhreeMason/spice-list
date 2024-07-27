@@ -6,6 +6,7 @@ import { useGetBookById } from '@/api/books';
 import RenderStars from '@/components/RenderStars';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import BookPageButtons from '@/components/BookPageButtons';
+import ReadingSessionTracker from '@/components/ReadingSessionTracker';
 
 const formatTitle = (title: string) => {
     // these titles are too long to show in the header
@@ -85,7 +86,7 @@ function BookDetailsScreen() {
                     />
                     <Text className="ml-2 text-sm text-gray-600">
                         Published:{' '}
-                        {new Date(book.published_date).toLocaleDateString()}
+                        {book.published_date && new Date(book.published_date).toLocaleDateString()}
                     </Text>
                 </View>
                 <BookPageButtons bookId={book.id} />
@@ -103,6 +104,8 @@ function BookDetailsScreen() {
                         </View>
                     ))}
                 </View>
+                
+                {data.user_books?.length && <ReadingSessionTracker userBookId={data.user_books[0].id} />}
 
                 <Text className="text-lg font-spice-semibold mb-2">
                     Description

@@ -106,7 +106,8 @@ export const useGetBookById = (bookId: number) => {
                 .select(
                     `*, genres:book_genres(
                             genre:genre_id(name)
-                        )`,
+                        ), 
+                        user_books(id)`,
                 )
                 .eq('id', bookId)
                 .single();
