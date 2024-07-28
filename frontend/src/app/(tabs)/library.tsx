@@ -1,7 +1,6 @@
 import {
     Text,
     View,
-    FlatList,
     ActivityIndicator,
     Image,
     TouchableOpacity,
@@ -9,8 +8,7 @@ import {
 import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
-import { useGetUserBooks, useGetBookShelves } from '@/api/bookshelves';
-import { ExclusiveSelf, UserBookWithBook } from '@/types';
+import { useGetBookShelves } from '@/api/bookshelves';
 import { useGetCurrentlyReadingBooks } from '@/api/books';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -30,9 +28,12 @@ function chunkArray<T>(array: T[], size: number): T[][] {
     return chunkedArray;
 }
 export default function LibraryScreen() {
-    const { data: myBooks, isLoading, error } = useGetUserBooks();
-    const { data: bookshelves } = useGetBookShelves(6);
-    const { data: currentlyReadingBooks } = useGetCurrentlyReadingBooks();
+    const { data: bookshelves, isLoading, error } = useGetBookShelves(6);
+    const {
+        data: currentlyReadingBooks,
+        isLoading: isLoadingCurrentlyReading,
+        error: errorCurrentlyReading,
+    } = useGetCurrentlyReadingBooks();
 
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
@@ -53,32 +54,6 @@ export default function LibraryScreen() {
     if (error) {
         return <Text>{error.message}</Text>;
     }
-
-    if (!myBooks || myBooks.length === 0) {
-        return (
-            <View>
-                <Text>No myBooks found</Text>
-                <Link href="/scan">Scan a your first book</Link>
-            </View>
-        );
-    }
-
-    const booksGroupedByShelf = myBooks.reduce(
-        (acc: { [key: string]: UserBookWithBook[] }, userBook) => {
-            if (!acc[userBook.exclusive_shelf]) {
-                acc[userBook.exclusive_shelf] = [];
-            }
-            // @ts-ignore
-            acc[userBook.exclusive_shelf].push(userBook);
-            return acc;
-        },
-        {},
-    );
-
-    const shelves = Object.keys(booksGroupedByShelf).map(shelf => ({
-        shelfName: shelf as ExclusiveSelf,
-        userBooks: booksGroupedByShelf[shelf],
-    }));
 
     return (
         <LinearGradient colors={['#040306', '#131624']} style={{ flex: 1 }}>
@@ -183,20 +158,6 @@ export default function LibraryScreen() {
                     estimatedItemSize={6}
                     keyExtractor={item => item.name}
                 />
-                {/* <View>
-
-                    <FlashList
-                        data={shelves}
-                        renderItem={({ item }) => (
-                            <ExclusiveSelfItem
-                                shelfName={item.shelfName}
-                                userBooks={item.userBooks}
-                            />
-                        )}
-                        keyExtractor={item => item.shelfName}
-                        showsVerticalScrollIndicator={false}
-                    />
-                </View> */}
             </ScrollView>
         </LinearGradient>
     );

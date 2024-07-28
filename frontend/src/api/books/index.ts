@@ -5,7 +5,7 @@ import {
     GoodReadsBookResult,
     GoogleBooksAPIResponse,
     InsertBook,
-    CurrentReadsQuery
+    CurrentReadsQuery,
 } from '@/types';
 import { CurrentlyReadingBook } from '@/types';
 import { useAuth } from '@/providers/AuthProvider';
