@@ -18,15 +18,7 @@ import { FlashList } from '@shopify/flash-list';
 import BookCoverCard from '@/components/BookCoverCard';
 
 dayjs.extend(relativeTime);
-function chunkArray<T>(array: T[], size: number): T[][] {
-    const chunkedArray = [];
-    let index = 0;
-    while (index < array.length) {
-        chunkedArray.push(array.slice(index, index + size));
-        index += size;
-    }
-    return chunkedArray;
-}
+
 export default function LibraryScreen() {
     const { data: bookshelves, isLoading, error } = useGetBookShelves(6);
     const {
