@@ -1,29 +1,47 @@
-import { Text, View, FlatList, ActivityIndicator, Image, Pressable, TouchableOpacity } from 'react-native';
+import {
+    Text,
+    View,
+    FlatList,
+    ActivityIndicator,
+    Image,
+    TouchableOpacity,
+} from 'react-native';
 import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
-import { useGetUserBooks } from '@/api/bookshelves';
+import { useGetUserBooks, useGetBookShelves } from '@/api/bookshelves';
 import { ExclusiveSelf, UserBookWithBook } from '@/types';
-import ExclusiveSelfItem from '@/components/ExclusiveShelf';
+import { useGetCurrentlyReadingBooks } from '@/api/books';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ImageTextBar from '@/components/ImageTextBar';
 import { FlashList } from '@shopify/flash-list';
 import BookCoverCard from '@/components/BookCoverCard';
-dayjs.extend(relativeTime);
 
+dayjs.extend(relativeTime);
+function chunkArray<T>(array: T[], size: number): T[][] {
+    const chunkedArray = [];
+    let index = 0;
+    while (index < array.length) {
+        chunkedArray.push(array.slice(index, index + size));
+        index += size;
+    }
+    return chunkedArray;
+}
 export default function LibraryScreen() {
     const { data: myBooks, isLoading, error } = useGetUserBooks();
+    const { data: bookshelves } = useGetBookShelves(6);
+    const { data: currentlyReadingBooks } = useGetCurrentlyReadingBooks();
 
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
-            return "Good Morning";
+            return 'Good Morning';
         } else if (currentTime < 16) {
-            return "Good Afternoon";
+            return 'Good Afternoon';
         } else {
-            return "Good Evening";
+            return 'Good Evening';
         }
     };
     const message = greetingMessage();
@@ -61,19 +79,22 @@ export default function LibraryScreen() {
         shelfName: shelf as ExclusiveSelf,
         userBooks: booksGroupedByShelf[shelf],
     }));
+
     return (
-        <LinearGradient colors={["#040306", "#131624"]} style={{ flex: 1 }}>
-            <ScrollView>
+        <LinearGradient colors={['#040306', '#131624']} style={{ flex: 1 }}>
+            <ScrollView style={{ marginTop: 50 }}>
                 {/* Header */}
                 <View
                     style={{
                         padding: 10,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                     }}
                 >
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
                         <Image
                             style={{
                                 width: 40,
@@ -81,14 +102,14 @@ export default function LibraryScreen() {
                                 borderRadius: 20,
                             }}
                             resizeMode="cover"
-                            source={{ uri: "https://i.pravatar.cc/100" }}
+                            source={{ uri: 'https://i.pravatar.cc/100' }}
                         />
                         <Text
                             style={{
                                 marginLeft: 10,
                                 fontSize: 20,
-                                fontWeight: "bold",
-                                color: "white",
+                                fontWeight: 'bold',
+                                color: 'white',
                             }}
                         >
                             {message}
@@ -101,50 +122,68 @@ export default function LibraryScreen() {
                         color="white"
                     />
                 </View>
-                {/* First Row */}
-                <View
+                {/* current reads */}
+                <Text
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        color: 'white',
+                        fontSize: 19,
+                        fontWeight: 'bold',
+                        marginHorizontal: 10,
+                        marginTop: 10,
                     }}
                 >
-                    <Pressable
-                        style={{
-                            marginBottom: 10,
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                            flex: 1,
-                            marginHorizontal: 10,
-                            marginVertical: 8,
-                            backgroundColor: "#202020",
-                            borderRadius: 4,
-                            elevation: 3,
-                        }}
-                    >
-                        <LinearGradient colors={["#33006F", "#FFFFFF"]}>
-                            <Pressable
-                                style={{
-                                    width: 55,
-                                    height: 55,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <AntDesign name="heart" size={24} color="white" />
-                            </Pressable>
-                        </LinearGradient>
-
-                        <Text style={{ color: "white", fontSize: 13, fontWeight: "bold" }}>
-                            Want to Read
-                        </Text>
-                    </Pressable>
-
-                    <ImageTextBar imageUri="https://i.pravatar.cc/100" text="Hiphop Tamhiza" />
-
-                </View>
-                <View>
+                    Currently Reading
+                </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {currentlyReadingBooks?.map(book => (
+                        <Link
+                            key={`${book.bookId}-${book.title}`}
+                            href={`/books/${book.bookId}`}
+                            className="m-2"
+                        >
+                            <BookCoverCard
+                                title={book.title}
+                                imageUrl={book.coverUrl || ''}
+                                bookPages={book.pages || 0}
+                                authors={book.authors}
+                                currentPage={book.currentPage || 0}
+                            />
+                        </Link>
+                    ))}
+                </ScrollView>
+                <Text
+                    style={{
+                        color: 'white',
+                        fontSize: 19,
+                        fontWeight: 'bold',
+                        marginHorizontal: 10,
+                        marginTop: 10,
+                    }}
+                >
+                    Recent Shelves
+                </Text>
+                {/* First Row */}
+                <FlashList
+                    data={bookshelves}
+                    renderItem={({ item }) => (
+                        <Link
+                            href={`/shelves/shelf/${item.id}`}
+                            asChild
+                            className="w-full"
+                        >
+                            <TouchableOpacity>
+                                <ImageTextBar
+                                    imageUri="https://i.pravatar.cc/100"
+                                    text={item.name}
+                                />
+                            </TouchableOpacity>
+                        </Link>
+                    )}
+                    numColumns={2}
+                    estimatedItemSize={6}
+                    keyExtractor={item => item.name}
+                />
+                {/* <View>
 
                     <FlashList
                         data={shelves}
@@ -157,28 +196,7 @@ export default function LibraryScreen() {
                         keyExtractor={item => item.shelfName}
                         showsVerticalScrollIndicator={false}
                     />
-                </View>
-
-                <Text
-                    style={{
-                        color: "white",
-                        fontSize: 19,
-                        fontWeight: "bold",
-                        marginHorizontal: 10,
-                        marginTop: 10,
-                    }}
-                >
-                    Currently Reading
-                </Text>
-                <ScrollView
-                    horizontal showsHorizontalScrollIndicator={false}>
-                    {shelves[0].userBooks.map((userBook) => (
-                        <BookCoverCard
-                            title={userBook.book.title}
-                            imageUrl={userBook.book.good_reads_image_url || ''}
-                        />
-                    ))}
-                </ScrollView>
+                </View> */}
             </ScrollView>
         </LinearGradient>
     );

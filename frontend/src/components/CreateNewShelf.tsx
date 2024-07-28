@@ -25,9 +25,9 @@ const CreateShelfComponent = ({
             { bookId, shelfName },
             {
                 onSuccess: () => {
-                    console.log('Book added to new shelf successfully');
                     setIsCreating(false);
                     setError('');
+                    setShelfName('');
                     onClose();
                 },
                 onError: error => {

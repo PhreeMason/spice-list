@@ -1,24 +1,26 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
+import { View, Text, Image } from 'react-native';
+import React from 'react';
 
-const ImageTextBar = (
-    { imageUri, text }:
-        { imageUri: string, text: string }
-) => {
+const ImageTextBar = ({
+    imageUri,
+    text,
+}: {
+    imageUri: string;
+    text: string;
+}) => {
     return (
         <View
             style={{
                 marginBottom: 10,
-                flexDirection: "row",
-                alignItems: "center",
+                flexDirection: 'row',
+                alignItems: 'center',
                 gap: 10,
                 flex: 1,
                 marginHorizontal: 10,
                 marginVertical: 8,
-                backgroundColor: "#202020",
+                backgroundColor: '#202020',
                 borderRadius: 4,
                 elevation: 3,
-                width: "100%",
             }}
         >
             <Image
@@ -27,9 +29,9 @@ const ImageTextBar = (
             />
             <Text
                 style={{
-                    color: "white",
+                    color: 'white',
                     fontSize: 13,
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                     paddingRight: 10,
                 }}
                 numberOfLines={1}
@@ -37,7 +39,7 @@ const ImageTextBar = (
                 {text}
             </Text>
         </View>
-    )
-}
+    );
+};
 
-export default ImageTextBar
+export default ImageTextBar;

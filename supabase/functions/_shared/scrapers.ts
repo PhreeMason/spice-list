@@ -23,7 +23,7 @@ export function isbnScraper($: cheerio.CheerioAPI) {
     .map((key: string) => {
       const author = apolloState[key];
       return {
-        name: author.name,
+        name: author.name?.replace(/\s+/g, ' '),
         webUrl: author.webUrl
       };
     })
@@ -74,7 +74,7 @@ export function bookPathScraper(
           const id = i + 1;
           return {
               id: id,
-              name: name,
+              name: name?.replace(/\s+/g, ' '),
               url: url
           };
       })
@@ -111,7 +111,7 @@ export function bookPathScraper(
               id: id,
               src: src,
               title: title,
-              author: author,
+              author: author?.replace(/\s+/g, ' '),
               url: url
           };
       })

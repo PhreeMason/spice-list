@@ -6,28 +6,27 @@ import { useAuth } from '@/providers/AuthProvider';
 export const useGetPreviousReadingSession = (user_book_id: number) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
-  
+
     return useQuery({
-      queryKey: ['previous_reading_session', user_book_id],
-      queryFn: async () => {
-        if (!user_id) throw new Error('User not found');
-  
-        const { data, error } = await supabase
-          .from('reading_sessions')
-          .select('*')
-          .eq('user_book_id', user_book_id)
-          .order('created_at', { ascending: false })
-          .limit(1);
-  
-        if (error) throw new Error(error.message);
-  
-        // Return null if no previous session exists
-        return data.length > 0 ? data[0] : null;
-      },
-      enabled: !!user_id && !!user_book_id,
+        queryKey: ['previous_reading_session', user_book_id],
+        queryFn: async () => {
+            if (!user_id) throw new Error('User not found');
+
+            const { data, error } = await supabase
+                .from('reading_sessions')
+                .select('*')
+                .eq('user_book_id', user_book_id)
+                .order('created_at', { ascending: false })
+                .limit(1);
+
+            if (error) throw new Error(error.message);
+
+            // Return null if no previous session exists
+            return data.length > 0 ? data[0] : null;
+        },
+        enabled: !!user_id && !!user_book_id,
     });
-  };
-  
+};
 
 // Insert or Update Reading Session
 export const useUpsertReadingSession = () => {
@@ -83,10 +82,19 @@ export const useUpsertReadingSession = () => {
             return data;
         },
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['reading_sessions', variables.user_book_id] });
-            queryClient.invalidateQueries({ queryKey: ['previous_reading_session', variables.user_book_id] });
+            queryClient.invalidateQueries({
+                queryKey: ['reading_sessions', variables.user_book_id],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['previous_reading_session', variables.user_book_id],
+            });
             // Trigger reading goals update
-            queryClient.invalidateQueries({ queryKey: ['reading_goals', user_id] });
+            queryClient.invalidateQueries({
+                queryKey: ['reading_goals', user_id],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['user_books', user_id],
+            });
         },
     });
 };
@@ -131,7 +139,9 @@ export const useCreateReadingGoal = () => {
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reading_goals', user_id] });
+            queryClient.invalidateQueries({
+                queryKey: ['reading_goals', user_id],
+            });
         },
     });
 };
@@ -187,7 +197,9 @@ export const useUpdateReadingGoalStatus = () => {
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reading_goals', user_id] });
+            queryClient.invalidateQueries({
+                queryKey: ['reading_goals', user_id],
+            });
         },
     });
 };
@@ -216,8 +228,9 @@ export const useCheckAndUpdateLateStatus = () => {
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reading_goals', user_id] });
+            queryClient.invalidateQueries({
+                queryKey: ['reading_goals', user_id],
+            });
         },
     });
 };
-

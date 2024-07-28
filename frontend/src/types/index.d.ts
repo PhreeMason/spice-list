@@ -26,6 +26,32 @@ export type ExclusiveSelf = 'to-read' | 'read' | 'reading' | 'did-not-finish';
 export type UserBook = Tables<'user_books'>;
 export type UserBookWithBook = UserBook & { book: Book };
 
+export type CurrentlyReadingBook = {
+    coverUrl: string;
+    title: string;
+    authors: string;
+    pages: number;
+    currentPage?: number | null;
+    deadline?: string | null;
+    bookId: number;
+};
+
+export type CurrentReadsQuery = {
+    id: number;
+    book: {
+        id: number;
+        title: string;
+        authors: string;
+        good_reads_image_url: string;
+        num_pages: number;
+    };
+    exclusive_shelf: string;
+    end_date: string | null;
+    reading_sessions: {
+        end_page: number | null;
+    }[];
+}[];
+
 export type ScanItem = {
     book: BookVolume;
     id: string;

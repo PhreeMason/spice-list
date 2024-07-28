@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { useGetPreviousReadingSession, useUpsertReadingSession } from '@/api/reading-log';
+import {
+    useGetPreviousReadingSession,
+    useUpsertReadingSession,
+} from '@/api/reading-log';
 
-const ReadingSessionTracker = (
-    { userBookId }:
-        { userBookId: number }
-) => {
+const ReadingSessionTracker = ({ userBookId }: { userBookId: number }) => {
     const [startPage, setStartPage] = useState('');
     const [endPage, setEndPage] = useState('');
     const [timeSpent, setTimeSpent] = useState('');
     const [notes, setNotes] = useState('');
 
-    const { data: previousSession, isLoading, error } = useGetPreviousReadingSession(userBookId);
+    const {
+        data: previousSession,
+        isLoading,
+        error,
+    } = useGetPreviousReadingSession(userBookId);
     const upsertReadingSession = useUpsertReadingSession();
 
     useEffect(() => {
@@ -42,7 +46,9 @@ const ReadingSessionTracker = (
                     <Text>Previous Session:</Text>
                     <Text>Start Page: {previousSession.start_page}</Text>
                     <Text>End Page: {previousSession.end_page}</Text>
-                    <Text>Time Spent: {previousSession.time_spent} minutes</Text>
+                    <Text>
+                        Time Spent: {previousSession.time_spent} minutes
+                    </Text>
                 </View>
             ) : (
                 <Text>No previous reading session found. Start a new one!</Text>

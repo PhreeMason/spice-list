@@ -5,7 +5,10 @@ import {
     GoodReadsBookResult,
     GoogleBooksAPIResponse,
     InsertBook,
+    CurrentReadsQuery
 } from '@/types';
+import { CurrentlyReadingBook } from '@/types';
+import { useAuth } from '@/providers/AuthProvider';
 
 const getBookDetailsFromGoogleBooks = (googleBook: BookVolume): InsertBook => {
     return {
@@ -117,6 +120,62 @@ export const useGetBookById = (bookId: number) => {
             }
 
             return data;
+        },
+    });
+};
+
+export const useGetCurrentlyReadingBooks = () => {
+    const { profile } = useAuth();
+    const user_id = profile?.id;
+    return useQuery({
+        queryKey: ['user_books', user_id, 'currently_reading'],
+        queryFn: async () => {
+            if (!user_id) throw new Error('User not found');
+            const { data, error } = await supabase
+                .from('user_books')
+                .select(
+                    `
+                    id,
+                    book:book_id(
+                        id,
+                        title,
+                        authors,
+                        good_reads_image_url,
+                        num_pages
+                    ),
+                    exclusive_shelf,
+                    end_date,
+                    reading_sessions(
+                        end_page
+                    )
+                `,
+                )
+                .eq('user_id', user_id)
+                .eq('exclusive_shelf', 'reading')
+                .order('created_at', { ascending: false })
+                .returns<CurrentReadsQuery>();
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            if (!data) {
+                return [];
+            }
+            return data.map((item): CurrentlyReadingBook => {
+                const lastReadingSession = item.reading_sessions[0]
+                    ? item.reading_sessions[item.reading_sessions.length - 1]
+                    : null;
+                return {
+                    coverUrl: item.book.good_reads_image_url,
+                    title: item.book.title,
+                    authors: item.book.authors,
+                    pages: item.book.num_pages,
+                    currentPage: lastReadingSession?.end_page,
+                    deadline: item.end_date,
+                    bookId: item.book.id,
+                };
+            });
         },
     });
 };

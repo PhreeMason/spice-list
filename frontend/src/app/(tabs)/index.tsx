@@ -33,7 +33,7 @@ export default function HistoryScreen() {
             </View>
         );
     }
-
+    // print authors and remove extra spaces
     return (
         <FlatList
             data={scans}
@@ -48,11 +48,19 @@ export default function HistoryScreen() {
                             className="w-20 h-30 object-cover rounded-md mr-4 "
                         />
                         <View className="flex-1 bg-white">
-                            <Text className="text-lg font-spice-semibold">
+                            <Text
+                                className="text-lg font-spice-semibold"
+                                numberOfLines={1}
+                            >
                                 {item.book.title}
                             </Text>
-                            <Text className="text-sm text-gray-600 mb-1">
-                                {item.book.authors.split(',')}
+                            <Text
+                                className="text-sm text-gray-600 mb-1"
+                                numberOfLines={1}
+                            >
+                                {item.book.authors
+                                    .replace(/\s+/g, ' ')
+                                    .split(',')}
                             </Text>
                             <View className="flex mb-1">
                                 {item.book.good_reads_rating && (

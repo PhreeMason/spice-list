@@ -1,6 +1,6 @@
 import { ExclusiveSelf, UserBookWithBook } from '@/types';
 import { Link } from 'expo-router';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { ExclusiveSelfNameMap } from '@/constants';
 import { FlashList } from '@shopify/flash-list';
 import ImageTextBar from './ImageTextBar';
@@ -16,9 +16,9 @@ function ExclusiveSelfItem({
         <>
             <Text
                 style={{
-                    color: "white",
+                    color: 'white',
                     fontSize: 19,
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                     marginHorizontal: 10,
                     marginTop: 10,
                 }}
@@ -36,14 +36,16 @@ function ExclusiveSelfItem({
                         >
                             <TouchableOpacity>
                                 <ImageTextBar
-                                    imageUri={item.book.good_reads_image_url || ''}
+                                    imageUri={
+                                        item.book.good_reads_image_url || ''
+                                    }
                                     text={item.book.title}
                                 />
                             </TouchableOpacity>
                         </Link>
                     )}
                     numColumns={2}
-                    keyExtractor={(item) => `${item.id}-${item.book_id}`}
+                    keyExtractor={item => `${item.id}-${item.book_id}`}
                     estimatedItemSize={10}
                 />
             </View>

@@ -30,8 +30,6 @@ export const useAddToExclusiveShelf = () => {
                 )
                 .select('*')
                 .single();
-
-            console.log({ data, error });
             if (error) {
                 throw new Error(error.message);
             }
@@ -103,18 +101,25 @@ export const useGetUserBooks = (bookId?: number) => {
     });
 };
 
-export const useGetBookShelves = () => {
+export const useGetBookShelves = (limit?: number) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
     return useQuery({
-        queryKey: ['bookshelves', user_id],
+        queryKey: ['bookshelves', user_id, limit],
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
-            const { data, error } = await supabase
+            let query = supabase
                 .from('bookshelves')
                 .select('*')
                 .eq('user_id', user_id)
                 .order('created_at', { ascending: false });
+
+            if (limit) {
+                query = query.limit(limit);
+            }
+
+            const { data, error } = await query;
+
             if (error) {
                 throw new Error(error.message);
             }
