@@ -86,6 +86,7 @@ function SignUp() {
                         setForm({ ...form, password: text })
                     }
                     containerStyles="mt-7"
+                    onSubmit={onSubmit}
                 />
 
                 <Button

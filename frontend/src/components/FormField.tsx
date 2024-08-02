@@ -14,6 +14,7 @@ type FromFieldProps = {
         | 'numeric'
         | 'email-address'
         | 'phone-pad';
+    onSubmit?: () => void;
 };
 
 function FormField({
@@ -23,6 +24,7 @@ function FormField({
     placeholder = '',
     containerStyles = '',
     keyboardType = 'default',
+    onSubmit = () => {},
 }: FromFieldProps) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -41,6 +43,12 @@ function FormField({
                     onChangeText={handleChangeText}
                     secureTextEntry={title === 'Password' && !showPassword}
                     keyboardType={keyboardType}
+                    onKeyPress={e => {
+                        if (e.nativeEvent.key === 'Enter') {
+                            e.preventDefault();
+                            onSubmit();
+                        }
+                    }}
                 />
 
                 {title === 'Password' && (

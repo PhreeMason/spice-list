@@ -72,14 +72,17 @@ const EXPO_PUBLIC_SUPABASE_ANON_DEV = process.env.EXPO_PUBLIC_SUPABASE_ANON_DEV;
 const EXPO_PUBLIC_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const EXPO_PUBLIC_SUPABASE_ANON = process.env.EXPO_PUBLIC_SUPABASE_ANON;
 
-const supabaseUrl =
-    NODE_ENV === 'development'
-        ? EXPO_PUBLIC_SUPABASE_URL_DEV
-        : EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey =
-    NODE_ENV === 'development'
-        ? EXPO_PUBLIC_SUPABASE_ANON_DEV
-        : EXPO_PUBLIC_SUPABASE_ANON;
+// const supabaseUrl =
+//     NODE_ENV === 'development'
+//         ? EXPO_PUBLIC_SUPABASE_URL_DEV
+//         : EXPO_PUBLIC_SUPABASE_URL;
+// const supabaseAnonKey =
+//     NODE_ENV === 'development'
+//         ? EXPO_PUBLIC_SUPABASE_ANON_DEV
+//         : EXPO_PUBLIC_SUPABASE_ANON;
+
+const supabaseUrl = EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = EXPO_PUBLIC_SUPABASE_ANON;
 
 const supabase = createClient<Database>(
     supabaseUrl || '',

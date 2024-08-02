@@ -14,12 +14,14 @@ type AuthData = {
     session: Session | null;
     loading: boolean;
     profile: Profile | null;
+    signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthData>({
     loading: false,
     session: null,
     profile: null,
+    signOut: async () => {},
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -56,6 +58,16 @@ export default function AuthProvider({ children }: PropsWithChildren) {
             session,
             loading,
             profile,
+            signOut: async () => {
+                try {
+                    await supabase.auth.signOut();
+                    setSession(null);
+                    setProfile(null);
+                } catch (error) {
+                    console.log('error signing out', error);
+                }
+        
+            }
         }),
         [loading, profile, session],
     );

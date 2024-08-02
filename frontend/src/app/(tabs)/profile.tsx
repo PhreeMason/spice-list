@@ -62,7 +62,7 @@ const profileData = {
 };
 
 function Profile() {
-    const { profile } = useAuth();
+    const { profile, signOut } = useAuth();
     return (
         <View className="bg-white min-h-screen font-sans">
             <View className="p-4">
@@ -108,6 +108,9 @@ function Profile() {
                     </View>
                     <TouchableOpacity className="text-blue-500 p-2 border-2 border-blue-300 rounded-md">
                         <Text className="text-blue-500">Edit Profile</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className="text-red-500 p-2 border-2 border-red-300 rounded-md" onPress={signOut}>
+                        <Text>Log Out</Text>
                     </TouchableOpacity>
                 </View>
 
