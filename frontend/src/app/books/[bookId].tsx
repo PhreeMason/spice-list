@@ -108,7 +108,7 @@ function BookDetailsScreen() {
 
                 {data.user_books?.length ? (
                     <ReadingSessionTracker userBookId={data.user_books[0].id} />
-                ): null}
+                ) : null}
 
                 <Text className="text-lg font-spice-semibold mb-2">
                     Description

@@ -4,15 +4,14 @@ import { Button, Text, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
 import { useUploadBookAndGenres } from '@/api/books';
-import { useInsertScanItems } from '@/api/book-scans';
 import { StatusBar } from 'expo-status-bar';
 
 export default function ScanScreen() {
     const [permission, requestPermission] = useCameraPermissions();
 
     const [isbn, setIsbn] = useState<string>('');
+    const [currentBook, setCurrentBook] = useState<any>(null);
     const { mutate: upsertBook } = useUploadBookAndGenres();
-    const { mutate: insertScan } = useInsertScanItems();
 
     if (!permission) {
         return <View />;
@@ -32,8 +31,8 @@ export default function ScanScreen() {
     const onBarcodeScanned = async ({ data }: { data: string }) => {
         if (!data || data === isbn) return;
         upsertBook(data, {
-            onSuccess: data => {
-                insertScan(data.id);
+            onSuccess: book => {
+                setCurrentBook(book);
             },
             onError: error => {
                 console.log('onBarcodeScanned : error', error);
@@ -59,7 +58,9 @@ export default function ScanScreen() {
 
                 {/* Container for BookScanPreview at the bottom */}
                 <View className="absolute bottom-0 left-0 right-0">
-                    {isbn && <BookScanPreview isbn={isbn} />}
+                    {currentBook && (
+                        <BookScanPreview currentBook={currentBook} />
+                    )}
                 </View>
             </CameraView>
             <StatusBar style="light" />

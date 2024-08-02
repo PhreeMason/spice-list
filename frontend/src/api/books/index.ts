@@ -22,27 +22,6 @@ const getBookDetailsFromGoogleBooks = (googleBook: BookVolume): InsertBook => {
     };
 };
 
-const getBookDetailsFromGoodReads = (
-    goodReadsBook: GoodReadsBookResult['result'],
-): InsertBook => {
-    return {
-        authors: goodReadsBook.authors.join(', '),
-        description: goodReadsBook.description || '',
-        good_reads_book_id: goodReadsBook.book_id,
-        good_reads_description: goodReadsBook.description,
-        good_reads_image_url: goodReadsBook.imageUrl,
-        good_reads_rating_count: goodReadsBook.ratingsCount,
-        good_reads_rating: goodReadsBook.averageRating,
-        google_books_id: null,
-        google_details_link: goodReadsBook.book_id,
-        isbn: goodReadsBook.isbn,
-        num_pages: goodReadsBook.numPages,
-        published_date: goodReadsBook.publishedDate,
-        publisher: goodReadsBook.publisher || '',
-        title: goodReadsBook.title,
-    };
-};
-
 const searchGoogleBooksApi = async (
     isbn: string,
 ): Promise<BookVolume | null> => {
@@ -55,7 +34,7 @@ const searchGoogleBooksApi = async (
     return book;
 };
 
-const searchGoodReadsApi = async (
+const searchGoodReadsApiOrDb = async (
     isbn: string,
 ): Promise<GoodReadsBookResult['result'] | null> => {
     if (!isbn) return null;
@@ -63,7 +42,7 @@ const searchGoodReadsApi = async (
         body: { isbn },
     });
     if (error) {
-        console.error('searchGoodReadsApi', error);
+        console.error('searchGoodReadsApiOrDb', error);
         return null;
     }
     return data.result;
@@ -86,6 +65,13 @@ export const useGetGoogleBook = (bookId: string) => {
     });
 };
 
+export const useGoodReadsBooks = (isbn: string) => {
+    return useQuery({
+        queryKey: ['goodReadsBooks', isbn],
+        queryFn: () => searchGoodReadsApiOrDb(isbn),
+    });
+};
+
 export const useGoogleBooks = (isbn: string) => {
     return useQuery({
         queryKey: ['googleBooks', isbn],
@@ -93,10 +79,27 @@ export const useGoogleBooks = (isbn: string) => {
     });
 };
 
-export const useGoodReadsBooks = (isbn: string) => {
+export const useGetBookByISBN = (isbn: string) => {
     return useQuery({
-        queryKey: ['goodReadsBooks', isbn],
-        queryFn: () => searchGoodReadsApi(isbn),
+        queryKey: ['books', { isbn }],
+        queryFn: async () => {
+            const { error, data } = await supabase
+                .from('books')
+                .select(
+                    `
+                    *,
+                    book_genres(name)
+                `,
+                )
+                .eq('isbn', isbn)
+                .single();
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            return data;
+        },
     });
 };
 
@@ -180,29 +183,6 @@ export const useGetCurrentlyReadingBooks = () => {
     });
 };
 
-export const useUpsertGoodReadsBook = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        async mutationFn(isbn: string) {
-            const goodReadsBook = await searchGoodReadsApi(isbn);
-            if (!goodReadsBook) throw new Error('Book not found');
-            const data = getBookDetailsFromGoodReads(goodReadsBook);
-            const { data: book, error } = await supabase
-                .from('books')
-                .upsert(data, { onConflict: 'good_reads_book_id' })
-                .select('*')
-                .single();
-            if (error) {
-                throw new Error(error.message);
-            }
-            return book;
-        },
-        onSuccess() {
-            queryClient.invalidateQueries({ queryKey: ['books'] });
-        },
-    });
-};
-
 export const useUpsertGoogleBook = () => {
     return useMutation({
         async mutationFn(isbn: string) {
@@ -229,33 +209,9 @@ export const useUploadBookAndGenres = () => {
     return useMutation({
         async mutationFn(isbn: string) {
             // 1. Fetch book data from GoodReads API
-            const goodReadsBook = await searchGoodReadsApi(isbn);
+            const goodReadsBook = await searchGoodReadsApiOrDb(isbn);
             if (!goodReadsBook) throw new Error('Book not found');
-
-            // 2. Prepare book data for insertion
-            const { data, error } = await supabase.rpc(
-                'upload_book_and_genres',
-                {
-                    p_isbn: isbn,
-                    p_authors: goodReadsBook.authors
-                        .map(author => author.name)
-                        .join(', '),
-                    p_description: goodReadsBook.description,
-                    p_good_reads_book_id: goodReadsBook.book_id,
-                    p_good_reads_image_url: goodReadsBook.imageUrl,
-                    p_good_reads_rating_count: goodReadsBook.ratingsCount,
-                    p_good_reads_rating: goodReadsBook.averageRating,
-                    p_num_pages: goodReadsBook.numPages,
-                    p_published_date: goodReadsBook.publishedDate,
-                    p_publisher: goodReadsBook.publisher,
-                    p_title: goodReadsBook.title,
-                    p_genres: goodReadsBook.genres || [],
-                },
-            );
-
-            if (error) throw new Error(error.message);
-
-            return data;
+            return goodReadsBook;
         },
         onSuccess: () => {
             // Invalidate and refetch relevant queries
