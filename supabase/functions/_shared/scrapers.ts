@@ -1,9 +1,10 @@
 import * as cheerio from "cheerio";
+import { GoodReadsBookResult } from "./types.ts";
 
-export function isbnScraper($: cheerio.CheerioAPI) {
+export function isbnScraper($: cheerio.CheerioAPI): GoodReadsBookResult | null {
   const dataHTML = $('script[type="application/json"]').html();
   if (!dataHTML) {
-    return {};
+    return null;
   }
   const jsonData = JSON.parse(dataHTML);
   const apolloState = jsonData.props.pageProps.apolloState;
