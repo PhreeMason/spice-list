@@ -66,8 +66,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
                 } catch (error) {
                     console.log('error signing out', error);
                 }
-        
-            }
+            },
         }),
         [loading, profile, session],
     );

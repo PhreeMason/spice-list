@@ -109,7 +109,10 @@ function Profile() {
                     <TouchableOpacity className="text-blue-500 p-2 border-2 border-blue-300 rounded-md">
                         <Text className="text-blue-500">Edit Profile</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="text-red-500 p-2 border-2 border-red-300 rounded-md" onPress={signOut}>
+                    <TouchableOpacity
+                        className="text-red-500 p-2 border-2 border-red-300 rounded-md"
+                        onPress={signOut}
+                    >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
                 </View>
