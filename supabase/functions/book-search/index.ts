@@ -21,8 +21,8 @@ Deno.serve(async (req) => {
     )
 
     const token = authHeader.replace('Bearer ', '')
-    const { data } = await supabaseClient.auth.getUser(token)
-    const user = data.user
+    const { data: userData } = await supabaseClient.auth.getUser(token)
+    const user = userData.user
     const user_id = user?.id
 
     const { isbn } = await req.json()
@@ -32,6 +32,29 @@ Deno.serve(async (req) => {
             headers: { 'Content-Type': 'application/json' }
         });
     }
+
+    // Check if the book exists in the database
+    const { data: bookData, error: bookError } = await supabaseClient
+        .from('books')
+        .select('*')
+        .eq('isbn', isbn)
+        .single()
+
+    if (bookData) {
+        // Book found in the database, return it
+        return new Response(JSON.stringify({
+            status: 'Found in database',
+            result: bookData
+        }), {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800'
+            }
+        });
+    }
+
+    // If book not found in database, proceed with scraping
     const scrapeURL = generateUrl(isbn);
     const scraper = isbnScraper;
 
@@ -49,13 +72,15 @@ Deno.serve(async (req) => {
 
         const lastScraped = new Date().toISOString();
         const responseData = {
-            status: 'Received',
+            status: 'Scraped',
             scrapeURL: scrapeURL,
             searchType: 'isbn',
             numberOfResults: numberOfResults,
             result: result,
             lastScraped: lastScraped
         };
+
+        // TODO: Consider saving the scraped data to the database here
 
         return new Response(JSON.stringify(responseData), {
             status: 200,
