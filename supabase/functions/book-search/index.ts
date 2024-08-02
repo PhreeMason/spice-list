@@ -138,6 +138,21 @@ Deno.serve(async (req) => {
             }
         }
 
+        // Add the book to the user's user_scan list
+        if (user_id) {
+            const { error: userScanError } = await supabaseClient
+                .from('user_scan')
+                .upsert({
+                    user_id: user_id,
+                    book_id: insertedBook.id,
+                    created_at: new Date().toISOString()
+                }, { onConflict: 'user_id,book_id' });
+
+            if (userScanError) {
+                console.error('Error adding book to user_scan:', userScanError);
+            }
+        }
+
         const responseData = {
             status: 'Scraped and Inserted',
             scrapeURL: scrapeURL,
