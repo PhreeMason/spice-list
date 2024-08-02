@@ -11,6 +11,8 @@ import {
     isbnScraper,
 } from "../_shared/scrapers.ts";
 
+import { InsertBook } from "../_shared/types.ts";
+
 Deno.serve(async (req) => {
 
     const authHeader = req.headers.get('Authorization')!
@@ -80,9 +82,42 @@ Deno.serve(async (req) => {
             lastScraped: lastScraped
         };
 
-        // TODO: Consider saving the scraped data to the database here
+        // Save the scraped data to the database
+        const insertBook: InsertBook = {
+            isbn: isbn,
+            title: result.title,
+            authors: result.authors.map(author => author.name).join(', '),
+            description: result.description,
+            good_reads_book_id: result.goodReadsBookId,
+            good_reads_description: result.description,
+            good_reads_image_url: result.imageUrl,
+            good_reads_rating_count: result.ratingCount,
+            good_reads_rating: result.rating,
+            google_books_id: null,
+            google_details_link: '',
+            image_url: result.imageUrl,
+            isbn_10: result.isbn10 || '',
+            isbn_13: result.isbn13 || '',
+            language: result.language,
+            page_count: result.numberOfPages,
+            publication_date: result.publicationDate,
+            publisher: result.publisher,
+            last_scraped: lastScraped
+        };
 
-        return new Response(JSON.stringify(responseData), {
+        const { data: insertedBook, error: insertError } = await supabaseClient
+            .from('books')
+            .insert(insertBook)
+            .single();
+
+        if (insertError) {
+            console.error('Error inserting book into database:', insertError);
+        }
+
+        return new Response(JSON.stringify({
+            ...responseData,
+            databaseOperation: insertError ? 'Failed to insert' : 'Inserted'
+        }), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json',
