@@ -4,23 +4,20 @@ import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 import {
     fakeUserAgent,
-    generateUrl,
-    getBookDetailsFromGoodReads
+    generateUrl
 } from "../_shared/utils.ts";
 
 import {
     isbnScraper,
 } from "../_shared/scrapers.ts";
 
-import { InsertBook } from "../_shared/types.ts";
-
 Deno.serve(async (req) => {
 
     const authHeader = req.headers.get('Authorization')!
     const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        { global: { headers: { Authorization: authHeader } } }
     )
 
     const token = authHeader.replace('Bearer ', '')
@@ -80,39 +77,28 @@ Deno.serve(async (req) => {
             });
         }
 
-        const result = getBookDetailsFromGoodReads(scrapedResult);
         const lastScraped = new Date().toISOString();
 
-        // Prepare data for insertion
-        const insertBook: InsertBook = {
-            isbn: isbn,
-            title: result.title,
-            authors: result.authors,
-            description: result.description,
-            good_reads_book_id: result.goodReadsBookId,
-            good_reads_description: result.description,
-            good_reads_image_url: result.imageUrl,
-            good_reads_rating_count: result.ratingCount,
-            good_reads_rating: result.rating,
-            google_books_id: null,
-            google_details_link: '',
-            image_url: result.imageUrl,
-            isbn_10: result.isbn10 || '',
-            isbn_13: result.isbn13 || '',
-            language: result.language,
-            page_count: result.numberOfPages,
-            publication_date: result.publicationDate,
-            publisher: result.publisher,
-            last_scraped: lastScraped
-        };
-
         // Insert book data
-        const { data: insertedBook, error: insertError } = await supabaseClient
-            .from('books')
-            .upsert(insertBook, { onConflict: 'isbn' })
-            .select()
-            .single();
-
+        const { data: insertedBook, error: insertError } = await supabaseClient.rpc(
+            'upload_book_and_genres',
+            {
+                p_isbn: isbn,
+                p_authors: scrapedResult.authors
+                    .map(author => author.name)
+                    .join(', '),
+                p_description: scrapedResult.description,
+                p_good_reads_book_id: scrapedResult.book_id,
+                p_good_reads_image_url: scrapedResult.imageUrl,
+                p_good_reads_rating_count: scrapedResult.ratingsCount,
+                p_good_reads_rating: scrapedResult.averageRating,
+                p_num_pages: scrapedResult.numPages,
+                p_published_date: scrapedResult.publishedDate,
+                p_publisher: scrapedResult.publisher,
+                p_title: scrapedResult.title,
+                p_genres: scrapedResult.genres || [],
+            },
+        );
         if (insertError) {
             console.error('Error inserting book into database:', insertError);
             return new Response(JSON.stringify({ error: 'Failed to insert book into database' }), {
@@ -120,24 +106,7 @@ Deno.serve(async (req) => {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-
-        // Insert genres
-        if (result.genres && result.genres.length > 0) {
-            const { error: genresError } = await supabaseClient
-                .from('book_genres')
-                .upsert(
-                    result.genres.map(genre => ({
-                        book_id: insertedBook.id,
-                        genre: genre
-                    })),
-                    { onConflict: 'book_id,genre' }
-                );
-
-            if (genresError) {
-                console.error('Error inserting genres:', genresError);
-            }
-        }
-
+       
         // Add the book to the user's user_scan list
         if (user_id) {
             const { error: userScanError } = await supabaseClient
