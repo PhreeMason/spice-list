@@ -217,6 +217,7 @@ export const useUploadBookAndGenres = () => {
             // Invalidate and refetch relevant queries
             queryClient.invalidateQueries({ queryKey: ['books'] });
             queryClient.invalidateQueries({ queryKey: ['genres'] });
+            queryClient.invalidateQueries({ queryKey: ['user_scans'] });
         },
     });
 };
