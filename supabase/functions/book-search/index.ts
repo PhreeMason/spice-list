@@ -71,29 +71,23 @@ Deno.serve(async (req) => {
         const htmlString = await response.text();
         const $ = cheerio.load(htmlString);
         const numberOfResults = $('.leftContainer > h3').text();
-        const result = scraper($);
+        const scrapedResult = scraper($);
 
-        if (!result) {
+        if (!scrapedResult) {
             return new Response(JSON.stringify({ error: 'No results found' }), {
                 status: 404,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        const lastScraped = new Date().toISOString();
-        const responseData = {
-            status: 'Scraped',
-            scrapeURL: scrapeURL,
-            searchType: 'isbn',
-            numberOfResults: numberOfResults,
-            result: result,
-            lastScraped: lastScraped
-        };
 
-        // Save the scraped data to the database
+        const result = getBookDetailsFromGoodReads(scrapedResult);
+        const lastScraped = new Date().toISOString();
+
+        // Prepare data for insertion
         const insertBook: InsertBook = {
             isbn: isbn,
             title: result.title,
-            authors: result.authors.map(author => author.name).join(', '),
+            authors: result.authors,
             description: result.description,
             good_reads_book_id: result.goodReadsBookId,
             good_reads_description: result.description,
@@ -112,19 +106,48 @@ Deno.serve(async (req) => {
             last_scraped: lastScraped
         };
 
+        // Insert book data
         const { data: insertedBook, error: insertError } = await supabaseClient
             .from('books')
-            .insert(insertBook)
+            .upsert(insertBook, { onConflict: 'isbn' })
+            .select()
             .single();
 
         if (insertError) {
             console.error('Error inserting book into database:', insertError);
+            return new Response(JSON.stringify({ error: 'Failed to insert book into database' }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
-        return new Response(JSON.stringify({
-            ...responseData,
-            databaseOperation: insertError ? 'Failed to insert' : 'Inserted'
-        }), {
+        // Insert genres
+        if (result.genres && result.genres.length > 0) {
+            const { error: genresError } = await supabaseClient
+                .from('book_genres')
+                .upsert(
+                    result.genres.map(genre => ({
+                        book_id: insertedBook.id,
+                        genre: genre
+                    })),
+                    { onConflict: 'book_id,genre' }
+                );
+
+            if (genresError) {
+                console.error('Error inserting genres:', genresError);
+            }
+        }
+
+        const responseData = {
+            status: 'Scraped and Inserted',
+            scrapeURL: scrapeURL,
+            searchType: 'isbn',
+            numberOfResults: numberOfResults,
+            result: insertedBook,
+            lastScraped: lastScraped
+        };
+
+        return new Response(JSON.stringify(responseData), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json',
