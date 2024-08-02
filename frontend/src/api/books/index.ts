@@ -233,95 +233,29 @@ export const useUploadBookAndGenres = () => {
             if (!goodReadsBook) throw new Error('Book not found');
 
             // 2. Prepare book data for insertion
-            const bookData: InsertBook = {
-                authors: goodReadsBook.authors
-                    .map(author => author.name)
-                    .join(', '),
-                description: goodReadsBook.description,
-                google_books_id: null,
-                good_reads_book_id: goodReadsBook.book_id,
-                good_reads_image_url: goodReadsBook.imageUrl,
-                good_reads_rating_count: goodReadsBook.ratingsCount,
-                good_reads_rating: goodReadsBook.averageRating,
-                isbn,
-                num_pages: goodReadsBook.numPages,
-                published_date: goodReadsBook.publishedDate,
-                publisher: goodReadsBook.publisher,
-                title: goodReadsBook.title,
-            };
-
-            // 3. Upsert book data
-            const { data: book, error: bookError } = await supabase
-                .from('books')
-                .upsert(bookData, { onConflict: 'isbn' })
-                .select()
-                .single();
-
-            if (bookError) throw new Error(bookError.message);
-
-            // 4. Process genres
-            const genres = goodReadsBook.genres || [];
-
-            // 4a. Check existing genres
-            const { data: existingGenres, error: genreCheckError } =
-                await supabase
-                    .from('genres')
-                    .select('id, name')
-                    .in('name', genres);
-
-            if (genreCheckError)
-                throw new Error(
-                    `Error checking genres: ${genreCheckError.message}`,
-                );
-            // 4b. Determine new genres
-            const existingGenreNames = existingGenres.map(g => g.name);
-            const newGenres = genres.filter(
-                g => !existingGenreNames.includes(g),
+            const { data, error } = await supabase.rpc(
+                'upload_book_and_genres',
+                {
+                    p_isbn: isbn,
+                    p_authors: goodReadsBook.authors
+                        .map(author => author.name)
+                        .join(', '),
+                    p_description: goodReadsBook.description,
+                    p_good_reads_book_id: goodReadsBook.book_id,
+                    p_good_reads_image_url: goodReadsBook.imageUrl,
+                    p_good_reads_rating_count: goodReadsBook.ratingsCount,
+                    p_good_reads_rating: goodReadsBook.averageRating,
+                    p_num_pages: goodReadsBook.numPages,
+                    p_published_date: goodReadsBook.publishedDate,
+                    p_publisher: goodReadsBook.publisher,
+                    p_title: goodReadsBook.title,
+                    p_genres: goodReadsBook.genres || [],
+                },
             );
 
-            // 4c. Insert new genres
-            if (newGenres.length > 0) {
-                const { error: insertError } = await supabase
-                    .from('genres')
-                    .insert(newGenres.map(name => ({ name })));
+            if (error) throw new Error(error.message);
 
-                if (insertError)
-                    throw new Error(
-                        `Error inserting new genres: ${insertError.message}`,
-                    );
-            }
-
-            // 4d. Fetch all genre IDs (including newly inserted ones)
-            const { data: allGenres, error: allGenresError } = await supabase
-                .from('genres')
-                .select('id, name')
-                .in('name', genres);
-
-            if (allGenresError)
-                throw new Error(
-                    `Error fetching all genres: ${allGenresError.message}`,
-                );
-
-            // 4e. Link book to genres
-            const bookGenreLinks = allGenres.map(genre => ({
-                book_id: book.id,
-                genre_id: genre.id,
-                book_id_genre_id: `${book.id}_${genre.id}`,
-            }));
-
-            const { error: linkError } = await supabase
-                .from('book_genres')
-                .upsert(bookGenreLinks, {
-                    onConflict: 'book_id_genre_id',
-                    ignoreDuplicates: true,
-                });
-
-            if (linkError)
-                throw new Error(
-                    `Error linking book to genres: ${linkError.message}`,
-                );
-
-            return book;
+            return data;
         },
         onSuccess: () => {
             // Invalidate and refetch relevant queries
