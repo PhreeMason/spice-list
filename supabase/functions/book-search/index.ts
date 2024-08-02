@@ -9,8 +9,6 @@ import {
 
 import {
     isbnScraper,
-    bookPathScraper,
-    bookSearchScraper
 } from "../_shared/scrapers.ts";
 
 Deno.serve(async (req) => {
@@ -27,9 +25,15 @@ Deno.serve(async (req) => {
     const user = data.user
     const user_id = user?.id
 
-    const { isbn, bookSearch, bookPath } = await req.json()
-    const scrapeURL = bookPath ? bookPath : generateUrl(isbn);
-    const scraper = isbn ? isbnScraper : bookSearch ? bookSearchScraper : bookPathScraper;
+    const { isbn } = await req.json()
+    if (!isbn) {
+        return new Response(JSON.stringify({ error: 'ISBN is required' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+    const scrapeURL = generateUrl(isbn);
+    const scraper = isbnScraper;
 
     try {
         const response = await fetch(`${scrapeURL}`, {
@@ -47,7 +51,7 @@ Deno.serve(async (req) => {
         const responseData = {
             status: 'Received',
             scrapeURL: scrapeURL,
-            searchType: 'books',
+            searchType: 'isbn',
             numberOfResults: numberOfResults,
             result: result,
             lastScraped: lastScraped
