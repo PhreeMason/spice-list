@@ -5,6 +5,7 @@ import { createClient } from 'jsr:@supabase/supabase-js@2'
 import {
     fakeUserAgent,
     generateUrl,
+    getBookDetailsFromGoodReads
 } from "../_shared/utils.ts";
 
 import {
@@ -72,6 +73,12 @@ Deno.serve(async (req) => {
         const numberOfResults = $('.leftContainer > h3').text();
         const result = scraper($);
 
+        if (!result) {
+            return new Response(JSON.stringify({ error: 'No results found' }), {
+                status: 404,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
         const lastScraped = new Date().toISOString();
         const responseData = {
             status: 'Scraped',
