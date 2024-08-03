@@ -31,7 +31,7 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
-                name="library"
+                name="index"
                 options={{
                     title: 'Library',
                     tabBarIcon: ({ color }) => (
@@ -42,32 +42,6 @@ export default function TabLayout() {
                         />
                     ),
                     headerShown: false,
-                }}
-            />
-            <Tabs.Screen
-                name="index"
-                options={{
-                    title: 'History',
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="bookmark" color={color} />
-                    ),
-                    headerRight: () => (
-                        <Link href="/modal" asChild>
-                            <Pressable>
-                                {({ pressed }) => (
-                                    <FontAwesome
-                                        name="info-circle"
-                                        size={25}
-                                        color="pink"
-                                        style={{
-                                            marginRight: 15,
-                                            opacity: pressed ? 0.5 : 1,
-                                        }}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    ),
                 }}
             />
             <Tabs.Screen

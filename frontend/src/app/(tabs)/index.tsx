@@ -1,21 +1,43 @@
 import {
     Text,
     View,
-    Image,
-    FlatList,
     ActivityIndicator,
+    Image,
     TouchableOpacity,
 } from 'react-native';
-import { useMyScanList } from '@/api/book-scans';
 import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
-import RenderStars from '@/components/RenderStars';
+import { useGetBookShelves } from '@/api/bookshelves';
+import { useGetCurrentlyReadingBooks } from '@/api/books';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ScrollView } from 'react-native-gesture-handler';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import ImageTextBar from '@/components/ImageTextBar';
+import { FlashList } from '@shopify/flash-list';
+import BookCoverCard from '@/components/BookCoverCard';
 
 dayjs.extend(relativeTime);
 
-export default function HistoryScreen() {
-    const { data: scans, isLoading, error } = useMyScanList();
+export default function LibraryScreen() {
+    const { data: bookshelves, isLoading, error } = useGetBookShelves(6);
+    const {
+        data: currentlyReadingBooks,
+        isLoading: isLoadingCurrentlyReading,
+        error: errorCurrentlyReading,
+    } = useGetCurrentlyReadingBooks();
+
+    const greetingMessage = () => {
+        const currentTime = new Date().getHours();
+        if (currentTime < 12) {
+            return 'Good Morning';
+        } else if (currentTime < 16) {
+            return 'Good Afternoon';
+        } else {
+            return 'Good Evening';
+        }
+    };
+    const message = greetingMessage();
 
     if (isLoading) {
         return <ActivityIndicator size="large" />;
@@ -25,72 +47,110 @@ export default function HistoryScreen() {
         return <Text>{error.message}</Text>;
     }
 
-    if (!scans) {
-        return (
-            <View>
-                <Text>No scans found</Text>
-                <Link href="/scan">Scan a your first book</Link>
-            </View>
-        );
-    }
-    // print authors and remove extra spaces
     return (
-        <FlatList
-            data={scans}
-            renderItem={({ item }) => (
-                <Link href={`/books/${item.book.id}`} asChild>
-                    <TouchableOpacity className="flex flex-row bg-white w-full p-2">
+        <LinearGradient colors={['#f8fafc', '#f5f3ff']} style={{ flex: 1 }}>
+            <ScrollView style={{ marginTop: 50 }}>
+                {/* Header */}
+                <View
+                    style={{
+                        padding: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
                         <Image
-                            source={{
-                                uri: item.book.good_reads_image_url || '',
+                            style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: 20,
                             }}
-                            resizeMode="contain"
-                            className="w-20 h-30 object-cover rounded-md mr-4 "
+                            resizeMode="cover"
+                            source={{ uri: 'https://i.pravatar.cc/100' }}
                         />
-                        <View className="flex-1 bg-white">
-                            <Text
-                                className="text-lg font-spice-semibold"
-                                numberOfLines={1}
-                            >
-                                {item.book.title}
-                            </Text>
-                            <Text
-                                className="text-sm text-gray-600 mb-1"
-                                numberOfLines={1}
-                            >
-                                {item.book.authors
-                                    .replace(/\s+/g, ' ')
-                                    .split(',')}
-                            </Text>
-                            <View className="flex mb-1">
-                                {item.book.good_reads_rating && (
-                                    <RenderStars
-                                        rating={item.book.good_reads_rating}
-                                    />
-                                )}
-                            </View>
-                            <View className="flex flex-row flex-wrap gap-1 mb-1">
-                                {item.book.genres
-                                    .slice(0, 3)
-                                    .map((genre, index) => (
-                                        <Text
-                                            key={JSON.stringify(genre)}
-                                            className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
-                                        >
-                                            {genre.genre.name}
-                                        </Text>
-                                    ))}
-                            </View>
-                            <Text className="text-xs text-gray-500">
-                                {dayjs(item.created_at).fromNow()}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                </Link>
-            )}
-            ItemSeparatorComponent={() => (
-                <View className="h-2 w-full border-b" />
-            )}
-        />
+                        <Text
+                            style={{
+                                marginLeft: 10,
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                                color: "black",
+                            }}
+                        >
+                            {message}
+                        </Text>
+                    </View>
+
+                    <MaterialCommunityIcons
+                        name="lightning-bolt-outline"
+                        size={24}
+                        color="black"
+                    />
+                </View>
+                {/* current reads */}
+                <Text
+                    style={{
+                        color: "black",
+                        fontSize: 19,
+                        fontWeight: 'bold',
+                        marginHorizontal: 10,
+                        marginTop: 10,
+                    }}
+                >
+                    Currently Reading
+                </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {currentlyReadingBooks?.map(book => (
+                        <Link
+                            key={`${book.bookId}-${book.title}`}
+                            href={`/books/${book.bookId}`}
+                            className="m-2"
+                        >
+                            <BookCoverCard
+                                title={book.title}
+                                imageUrl={book.coverUrl || ''}
+                                bookPages={book.pages || 0}
+                                authors={book.authors}
+                                currentPage={book.currentPage || 0}
+                            />
+                        </Link>
+                    ))}
+                </ScrollView>
+                <Text
+                    style={{
+                        color: "black",
+                        fontSize: 19,
+                        fontWeight: 'bold',
+                        marginHorizontal: 10,
+                        marginTop: 10,
+                    }}
+                >
+                    Recent Shelves
+                </Text>
+                {/* First Row */}
+                <FlashList
+                    data={bookshelves}
+                    renderItem={({ item }) => (
+                        <Link
+                            href={`/shelves/shelf/${item.id}`}
+                            asChild
+                            className="w-full"
+                        >
+                            <TouchableOpacity>
+                                <ImageTextBar
+                                    imageUri="https://i.pravatar.cc/100"
+                                    text={item.name}
+                                />
+                            </TouchableOpacity>
+                        </Link>
+                    )}
+                    numColumns={2}
+                    estimatedItemSize={6}
+                    keyExtractor={item => item.name}
+                />
+            </ScrollView>
+        </LinearGradient>
     );
 }

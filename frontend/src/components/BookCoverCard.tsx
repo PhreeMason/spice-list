@@ -28,13 +28,13 @@ const BookCoverCard = ({
                 />
             )}
             <Text
-                className="font-spice-semibold text-white mt-2 max-w-[130px]"
+                className="font-spice-semibold text-black mt-2 max-w-[130px]"
                 numberOfLines={1}
             >
                 {title}
             </Text>
             <Text
-                className="font-spice-regular text-white max-w-[130px] text-xs"
+                className="font-spice-regular text-black max-w-[130px] text-xs"
                 numberOfLines={1}
             >
                 {authors}
