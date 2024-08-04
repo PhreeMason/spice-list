@@ -221,3 +221,20 @@ export const useUploadBookAndGenres = () => {
         },
     });
 };
+
+export const useSearchBooks = (query: string) => {
+    return useQuery({
+        queryKey: ['search', query],
+        queryFn: async () => {
+            if (!query || query.length < 3) return [];
+            console.log('query', query);
+            const { data, error } = await await supabase.functions.invoke('book-search-list', {
+                body: JSON.stringify({ query }),
+            })
+            if (error) {
+                throw new Error(error.message);
+            }
+            return data;
+        },
+    });
+}
