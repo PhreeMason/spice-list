@@ -247,7 +247,15 @@ export function bookPathScraper(
   };
 }
 
-export function bookSearchScraper($: cheerio.CheerioAPI) {
+export function bookSearchScraper($: cheerio.CheerioAPI): {
+    id: number;
+    cover?: string;
+    title: string;
+    bookURL?: string;
+    author: string | null;
+    authorURL?: string;
+    rating: string;
+  }[] {
   const result = $('table > tbody > tr')
       .map((i, el) => {
           const $el = $(el);

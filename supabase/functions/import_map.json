@@ -1,6 +1,7 @@
 {
     "imports": {
         "@supabase/functions-js": "https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts",
-        "cheerio": "https://esm.sh/cheerio@1.0.0-rc.12"
+        "cheerio": "https://esm.sh/cheerio@1.0.0-rc.12",
+        "axios": "https://deno.land/x/axiod/mod.ts"
     }
 }

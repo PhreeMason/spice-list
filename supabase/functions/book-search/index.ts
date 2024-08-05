@@ -25,8 +25,8 @@ Deno.serve(async (req) => {
     const user_id = user?.id
 
     const { isbn } = await req.json()
-    if (!isbn) {
-        return new Response(JSON.stringify({ error: 'ISBN is required' }), {
+    if (!isbn || !user_id) {
+        return new Response(JSON.stringify({ error: 'ISBN and user is required' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
         });

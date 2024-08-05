@@ -22,6 +22,16 @@ const getBookDetailsFromGoogleBooks = (googleBook: BookVolume): InsertBook => {
     };
 };
 
+export type BookSearchResponse = {
+    author: string;
+    authorURL: string;
+    bookURL: string;
+    cover: string;
+    id: number;
+    rating: string;
+    title: string;
+};
+
 const searchGoogleBooksApi = async (
     isbn: string,
 ): Promise<BookVolume | null> => {
@@ -103,6 +113,36 @@ export const useGetBookByISBN = (isbn: string) => {
     });
 };
 
+
+type BookWithUserBooks = {
+    id: number;
+    created_at: string;
+    title: string;
+    authors: string;
+    google_rating?: number | null;
+    series_name?: string | null;
+    description: string;
+    google_books_id?: string | null;
+    google_details_link?: string | null;
+    publisher: string;
+    good_reads_description?: string | null;
+    num_pages: number;
+    published_date: string;
+    good_reads_rating: number;
+    good_reads_image_url: string;
+    good_reads_rating_count: number;
+    good_reads_book_id: string;
+    isbn: string;
+    genres: {
+        genre: {
+            name: string;
+        };
+    }[];
+    user_books: {
+        id: number;
+    }[];
+}
+
 export const useGetBookById = (bookId: number) => {
     return useQuery({
         queryKey: ['books', { bookId }],
@@ -116,8 +156,8 @@ export const useGetBookById = (bookId: number) => {
                         user_books(id)`,
                 )
                 .eq('id', bookId)
-                .single();
-
+                .returns<BookWithUserBooks[]>()
+                .single()
             if (error) {
                 throw new Error(error.message);
             }
@@ -228,12 +268,13 @@ export const useSearchBooks = (query: string) => {
         queryFn: async () => {
             if (!query || query.length < 3) return [];
             console.log('query', query);
-            const { data, error } = await await supabase.functions.invoke('book-search-list', {
+            const { data, error }: { data: BookSearchResponse[] | null; error: any } = await supabase.functions.invoke('book-search-list', {
                 body: JSON.stringify({ query }),
             })
             if (error) {
                 throw new Error(error.message);
             }
+
             return data;
         },
     });
