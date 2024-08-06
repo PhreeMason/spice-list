@@ -29,7 +29,6 @@ function BookDetailsScreen() {
         return <Text>No book found</Text>;
     }
     const book = data;
-    console.log(JSON.stringify(book, null, 2));
     return (
         <ScrollView className="flex-1 bg-white">
             <Stack.Screen options={{ title: formatTitle(book.title) }} />

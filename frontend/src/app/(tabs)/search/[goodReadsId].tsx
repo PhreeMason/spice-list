@@ -32,7 +32,6 @@ const BooKSearchDetailsScreen = () => {
     }
 
     const book = data.book;
-    console.log(JSON.stringify(book, null, 2));
     return (
         <ScrollView className="flex-1 bg-white">
             <Stack.Screen options={{ title: formatTitle(book.title) }} />
