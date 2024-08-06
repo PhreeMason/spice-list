@@ -214,3 +214,30 @@ export type ShelfListItem = {
     user_id: string;
     bookShelfBookId?: number;
 };
+
+export type BookSearchResultByGID = {
+    id: number;
+    created_at: string;
+    title: string;
+    authors: string;
+    google_rating: null | number;
+    series_name: null | string;
+    description: string;
+    google_books_id: null | string;
+    google_details_link: null | string;
+    publisher: string;
+    good_reads_description: null | string;
+    num_pages: number;
+    published_date: string;
+    good_reads_rating: number;
+    good_reads_image_url: string;
+    good_reads_rating_count: number;
+    good_reads_book_id: string;
+    isbn: string;
+    book_genres: {
+        genres: {
+            name: string;
+        };
+    }[];
+    genres: string[];
+};

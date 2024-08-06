@@ -5,9 +5,16 @@ import { Feather } from '@expo/vector-icons';
 interface SearchBarProps {
     placeholder: string;
     onChangeText: (text: string) => void;
+    value: string;
+    autoFocus?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder, onChangeText }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+    placeholder,
+    onChangeText,
+    value,
+    autoFocus,
+}) => {
     return (
         <View style={styles.container}>
             <Feather name="search" size={20} color="gray" />
@@ -15,6 +22,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder, onChangeText }) => {
                 style={styles.input}
                 placeholder={placeholder}
                 onChangeText={onChangeText}
+                value={value}
+                autoFocus={!!autoFocus}
             />
         </View>
     );
@@ -26,7 +35,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 10,
         height: 35,
-        backgroundColor: '#F0F0F0',
+        backgroundColor: '#FFFFFF',
         borderRadius: 10,
         margin: 10,
     },
@@ -34,6 +43,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         fontSize: 16,
         flex: 1,
+        padding: 10,
     },
 });
 

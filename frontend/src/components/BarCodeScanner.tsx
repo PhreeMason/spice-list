@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, Text, View } from 'react-native';
 
 import BookScanPreview from '@/components/BookScanPreview';
-import { useUploadBookAndGenres } from '@/api/books';
+import { useSearchBookAndSaveIfFound } from '@/api/books';
 import { StatusBar } from 'expo-status-bar';
 
 export default function BarCodeScanner() {
@@ -11,7 +11,7 @@ export default function BarCodeScanner() {
 
     const [isbn, setIsbn] = useState<string>('');
     const [currentBook, setCurrentBook] = useState<any>(null);
-    const { mutate: upsertBook } = useUploadBookAndGenres();
+    const { mutate: upsertBook } = useSearchBookAndSaveIfFound();
 
     if (!permission) {
         return <View />;

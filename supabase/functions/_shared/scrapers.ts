@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { GoodReadsBookResult } from "./types.ts";
+import { GoodReadsBookResult, BookPathResponse } from "./types.ts";
 
 export function isbnScraper($: cheerio.CheerioAPI): GoodReadsBookResult | null {
   const dataHTML = $('script[type="application/json"]').html();
@@ -59,7 +59,7 @@ export function isbnScraper($: cheerio.CheerioAPI): GoodReadsBookResult | null {
 
 export function bookPathScraper(
   $: cheerio.CheerioAPI
-) {
+): BookPathResponse {
   const cover = $('.ResponsiveImage').attr('src');
   const series = $('h3.Text__italic').text();
   const seriesURL = $('h3.Text__italic > a').attr('href');
@@ -159,65 +159,7 @@ export function bookPathScraper(
       rating1: rating1
   };
 
-  const reviews = $('.ReviewsList > div:nth-child(2) > div')
-      .filter(Boolean)
-      .map((i, el) => {
-          const $el = $(el);
-          const image = $el
-              .find('div > article > div > div > section > a > img')
-              .attr('src');
-          const author = $el
-              .find(
-                  'div > article > div > div > section:nth-child(2) > span:nth-child(1) > div > a'
-              )
-              .text();
-          const date = $el
-              .find(
-                  'div > article > section > section:nth-child(1) > span > a'
-              )
-              .text();
-          const stars = $el
-              .find(
-                  'div > article > section > section:nth-child(1) > div > span'
-              )
-              .attr('aria-label');
-          const text = $el
-              .find(
-                  'div > article > section > section:nth-child(2) > section > div > div > span'
-              )
-              .html();
-          const likes = $el
-              .find(
-                  'div > article > section > footer > div > div:nth-child(1) > button > span'
-              )
-              .text();
-          const id = i + 1;
 
-          return {
-              id: id,
-              image: image,
-              author: author,
-              date: date,
-              stars: stars,
-              text: text,
-              likes: likes
-          };
-      })
-      .toArray();
-
-  const quotes = $(
-      'div.BookDiscussions > div.BookDiscussions__list > a.DiscussionCard:nth-child(1) > div.DiscussionCard__middle > div.DiscussionCard__stats'
-  ).text();
-  const quotesURL = $(
-      'div.BookDiscussions > div.BookDiscussions__list > a.DiscussionCard:nth-child(1)'
-  ).attr('href');
-
-  const questions = $(
-      'div.BookDiscussions > div.BookDiscussions__list > a.DiscussionCard:nth-child(3) > div.DiscussionCard__middle > div.DiscussionCard__stats'
-  ).text();
-  const questionsURL = $(
-      'div.BookDiscussions > div.BookDiscussions__list > a.DiscussionCard:nth-child(3)'
-  ).attr('href');
   const lastScraped = new Date().toISOString();
   return {
       status: 'Received',
@@ -238,11 +180,6 @@ export function bookPathScraper(
       publishDate: publishDate,
       related: related,
       reviewBreakdown: reviewBreakdown,
-      reviews: reviews,
-      quotes: quotes,
-      quotesURL: quotesURL,
-      questions: questions,
-      questionsURL: questionsURL,
       lastScraped: lastScraped
   };
 }
@@ -251,7 +188,7 @@ export function bookSearchScraper($: cheerio.CheerioAPI): {
     id: number;
     cover?: string;
     title: string;
-    bookURL?: string;
+    goodReadsUrl?: string;
     author: string | null;
     authorURL?: string;
     rating: string;
@@ -261,7 +198,7 @@ export function bookSearchScraper($: cheerio.CheerioAPI): {
           const $el = $(el);
           const cover = $el.find('tr > td > a > img').attr('src');
           const title = $el.find('tr > td:nth-child(2) > a > span').text();
-          const bookURL = $el.find('tr > td:nth-child(2) > a').attr('href');
+          const goodReadsUrl = $el.find('tr > td:nth-child(2) > a').attr('href');
           const author = $el
               .find(
                   "tr > td:nth-child(2) > span[itemprop = 'author'] > div > a > span[itemprop = 'name']"
@@ -285,7 +222,7 @@ export function bookSearchScraper($: cheerio.CheerioAPI): {
               id: id,
               cover: cover,
               title: title,
-              bookURL: bookURL,
+              goodReadsUrl: goodReadsUrl?.replace('/book/show/', '').split('?')[0],
               author: author,
               authorURL: authorURL,
               rating: rating

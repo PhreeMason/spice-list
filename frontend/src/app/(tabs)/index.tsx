@@ -76,7 +76,7 @@ export default function LibraryScreen() {
                                 marginLeft: 10,
                                 fontSize: 20,
                                 fontWeight: 'bold',
-                                color: "black",
+                                color: 'black',
                             }}
                         >
                             {message}
@@ -92,7 +92,7 @@ export default function LibraryScreen() {
                 {/* current reads */}
                 <Text
                     style={{
-                        color: "black",
+                        color: 'black',
                         fontSize: 19,
                         fontWeight: 'bold',
                         marginHorizontal: 10,
@@ -120,7 +120,7 @@ export default function LibraryScreen() {
                 </ScrollView>
                 <Text
                     style={{
-                        color: "black",
+                        color: 'black',
                         fontSize: 19,
                         fontWeight: 'bold',
                         marginHorizontal: 10,

@@ -32,3 +32,35 @@ export type InsertBook = {
     publisher: string;
     title: string;
 };
+
+export type BookPathResponse = {
+    status: string;
+    statusCode: number;
+    source: string;
+    cover?: string;
+    series: string;
+    seriesURL: string | undefined;
+    workURL?: string;
+    title: string;
+    author?: {
+      id: number;
+      name: string;
+      url?: string;
+    }[];
+    rating: string;
+    ratingCount: string;
+    reviewsCount: string;
+    desc: string;
+    genres: string[];
+    bookEdition: string;
+    publishDate: string;
+    related: any[];
+    reviewBreakdown: {
+      rating5: string;
+      rating4: string;
+      rating3: string;
+      rating2: string;
+      rating1: string;
+    };
+    lastScraped: string;
+  };

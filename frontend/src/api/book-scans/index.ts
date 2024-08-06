@@ -4,11 +4,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Genre = {
     genre: {
-      name: string;
+        name: string;
     };
-  };
-  
-  type Book = {
+};
+
+type Book = {
     id: number;
     isbn: string;
     title: string;
@@ -28,16 +28,14 @@ type Genre = {
     good_reads_image_url: string;
     good_reads_description: string | null;
     good_reads_rating_count: number;
-  };
-  
+};
+
 export type ScanResponseItem = {
     id: number;
     user_id: string;
     created_at: string;
     book: Book;
-  };
-  
-  
+};
 
 export const useMyScanList = () => {
     const { profile } = useAuth();

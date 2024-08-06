@@ -3,48 +3,23 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     BookVolume,
     GoodReadsBookResult,
-    GoogleBooksAPIResponse,
-    InsertBook,
+    BookSearchResultByGID,
     CurrentReadsQuery,
 } from '@/types';
 import { CurrentlyReadingBook } from '@/types';
 import { useAuth } from '@/providers/AuthProvider';
 
-const getBookDetailsFromGoogleBooks = (googleBook: BookVolume): InsertBook => {
-    return {
-        authors: googleBook.volumeInfo.authors.join(', '),
-        description: googleBook.volumeInfo.description || '',
-        isbn: googleBook.volumeInfo.industryIdentifiers[0].identifier || '',
-        google_books_id: googleBook.id,
-        google_details_link: googleBook.selfLink,
-        publisher: googleBook.volumeInfo.publisher,
-        title: googleBook.volumeInfo.title,
-    };
-};
-
 export type BookSearchResponse = {
     author: string;
     authorURL: string;
-    bookURL: string;
+    goodReadsUrl: string;
     cover: string;
     id: number;
     rating: string;
     title: string;
 };
 
-const searchGoogleBooksApi = async (
-    isbn: string,
-): Promise<BookVolume | null> => {
-    if (!isbn) return null;
-    const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`,
-    );
-    const json: GoogleBooksAPIResponse = await response.json();
-    const book = json?.items[0] || null;
-    return book;
-};
-
-const searchGoodReadsApiOrDb = async (
+const searchGoodReadsApiOrDbByISBN = async (
     isbn: string,
 ): Promise<GoodReadsBookResult['result'] | null> => {
     if (!isbn) return null;
@@ -52,10 +27,38 @@ const searchGoodReadsApiOrDb = async (
         body: { isbn },
     });
     if (error) {
-        console.error('searchGoodReadsApiOrDb', error);
+        console.error('searchGoodReadsApiOrDbByISBN', error);
         return null;
     }
     return data.result;
+};
+
+const searchByGoodReadsId = async (
+    good_reads_book_id: string,
+): Promise<{
+    book: BookSearchResultByGID;
+    lastScraped: null | string;
+    scrapeURL: null | string;
+    searchType: string;
+    numberOfResults: null | number;
+} | null> => {
+    if (!good_reads_book_id) return null;
+    const { data, error } = await supabase.functions.invoke('book-search-url', {
+        body: { good_reads_book_id },
+    });
+    if (error) {
+        console.error('searchByGoodReadsId', error);
+        return null;
+    }
+    return data.result;
+};
+
+export const useSearchByGoodReadsId = (good_reads_book_id: string) => {
+    return useQuery({
+        queryKey: ['goodreads', good_reads_book_id],
+        queryFn: () => searchByGoodReadsId(good_reads_book_id),
+        retry: false,
+    });
 };
 
 const getGoogleBook = async (bookId: string): Promise<BookVolume | null> => {
@@ -72,20 +75,6 @@ export const useGetGoogleBook = (bookId: string) => {
         queryKey: ['googleBooks', bookId],
         queryFn: () => getGoogleBook(bookId),
         retry: false,
-    });
-};
-
-export const useGoodReadsBooks = (isbn: string) => {
-    return useQuery({
-        queryKey: ['goodReadsBooks', isbn],
-        queryFn: () => searchGoodReadsApiOrDb(isbn),
-    });
-};
-
-export const useGoogleBooks = (isbn: string) => {
-    return useQuery({
-        queryKey: ['googleBooks', isbn],
-        queryFn: () => searchGoogleBooksApi(isbn),
     });
 };
 
@@ -112,7 +101,6 @@ export const useGetBookByISBN = (isbn: string) => {
         },
     });
 };
-
 
 type BookWithUserBooks = {
     id: number;
@@ -141,7 +129,7 @@ type BookWithUserBooks = {
     user_books: {
         id: number;
     }[];
-}
+};
 
 export const useGetBookById = (bookId: number) => {
     return useQuery({
@@ -157,7 +145,7 @@ export const useGetBookById = (bookId: number) => {
                 )
                 .eq('id', bookId)
                 .returns<BookWithUserBooks[]>()
-                .single()
+                .single();
             if (error) {
                 throw new Error(error.message);
             }
@@ -223,33 +211,13 @@ export const useGetCurrentlyReadingBooks = () => {
     });
 };
 
-export const useUpsertGoogleBook = () => {
-    return useMutation({
-        async mutationFn(isbn: string) {
-            const googleBook = await searchGoogleBooksApi(isbn);
-            if (!googleBook) throw new Error('Book not found');
-            const data = getBookDetailsFromGoogleBooks(googleBook);
-            const { data: book, error } = await supabase
-                .from('books')
-                .upsert(data, { onConflict: 'google_books_id' })
-                .select('*')
-                .single();
-
-            if (error) {
-                throw new Error(error.message);
-            }
-            return book;
-        },
-    });
-};
-
-export const useUploadBookAndGenres = () => {
+export const useSearchBookAndSaveIfFound = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         async mutationFn(isbn: string) {
             // 1. Fetch book data from GoodReads API
-            const goodReadsBook = await searchGoodReadsApiOrDb(isbn);
+            const goodReadsBook = await searchGoodReadsApiOrDbByISBN(isbn);
             if (!goodReadsBook) throw new Error('Book not found');
             return goodReadsBook;
         },
@@ -267,10 +235,13 @@ export const useSearchBooks = (query: string) => {
         queryKey: ['search', query],
         queryFn: async () => {
             if (!query || query.length < 3) return [];
-            console.log('query', query);
-            const { data, error }: { data: BookSearchResponse[] | null; error: any } = await supabase.functions.invoke('book-search-list', {
-                body: JSON.stringify({ query }),
-            })
+            const {
+                data,
+                error,
+            }: { data: BookSearchResponse[] | null; error: any } =
+                await supabase.functions.invoke('book-search-list', {
+                    body: JSON.stringify({ query }),
+                });
             if (error) {
                 throw new Error(error.message);
             }
@@ -278,4 +249,4 @@ export const useSearchBooks = (query: string) => {
             return data;
         },
     });
-}
+};

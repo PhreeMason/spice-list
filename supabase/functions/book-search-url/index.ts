@@ -1,15 +1,19 @@
-import "@supabase/functions-js"
+import "@supabase/functions-js";
 import * as cheerio from "cheerio";
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+import axios from "axios";
 
 import {
     fakeUserAgent,
-    generateUrl
 } from "../_shared/utils.ts";
 
 import {
-    isbnScraper,
+    isbnScraper
 } from "../_shared/scrapers.ts";
+
+const generateURL = (good_reads_book_id: string) => {
+    return `https://www.goodreads.com/book/show/${good_reads_book_id}`
+}
 
 Deno.serve(async (req) => {
     const authHeader = req.headers.get('Authorization')!
@@ -24,16 +28,16 @@ Deno.serve(async (req) => {
     const user = userData.user
     const user_id = user?.id
 
-    const { isbn } = await req.json()
-    if (!isbn || !user_id) {
-        return new Response(JSON.stringify({ error: 'ISBN and user is required' }), {
+    const { good_reads_book_id } = await req.json()
+
+    if (!good_reads_book_id || !user_id) {
+        return new Response(JSON.stringify({ error: 'good_reads_book_id and user is required' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
         });
     }
 
-    // Check if the book exists in the database
-    const { data: bookData, } = await supabaseClient
+    const { data: bookData } = await supabaseClient
         .from('books')
         .select(
             `*, genres:book_genres(
@@ -41,11 +45,10 @@ Deno.serve(async (req) => {
                 ), 
                 user_books(id)`,
         )
-        .eq('isbn', isbn)
+        .eq('good_reads_book_id', good_reads_book_id)
         .single()
 
     let responseData;
-
     if (bookData) {
         // Book found in the database, add it to user's scan list
         if (user_id) {
@@ -69,26 +72,23 @@ Deno.serve(async (req) => {
                 book: bookData,
                 lastScraped: null,
                 scrapeURL: null,
-                searchType: 'isbn',
+                searchType: 'goodreadsURL',
                 numberOfResults: null
             }
         };
     } else {
-        // If book not found in database, proceed with scraping
-        const scrapeURL = generateUrl(isbn);
-        const scraper = isbnScraper;
-
         try {
-            const response = await fetch(`${scrapeURL}`, {
+            const scrapeUrl = generateURL(good_reads_book_id);
+            const { data: html } = await axios({
                 method: 'GET',
                 headers: new Headers({
                     'User-Agent': fakeUserAgent
-                })
-            });
-            const htmlString = await response.text();
-            const $ = cheerio.load(htmlString);
-            const numberOfResults = $('.leftContainer > h3').text();
-            const scrapedResult = scraper($);
+                }),
+                url: scrapeUrl
+            })
+
+            const $ = cheerio.load(html)
+            const scrapedResult = isbnScraper($);
 
             if (!scrapedResult) {
                 return new Response(JSON.stringify({ error: 'No results found' }), {
@@ -98,12 +98,12 @@ Deno.serve(async (req) => {
             }
 
             const lastScraped = new Date().toISOString();
-
+            console.log({ scrapedResult })
             // Insert book data
             const { data: insertedBook, error: insertError } = await supabaseClient.rpc(
                 'upload_book_and_genres',
                 {
-                    p_isbn: isbn,
+                    p_isbn: scrapedResult.isbn || good_reads_book_id,
                     p_authors: scrapedResult.authors
                         .map(author => author.name)
                         .join(', '),
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
                     headers: { 'Content-Type': 'application/json' }
                 });
             }
-           
+
             // Add the book to the user's user_scans list
             if (user_id) {
                 const { error: userScanError } = await supabaseClient
@@ -144,25 +144,22 @@ Deno.serve(async (req) => {
             responseData = {
                 status: 'Scraped and Inserted',
                 result: {
-                    book: insertedBook,
+                    book: { ...insertedBook.book, genres: insertedBook.genres || [] },
                     lastScraped: lastScraped,
-                    scrapeURL: scrapeURL,
-                    searchType: 'isbn',
-                    numberOfResults: numberOfResults
+                    scrapeURL: scrapeUrl,
+                    searchType: 'goodreadsURL',
+                    numberOfResults: 1
                 }
             };
         } catch (error) {
-            console.error('An error has occurred with the scraper.');
-            console.log(error);
-
-            return new Response(JSON.stringify({
-                status: 'Error - Invalid Query',
-                error: error.message,
-                scrapeURL: scrapeURL
-            }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            console.log(error)
+            return new Response(
+                JSON.stringify({ error: error }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    status: 400
+                }
+            )
         }
     }
 

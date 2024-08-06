@@ -181,7 +181,7 @@ export const useAddBookToShelf = () => {
                 .from('user_books')
                 .upsert(
                     { user_id, book_id },
-                    { onConflict: 'user_id,book_id', ignoreDuplicates: false },
+                    { onConflict: 'user_id,book_id', ignoreDuplicates: true },
                 )
                 .select()
                 .single();
