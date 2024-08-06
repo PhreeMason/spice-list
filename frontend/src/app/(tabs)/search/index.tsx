@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import ScanListItem from '@/components/ScanListItem';
 import { useMyScanList } from '@/api/book-scans';
+import { Feather } from '@expo/vector-icons';
 
 export default function SearchScreen() {
     const { data: scans, isLoading, error } = useMyScanList();
@@ -27,7 +28,8 @@ export default function SearchScreen() {
     return (
         <View className="flex-1">
             <Link asChild href={'/search/books'}>
-                <TouchableOpacity className="bg-gray-100 p-2 rounded-md items-center w-11/12 self-center">
+                <TouchableOpacity className="bg-white p-2 rounded-md items-center w-11/12 self-center">
+                    <Feather name="search" size={20} color="gray" />
                     <Text className="text-black p-2">Search Books</Text>
                 </TouchableOpacity>
             </Link>
