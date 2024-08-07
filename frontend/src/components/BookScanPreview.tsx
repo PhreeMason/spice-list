@@ -44,7 +44,8 @@ type BookScanPreviewProps = {
 };
 
 function BookScanPreview({ currentBook }: BookScanPreviewProps) {
-    const { book } = currentBook;
+    let { book } = currentBook;
+    console.log(JSON.stringify(book, null, 2));
     return (
         <Link href={`/books/${book.id}`}>
             <View className="flex flex-row bg-white w-full p-2">
@@ -71,7 +72,10 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                                 key={uuidv4()}
                                 className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
                             >
-                                {trope}
+                                {typeof trope === 'string'
+                                ? trope
+                                // @ts-ignore
+                                : trope.genre?.name}
                             </Text>
                         ))}
                     </View>

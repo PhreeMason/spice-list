@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
             responseData = {
                 status: 'Scraped and Inserted',
                 result: {
-                    book: insertedBook,
+                    book: {...insertedBook.book, genres: insertedBook.genres},
                     lastScraped: lastScraped,
                     scrapeURL: scrapeURL,
                     searchType: 'isbn',
