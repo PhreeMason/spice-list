@@ -1,12 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Feather } from '@expo/vector-icons';
 import { useSharedValue } from 'react-native-reanimated';
 
-import BottomSheet from '@/components/BottomSheet';
-import CreateShelfComponent from '@/components/CreateNewShelf';
 import type { ShelfListItem } from '@/types/index';
 import BookShelfItem from '@/components/BookShelfItem';
 import SearchBar from '@/components/SearchBar';
@@ -21,6 +19,8 @@ import {
 } from '@/api/bookshelves';
 import { ExclusiveSelfOptions } from '@/constants';
 import type { ExclusiveSelf } from '@/types/index';
+import { createExclusiveShelfName } from '@/utils/helpers';
+
 
 const RightIcon = ({ onPress }: { onPress: () => void }) => (
     <TouchableOpacity onPress={onPress} className="px-6">
@@ -90,12 +90,14 @@ export default function ShelvesScreen() {
             <Stack.Screen
                 options={{
                     headerTitle: 'Add to Shelves',
-                    headerRight: () => <RightIcon onPress={toggleSheet} />,
+                    headerRight: () => <RightIcon onPress={() => router.push(`/shelves/new/${bookId}`)} />,
                 }}
             />
             <SearchBar
                 placeholder="Search..."
                 onChangeText={text => setSearchText(text)}
+                value={searchText}
+                showBarcodeScanner={false}
             />
 
             <SegmentCotrolSlider
@@ -119,12 +121,6 @@ export default function ShelvesScreen() {
                 )}
                 estimatedItemSize={50}
             />
-            <BottomSheet isOpen={isOpen} toggleSheet={toggleSheet}>
-                <CreateShelfComponent
-                    bookId={bookIdNumber}
-                    onClose={toggleSheet}
-                />
-            </BottomSheet>
         </View>
     );
 }

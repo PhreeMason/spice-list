@@ -4,7 +4,15 @@ import { StatusBar } from 'expo-status-bar';
 export default function Layout() {
     return (
         <>
-            <Stack />
+            <Stack>
+                <Stack.Screen
+                    name="new/[bookId]"
+                    options={{
+                        headerShown: false,
+                        presentation: "modal"
+                    }}
+                />
+            </Stack>
             <StatusBar style="light" />
         </>
     );

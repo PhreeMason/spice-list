@@ -5,7 +5,48 @@ import BookPageButtons from './BookPageButtons';
 import ReadingSessionTracker from './ReadingSessionTracker';
 import RenderStars from './RenderStars';
 
-const BookView = ({ book, user_books }) => {
+type Props = {
+    book: {
+        id: number;
+        created_at: string;
+        title: string;
+        authors: string;
+        google_rating?: number | null;
+        series_name?: string | null;
+        description: string;
+        google_books_id?: string | null;
+        google_details_link?: string | null;
+        publisher: string;
+        good_reads_description?: string | null;
+        num_pages: number;
+        published_date: string;
+        good_reads_rating: number;
+        good_reads_image_url: string;
+        good_reads_rating_count: number;
+        good_reads_book_id: string;
+        isbn: string;
+        genres: {
+            genre: {
+                name: string;
+            };
+        }[];
+    };
+    user_books: {
+        book_id: number;
+        created_at: string;
+        end_date: string | null;
+        exclusive_shelf: string;
+        id: number;
+        my_rating: number | null;
+        my_review: string | null;
+        owned_copies: number | null;
+        read_count: number | null;
+        start_date: string | null;
+        user_id: string;
+    }[] | undefined;
+};
+
+const BookView = ({ book, user_books }: Props) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     return (

@@ -28,7 +28,7 @@ const SegmentCotrolSlider: React.FC<SegmentedControlProps> = React.memo(
         const { width: windowWidth } = useWindowDimensions();
 
         const internalPadding = 20;
-        const segmentedControlWidth = windowWidth - 40;
+        const segmentedControlWidth = windowWidth;
 
         const itemWidth =
             (segmentedControlWidth - internalPadding) / options.length;

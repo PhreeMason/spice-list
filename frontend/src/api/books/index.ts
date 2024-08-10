@@ -127,7 +127,17 @@ type BookWithUserBooks = {
         };
     }[];
     user_books: {
+        book_id: number;
+        created_at: string;
+        end_date: string | null;
+        exclusive_shelf: string;
         id: number;
+        my_rating: number | null;
+        my_review: string | null;
+        owned_copies: number | null;
+        read_count: number | null;
+        start_date: string | null;
+        user_id: string;
     }[];
 };
 
@@ -141,7 +151,7 @@ export const useGetBookById = (bookId: number) => {
                     `*, genres:book_genres(
                             genre:genre_id(name)
                         ), 
-                        user_books(id)`,
+                        user_books(*)`,
                 )
                 .eq('id', bookId)
                 .returns<BookWithUserBooks[]>()

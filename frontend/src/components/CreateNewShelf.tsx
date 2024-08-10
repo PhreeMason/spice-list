@@ -40,11 +40,11 @@ const CreateShelfComponent = ({
 
     return (
         <>
-            <Animated.Text className="text-xl font-bold mb-4 text-center text-gray-800">
+            <Animated.Text className="text-2xl font-bold mb-4 text-center text-gray-800">
                 Give your new shelf a name
             </Animated.Text>
             <TextInput
-                className="border border-gray-300 rounded-md p-2 mb-4"
+                className="border border-gray-600 rounded-md p-4 mb-4 w-full"
                 value={shelfName}
                 onChangeText={setShelfName}
                 placeholder="Enter shelf name"
@@ -56,19 +56,19 @@ const CreateShelfComponent = ({
             <View className="flex-row justify-between gap-6">
                 <Text
                     onPress={onClose}
-                    className="text-gray-800 font-semibold underline self-center"
+                    className="text-gray-800 font-semibold underline self-center text-md p-4"
                 >
                     Cancel
                 </Text>
 
                 <TouchableOpacity
-                    className={`py-1 px-4 rounded-md ${
+                    className={`py-1 px-4 rounded-md p-4 px-6 ${
                         isCreating ? 'bg-blue-300' : 'bg-blue-500'
                     }`}
                     onPress={handleCreate}
                     disabled={isCreating}
                 >
-                    <Text className="text-white font-semibold">
+                    <Text className="text-white font-semibold text-md">
                         {isCreating ? 'Creating...' : 'Create'}
                     </Text>
                 </TouchableOpacity>

@@ -86,7 +86,7 @@ export const useGetUserBooks = (bookId?: number) => {
             if (!user_id) throw new Error('User not found');
             const { data, error } = await supabase
                 .from('user_books')
-                .select('*, book:book_id(*)')
+                .select('*')
                 .eq('user_id', user_id)
                 .order('created_at', { ascending: false });
             if (error) {
@@ -94,7 +94,7 @@ export const useGetUserBooks = (bookId?: number) => {
             }
 
             if (bookId) {
-                return data.filter((book: any) => book.book.id === bookId);
+                return data.filter((userBook: any) => userBook.book_id === bookId);
             }
             return data;
         },

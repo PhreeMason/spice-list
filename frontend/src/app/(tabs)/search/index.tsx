@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import ScanListItem from '@/components/ScanListItem';
 import { useMyScanList } from '@/api/book-scans';
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 
 export default function SearchScreen() {
     const { data: scans, isLoading, error } = useMyScanList();
@@ -15,25 +15,24 @@ export default function SearchScreen() {
         return <Text>{error.message}</Text>;
     }
 
-    if (!scans || scans.length === 0) {
-        return (
-            <View className="flex-1 justify-center items-center">
-                <Text className="mb-4">No scans found</Text>
-                <Link href="/scan" className="bg-blue-500 p-2 rounded-md">
-                    <Text className="text-white">Scan your first book</Text>
-                </Link>
-            </View>
-        );
-    }
     return (
         <View className="flex-1">
             <Link asChild href={'/search/books'}>
-                <TouchableOpacity className="bg-white p-2 rounded-md items-center w-11/12 self-center">
-                    <Feather name="search" size={20} color="gray" />
-                    <Text className="text-black p-2">Search Books</Text>
+                <TouchableOpacity className="border border-gray-200 bg-white px-4 p-2 rounded-md mb-2 items-center w-full self-center flex-row">
+                    <View className="flex-1 flex-row items-center p-2">
+                        <Feather name="search" size={20} color="gray" />
+                        <Text className="text-black pl-2">Search</Text>
+                    </View>
+                    <Ionicons name="barcode-sharp" size={24} color="black" />
                 </TouchableOpacity>
             </Link>
             <FlatList
+                ListEmptyComponent={() => <View className="flex-1 justify-center items-center">
+                    <Text className="mb-4">No books found</Text>
+                    <Link href="/search/barcode-scan">
+                        <Text className="text-white text-blue-500 text-semibold">Scan your first book</Text>
+                    </Link>
+                </View>}
                 refreshing={isLoading}
                 onRefresh={() =>
                     queryClient.invalidateQueries({ queryKey: ['user_scans'] })

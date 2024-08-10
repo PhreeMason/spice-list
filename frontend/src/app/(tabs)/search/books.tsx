@@ -23,14 +23,14 @@ export default function SearchScreen() {
 
     if (!onLineBooks || onLineBooks.length === 0) {
         return (
-            <View className="flex-1 justify-around items-center">
+            <View className="flex-1 justify-start items-center">
                 <SearchBar
                     value={search}
                     onChangeText={setSearch}
                     placeholder="Search"
                     autoFocus
                 />
-                <Text className="mb-4">No books found</Text>
+                <Text className="mb-4">Enter a book to search</Text>
             </View>
         );
     }

@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+import { Feather, Ionicons } from '@expo/vector-icons';
 
 interface SearchBarProps {
     placeholder: string;
     onChangeText: (text: string) => void;
     value: string;
     autoFocus?: boolean;
+    showBarcodeScanner?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -14,6 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     onChangeText,
     value,
     autoFocus,
+    showBarcodeScanner = true,
 }) => {
     return (
         <View style={styles.container}>
@@ -25,6 +28,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 value={value}
                 autoFocus={!!autoFocus}
             />
+            {showBarcodeScanner ? <Link href={'/search/barcode-scan'}>
+                <Ionicons name="barcode-sharp" size={24} color="black" />
+            </Link> : null}
+
         </View>
     );
 };
@@ -34,10 +41,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
-        height: 35,
+        height: 50,
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
         margin: 10,
+        width: '99%'
     },
     input: {
         marginLeft: 5,

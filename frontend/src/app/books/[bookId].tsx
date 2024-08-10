@@ -15,7 +15,7 @@ const formatTitle = (title: string) => {
 function BookDetailsScreen() {
     const { bookId } = useLocalSearchParams();
     const bookIdNumber = Number(bookId);
-    const { data, isLoading, error } = useGetBookById(bookIdNumber);
+    const { data: book, isLoading, error } = useGetBookById(bookIdNumber);
 
     if (isLoading) {
         return <ActivityIndicator size="large" />;
@@ -25,10 +25,9 @@ function BookDetailsScreen() {
         return <Text>{error.message}</Text>;
     }
 
-    if (!data || !data.title) {
+    if (!book || !book.title) {
         return <Text>No book found</Text>;
     }
-    const book = data;
     return (
         <ScrollView className="flex-1 bg-white">
             <Stack.Screen options={{ title: formatTitle(book.title) }} />

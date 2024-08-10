@@ -130,26 +130,28 @@ export default function LibraryScreen() {
                     Recent Shelves
                 </Text>
                 {/* First Row */}
-                <FlashList
-                    data={bookshelves}
-                    renderItem={({ item }) => (
-                        <Link
-                            href={`/shelves/shelf/${item.id}`}
-                            asChild
-                            className="w-full"
-                        >
-                            <TouchableOpacity>
-                                <ImageTextBar
-                                    imageUri="https://i.pravatar.cc/100"
-                                    text={item.name}
-                                />
-                            </TouchableOpacity>
-                        </Link>
-                    )}
-                    numColumns={2}
-                    estimatedItemSize={6}
-                    keyExtractor={item => item.name}
-                />
+                <View>
+                    <FlashList
+                        data={bookshelves}
+                        renderItem={({ item }) => (
+                            <Link
+                                href={`/shelves/shelf/${item.id}`}
+                                asChild
+                                className="w-full"
+                            >
+                                <TouchableOpacity>
+                                    <ImageTextBar
+                                        imageUri="https://i.pravatar.cc/100"
+                                        text={item.name}
+                                    />
+                                </TouchableOpacity>
+                            </Link>
+                        )}
+                        numColumns={2}
+                        estimatedItemSize={6}
+                        keyExtractor={item => item.name}
+                    />
+                </View>
             </ScrollView>
         </LinearGradient>
     );
