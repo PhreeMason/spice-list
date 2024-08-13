@@ -28,6 +28,27 @@ export const useGetPreviousReadingSession = (user_book_id: number) => {
     });
 };
 
+export const useGetReadingSessions = (bookId: number) => {
+    const { profile } = useAuth();
+    const user_id = profile?.id;
+
+    return useQuery({
+        queryKey: ['reading_sessions', bookId],
+        queryFn: async () => {
+            if (!user_id) throw new Error('User not found');
+
+            const { data, error } = await supabase
+                .from('reading_sessions')
+                .select('*, user_books(*)')
+                .eq('user_books.book_id', bookId)
+
+            if (error) throw new Error(error.message);
+            return data;
+        },
+        enabled: !!user_id && !!bookId,
+    });
+};
+
 // Insert or Update Reading Session
 export const useUpsertReadingSession = () => {
     const queryClient = useQueryClient();

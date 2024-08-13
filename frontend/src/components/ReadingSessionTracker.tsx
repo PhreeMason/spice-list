@@ -41,40 +41,6 @@ const ReadingSessionTracker = ({ userBookId }: { userBookId: number }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Reading Session Tracker</Text>
 
-            {previousSession ? (
-                <View style={styles.previousSession}>
-                    <Text>Previous Session:</Text>
-                    <Text>Start Page: {previousSession.start_page}</Text>
-                    <Text>End Page: {previousSession.end_page}</Text>
-
-                    {previousSession.end_page && previousSession.start_page ? (
-                        <Text>
-                            Pages Read:{' '}
-                            {previousSession.end_page -
-                                previousSession.start_page}
-                        </Text>
-                    ) : null}
-                    <Text>
-                        Time Spent: {previousSession.time_spent} minutes
-                    </Text>
-
-                    {previousSession.time_spent &&
-                    previousSession.start_page &&
-                    previousSession.end_page ? (
-                        <Text>
-                            Pages Per Minute :{' '}
-                            {(
-                                (previousSession.end_page -
-                                    previousSession.start_page) /
-                                previousSession.time_spent
-                            ).toFixed(2)}
-                        </Text>
-                    ) : null}
-                </View>
-            ) : (
-                <Text>No previous reading session found. Start a new one!</Text>
-            )}
-
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}

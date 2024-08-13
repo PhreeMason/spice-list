@@ -2,8 +2,8 @@ import { View, Text, Image } from 'react-native';
 import React, { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import BookPageButtons from './BookPageButtons';
-import ReadingSessionTracker from './ReadingSessionTracker';
 import RenderStars from './RenderStars';
+import { Link } from 'expo-router';
 
 type Props = {
     book: {
@@ -120,9 +120,9 @@ const BookView = ({ book, user_books }: Props) => {
                 ))}
             </View>
 
-            {user_books?.length ? (
-                <ReadingSessionTracker userBookId={user_books[0].id} />
-            ) : null}
+            <Link href={`/books/logs/${book.id}`}>
+                <Text className='text-blue-500 underline'> Logs </Text>
+            </Link>
 
             <Text className="text-lg font-spice-semibold mb-2">
                 Description

@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { Text, View, FlatList } from 'react-native';
-import { Link } from 'expo-router';
 
 import SearchBar from '@/components/SearchBar';
 import { useSearchBooks } from '@/api/books';
