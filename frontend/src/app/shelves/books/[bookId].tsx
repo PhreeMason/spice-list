@@ -19,7 +19,6 @@ import {
 import { ExclusiveSelfOptions } from '@/constants';
 import type { ExclusiveSelf } from '@/types/index';
 
-
 const RightIcon = ({ onPress }: { onPress: () => void }) => (
     <TouchableOpacity onPress={onPress} className="px-6">
         <Feather name="plus-circle" size={24} color={'#5FA2EF'} />
@@ -63,15 +62,21 @@ export default function ShelvesScreen() {
         const { id: shelfId, bookShelfBookId, isSelected } = shelfData;
         setListLoading(shelfId);
         if (isSelected && bookShelfBookId) {
-            removeBookFromShelf({ bookShelfBookId }, {
-                onSuccess: () => setListLoading(0),
-                onError: () => setListLoading(0),
-            });
+            removeBookFromShelf(
+                { bookShelfBookId },
+                {
+                    onSuccess: () => setListLoading(0),
+                    onError: () => setListLoading(0),
+                },
+            );
         } else {
-            addBookToShelf({ book_id: bookIdNumber, bookshelf_id: shelfId }, {
-                onSuccess: () => setListLoading(0),
-                onError: () => setListLoading(0),
-            });
+            addBookToShelf(
+                { book_id: bookIdNumber, bookshelf_id: shelfId },
+                {
+                    onSuccess: () => setListLoading(0),
+                    onError: () => setListLoading(0),
+                },
+            );
         }
     };
 
@@ -85,13 +90,19 @@ export default function ShelvesScreen() {
 
     const selectedOption =
         userBooks?.[0]?.exclusive_shelf || ExclusiveSelfOptions[0];
-    
+
     return (
         <View className="flex-1 bg-white">
             <Stack.Screen
                 options={{
                     headerTitle: 'Add to Shelves',
-                    headerRight: () => <RightIcon onPress={() => router.push(`/shelves/new/${bookId}`)} />,
+                    headerRight: () => (
+                        <RightIcon
+                            onPress={() =>
+                                router.push(`/shelves/new/${bookId}`)
+                            }
+                        />
+                    ),
                 }}
             />
             <SearchBar

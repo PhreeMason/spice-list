@@ -31,19 +31,21 @@ type Props = {
             };
         }[];
     };
-    user_books: {
-        book_id: number;
-        created_at: string;
-        end_date: string | null;
-        exclusive_shelf: string;
-        id: number;
-        my_rating: number | null;
-        my_review: string | null;
-        owned_copies: number | null;
-        read_count: number | null;
-        start_date: string | null;
-        user_id: string;
-    }[] | undefined;
+    user_books:
+        | {
+              book_id: number;
+              created_at: string;
+              end_date: string | null;
+              exclusive_shelf: string;
+              id: number;
+              my_rating: number | null;
+              my_review: string | null;
+              owned_copies: number | null;
+              read_count: number | null;
+              start_date: string | null;
+              user_id: string;
+          }[]
+        | undefined;
 };
 
 const BookView = ({ book, user_books }: Props) => {

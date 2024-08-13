@@ -9,9 +9,9 @@ type Book = {
     authors: string;
     good_reads_image_url: string;
     good_reads_rating: number;
-  };
-  
-  type UserBook = {
+};
+
+type UserBook = {
     id: number;
     book: Book;
     book_id: number;
@@ -24,9 +24,9 @@ type Book = {
     start_date: null | string;
     owned_copies: null | number;
     exclusive_shelf: string;
-  };
-  
-  export type ShelfEntry = {
+};
+
+export type ShelfEntry = {
     id: number;
     created_at: string;
     user_book_id: number;
@@ -35,9 +35,9 @@ type Book = {
     bookshelves: {
         name: string;
     };
-  };
-  
-  type ShelfEntries = ShelfEntry[];
+};
+
+type ShelfEntries = ShelfEntry[];
 
 export const useAddToExclusiveShelf = () => {
     const queryClient = useQueryClient();
@@ -95,7 +95,9 @@ export const useGetUserBooks = (bookId?: number) => {
             }
 
             if (bookId) {
-                return data.filter((userBook: any) => userBook.book_id === bookId);
+                return data.filter(
+                    (userBook: any) => userBook.book_id === bookId,
+                );
             }
             return data;
         },
@@ -110,10 +112,10 @@ export const useGetBookShelves = () => {
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
             const { data, error } = await supabase
-            .from('bookshelves')
-            .select('*')
-            .eq('user_id', user_id)
-            .order('created_at', { ascending: false });
+                .from('bookshelves')
+                .select('*')
+                .eq('user_id', user_id)
+                .order('created_at', { ascending: false });
 
             if (error) {
                 throw new Error(error.message);

@@ -9,7 +9,7 @@ export default function Layout() {
                     name="new/[bookId]"
                     options={{
                         headerShown: false,
-                        presentation: "modal"
+                        presentation: 'modal',
                     }}
                 />
             </Stack>

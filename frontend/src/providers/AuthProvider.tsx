@@ -6,7 +6,6 @@ import {
     useEffect,
     useState,
     useContext,
-    useMemo,
 } from 'react';
 import { Profile } from '@/types/index';
 
@@ -21,7 +20,7 @@ const AuthContext = createContext<AuthData>({
     loading: false,
     session: null,
     profile: null,
-    signOut: async () => { },
+    signOut: async () => {},
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {

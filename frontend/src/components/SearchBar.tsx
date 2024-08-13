@@ -28,10 +28,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 value={value}
                 autoFocus={!!autoFocus}
             />
-            {showBarcodeScanner ? <Link href={'/search/barcode-scan'}>
-                <Ionicons name="barcode-sharp" size={24} color="black" />
-            </Link> : null}
-
+            {showBarcodeScanner ? (
+                <Link href={'/search/barcode-scan'}>
+                    <Ionicons name="barcode-sharp" size={24} color="black" />
+                </Link>
+            ) : null}
         </View>
     );
 };
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
         margin: 10,
-        width: '99%'
+        width: '99%',
     },
     input: {
         marginLeft: 5,

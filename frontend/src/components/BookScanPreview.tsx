@@ -73,9 +73,9 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                                 className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
                             >
                                 {typeof trope === 'string'
-                                ? trope
-                                // @ts-ignore
-                                : trope.genre?.name}
+                                    ? trope
+                                    : // @ts-ignore
+                                      trope.genre?.name}
                             </Text>
                         ))}
                     </View>

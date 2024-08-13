@@ -12,11 +12,10 @@ export default function Layout() {
                 <Stack.Screen name="books" options={{ headerShown: false }} />
                 <Stack.Screen
                     name="barcode-scan"
-                    options={{ 
+                    options={{
                         headerShown: false,
-                        presentation: 'modal'
+                        presentation: 'modal',
                     }}
-
                 />
             </Stack>
             <StatusBar style="dark" />

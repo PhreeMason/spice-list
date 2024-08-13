@@ -26,17 +26,25 @@ export default function SearchScreen() {
                 </Link>
                 <Link asChild href={'/search/barcode-scan'}>
                     <TouchableOpacity>
-                        <Ionicons name="barcode-sharp" size={24} color="black" />
+                        <Ionicons
+                            name="barcode-sharp"
+                            size={24}
+                            color="black"
+                        />
                     </TouchableOpacity>
                 </Link>
             </View>
             <FlatList
-                ListEmptyComponent={() => <View className="flex-1 justify-center items-center">
-                    <Text className="mb-4">No books found</Text>
-                    <Link href="/search/barcode-scan">
-                        <Text className="text-white text-blue-500 text-semibold">Scan your first book</Text>
-                    </Link>
-                </View>}
+                ListEmptyComponent={() => (
+                    <View className="flex-1 justify-center items-center">
+                        <Text className="mb-4">No books found</Text>
+                        <Link href="/search/barcode-scan">
+                            <Text className="text-white text-blue-500 text-semibold">
+                                Scan your first book
+                            </Text>
+                        </Link>
+                    </View>
+                )}
                 refreshing={isLoading}
                 onRefresh={() =>
                     queryClient.invalidateQueries({ queryKey: ['user_scans'] })

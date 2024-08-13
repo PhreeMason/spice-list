@@ -19,12 +19,14 @@ const BookShelfItem = ({
             className="flex-row w-full items-center justify-between p-4 border-b border-gray-200"
         >
             <Text className="text-lg">{shelf.name}</Text>
-            {isLoading ?
-                <ActivityIndicator size="small" color="#0000ff" /> :
+            {isLoading ? (
+                <ActivityIndicator size="small" color="#0000ff" />
+            ) : (
                 <Checkbox
                     status={shelf.isSelected ? 'checked' : 'unchecked'}
                     onPress={() => handleShelfToggle(shelf)}
-                />}
+                />
+            )}
         </TouchableOpacity>
     );
 };

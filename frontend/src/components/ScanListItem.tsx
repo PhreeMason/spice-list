@@ -1,5 +1,5 @@
 import { ScanResponseItem } from '@/api/book-scans';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import RenderStars from '@/components/RenderStars';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
