@@ -1,22 +1,32 @@
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import React from 'react';
-import {useGetBooksOfShelf} from '@/api/bookshelves';
-import { useLocalSearchParams } from 'expo-router';
+import { useGetBooksOfShelf } from '@/api/bookshelves';
+import { useLocalSearchParams, Stack } from 'expo-router';
+import { ActivityIndicator, Title } from 'react-native-paper';
+import { FlashList } from '@shopify/flash-list';
+import ShelfListItem from '@/components/ShelfListItem';
 
 const Shelf = () => {
     const { shelfId } = useLocalSearchParams();
     const shelfID = Number(shelfId);
-    const { data, isLoading, error } = useGetBooksOfShelf(shelfID);
-    
-    console.log(
-        JSON.stringify(
-            {shelfID, shelfId, data, isLoading, error}, 
-            null, 
-            2)
-    );
+    const { data: items, isLoading, error } = useGetBooksOfShelf(shelfID);
+
+    if (isLoading) return <ActivityIndicator />;
+
+    if (error) return <Text>Error: {error.message}</Text>;
+    const shelfName = items?.[0].bookshelves.name;
     return (
-        <View>
-            <Text>Shelf</Text>
+        <View className='flex-1'>
+            <Stack.Screen options={{
+                title: shelfName || 'Shelf',
+            }} />
+
+            <FlashList
+                data={items}
+                keyExtractor={(item) => item.id.toString()}
+                estimatedItemSize={86}
+                renderItem={({ item }) => <ShelfListItem item={item} />}
+            />
         </View>
     );
 };

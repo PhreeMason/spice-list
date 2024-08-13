@@ -4,6 +4,41 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/providers/AuthProvider';
 import { ExclusiveSelf } from '@/types';
 
+type Book = {
+    title: string;
+    authors: string;
+    good_reads_image_url: string;
+    good_reads_rating: number;
+  };
+  
+  type UserBook = {
+    id: number;
+    book: Book;
+    book_id: number;
+    user_id: string;
+    end_date: null | string;
+    my_rating: null | number;
+    my_review: null | string;
+    created_at: string;
+    read_count: null | number;
+    start_date: null | string;
+    owned_copies: null | number;
+    exclusive_shelf: string;
+  };
+  
+  export type ShelfEntry = {
+    id: number;
+    created_at: string;
+    user_book_id: number;
+    bookshelf_id: number;
+    user_book: UserBook;
+    bookshelves: {
+        name: string;
+    };
+  };
+  
+  type ShelfEntries = ShelfEntry[];
+
 export const useAddToExclusiveShelf = () => {
     const queryClient = useQueryClient();
     const { profile } = useAuth();
@@ -67,29 +102,22 @@ export const useGetUserBooks = (bookId?: number) => {
     });
 };
 
-export const useGetBookShelves = (limit?: number) => {
+export const useGetBookShelves = () => {
     const { profile } = useAuth();
     const user_id = profile?.id;
     return useQuery({
-        queryKey: ['bookshelves', user_id, limit],
+        queryKey: ['bookshelves', user_id],
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
-            let query = supabase
-                .from('bookshelves')
-                .select('*')
-                .eq('user_id', user_id)
-                .order('created_at', { ascending: false });
-
-            if (limit) {
-                query = query.limit(limit);
-            }
-
-            const { data, error } = await query;
+            const { data, error } = await supabase
+            .from('bookshelves')
+            .select('*')
+            .eq('user_id', user_id)
+            .order('created_at', { ascending: false });
 
             if (error) {
                 throw new Error(error.message);
             }
-            console.log({data});
             return data;
         },
     });
@@ -100,7 +128,7 @@ export const useGetBookShelvesForBook = (bookId: number) => {
     const user_id = profile?.id;
 
     return useQuery({
-        queryKey: ['book_shelves', user_id, bookId],
+        queryKey: ['bookshelves', user_id, bookId],
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
             const { data, error } = await supabase
@@ -148,11 +176,10 @@ export const useAddBookToShelf = () => {
                 .from('user_books')
                 .upsert(
                     { user_id, book_id },
-                    { onConflict: 'user_id,book_id', ignoreDuplicates: true },
+                    { onConflict: 'user_id,book_id', ignoreDuplicates: false },
                 )
-                .select()
+                .select('*')
                 .single();
-
             if (userBookError) throw new Error(userBookError.message);
 
             // Then, add the book to the bookshelf
@@ -166,7 +193,6 @@ export const useAddBookToShelf = () => {
                 .single();
 
             if (error) throw new Error(error.message);
-
             return { ...data, book_id };
         },
         onSuccess: () => {
@@ -178,7 +204,7 @@ export const useAddBookToShelf = () => {
                 queryKey: ['user_books', user_id],
             });
             queryClient.invalidateQueries({
-                queryKey: ['book_shelves', user_id],
+                queryKey: ['bookshelf_books', user_id],
             });
         },
     });
@@ -221,9 +247,6 @@ export const useAddBookToNewShelf = () => {
             queryClient.invalidateQueries({
                 queryKey: ['user_books', user_id],
             });
-            queryClient.invalidateQueries({
-                queryKey: ['book_shelves', user_id],
-            });
         },
     });
 };
@@ -249,7 +272,7 @@ export const useRemoveBookFromShelf = () => {
         onSuccess: () => {
             // Invalidate and refetch relevant queries
             queryClient.invalidateQueries({
-                queryKey: ['book_shelves', user_id],
+                queryKey: ['bookshelves', user_id],
             });
         },
     });
@@ -268,16 +291,26 @@ export const useGetBooksOfShelf = (shelfId: number) => {
                 .from('bookshelf_books')
                 .select(
                     `
-                    user_book_id,
-                    
+                    *,
+                    bookshelves: bookshelf_id(name),
+                    user_book: user_book_id(
+                        *, 
+                        book:book_id(
+                            id,
+                            title, 
+                            authors, 
+                            good_reads_image_url,
+                            good_reads_rating
+                            )
+                        )
                     `,
                 )
-                .eq('bookshelf_id', shelfId);
+                .eq('bookshelf_id', shelfId)
+                .returns<ShelfEntries>();
 
             if (error) {
                 throw new Error(error.message);
             }
-            console.log(data);
             return data;
         },
     });

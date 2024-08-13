@@ -3,7 +3,6 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Feather } from '@expo/vector-icons';
-import { useSharedValue } from 'react-native-reanimated';
 
 import type { ShelfListItem } from '@/types/index';
 import BookShelfItem from '@/components/BookShelfItem';
@@ -39,8 +38,9 @@ export default function ShelvesScreen() {
         useGetBookShelvesForBook(bookIdNumber);
     const { mutate: removeBookFromShelf } = useRemoveBookFromShelf();
     const { mutate: addToExclusiveShelf } = useAddToExclusiveShelf();
+    const [listLoading, setListLoading] = useState(0);
 
-    const shelvesList: ShelfListItem[] = useMemo(() => {
+    const shelvesList = (): ShelfListItem[] => {
         if (!bookShelves) return [];
 
         return bookShelves
@@ -57,21 +57,22 @@ export default function ShelvesScreen() {
                     isSelected: selectedBookShelf ? true : false,
                 };
             });
-    }, [bookShelves, bookShelvesForBook, searchText]);
+    };
 
     const handleShelfToggle = (shelfData: ShelfListItem) => {
         const { id: shelfId, bookShelfBookId, isSelected } = shelfData;
+        setListLoading(shelfId);
         if (isSelected && bookShelfBookId) {
-            removeBookFromShelf({ bookShelfBookId });
+            removeBookFromShelf({ bookShelfBookId }, {
+                onSuccess: () => setListLoading(0),
+                onError: () => setListLoading(0),
+            });
         } else {
-            addBookToShelf({ book_id: bookIdNumber, bookshelf_id: shelfId });
+            addBookToShelf({ book_id: bookIdNumber, bookshelf_id: shelfId }, {
+                onSuccess: () => setListLoading(0),
+                onError: () => setListLoading(0),
+            });
         }
-    };
-
-    const isOpen = useSharedValue(false);
-
-    const toggleSheet = () => {
-        isOpen.value = !isOpen.value;
     };
 
     if (isLoadingShelves || isLoadingBookShelves) {
@@ -84,6 +85,7 @@ export default function ShelvesScreen() {
 
     const selectedOption =
         userBooks?.[0]?.exclusive_shelf || ExclusiveSelfOptions[0];
+    
     return (
         <View className="flex-1 bg-white">
             <Stack.Screen
@@ -111,11 +113,12 @@ export default function ShelvesScreen() {
             />
 
             <FlashList
-                data={shelvesList}
+                data={shelvesList()}
                 renderItem={({ item }) => (
                     <BookShelfItem
                         handleShelfToggle={handleShelfToggle}
                         shelf={item}
+                        isLoading={listLoading === item.id}
                     />
                 )}
                 estimatedItemSize={50}

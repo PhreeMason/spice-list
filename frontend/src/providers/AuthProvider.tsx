@@ -21,7 +21,7 @@ const AuthContext = createContext<AuthData>({
     loading: false,
     session: null,
     profile: null,
-    signOut: async () => {},
+    signOut: async () => { },
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -53,23 +53,20 @@ export default function AuthProvider({ children }: PropsWithChildren) {
             setSession(authSession);
         });
     }, []);
-    const providerValue = useMemo(
-        () => ({
-            session,
-            loading,
-            profile,
-            signOut: async () => {
-                try {
-                    await supabase.auth.signOut();
-                    setSession(null);
-                    setProfile(null);
-                } catch (error) {
-                    console.log('error signing out', error);
-                }
-            },
-        }),
-        [loading, profile, session],
-    );
+    const providerValue = {
+        session,
+        loading,
+        profile,
+        signOut: async () => {
+            try {
+                await supabase.auth.signOut();
+                setSession(null);
+                setProfile(null);
+            } catch (error) {
+                console.log('error signing out', error);
+            }
+        },
+    };
     return (
         <AuthContext.Provider value={providerValue}>
             {children}
