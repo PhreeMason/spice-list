@@ -17,15 +17,19 @@ export default function SearchScreen() {
 
     return (
         <View className="flex-1">
-            <Link asChild href={'/search/books'}>
-                <TouchableOpacity className="border border-gray-200 bg-white px-4 p-2 rounded-md mb-2 items-center w-full self-center flex-row">
-                    <View className="flex-1 flex-row items-center p-2">
+            <View className="border border-gray-200 bg-white px-4 p-2 rounded-md mb-2 items-center w-full self-center flex-row">
+                <Link asChild href={'/search/books'}>
+                    <TouchableOpacity className="flex-1 flex-row items-center p-2">
                         <Feather name="search" size={20} color="gray" />
                         <Text className="text-black pl-2">Search</Text>
-                    </View>
-                    <Ionicons name="barcode-sharp" size={24} color="black" />
-                </TouchableOpacity>
-            </Link>
+                    </TouchableOpacity>
+                </Link>
+                <Link asChild href={'/search/barcode-scan'}>
+                    <TouchableOpacity>
+                        <Ionicons name="barcode-sharp" size={24} color="black" />
+                    </TouchableOpacity>
+                </Link>
+            </View>
             <FlatList
                 ListEmptyComponent={() => <View className="flex-1 justify-center items-center">
                     <Text className="mb-4">No books found</Text>

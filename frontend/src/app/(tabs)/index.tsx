@@ -132,6 +132,10 @@ export default function LibraryScreen() {
                 {/* First Row */}
                 <View>
                     <FlashList
+                        ListEmptyComponent={<View>
+                            <Text>No shelves found
+                            </Text>
+                        </View>}
                         data={bookshelves}
                         renderItem={({ item }) => (
                             <Link

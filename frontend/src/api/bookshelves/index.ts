@@ -43,40 +43,6 @@ export const useAddToExclusiveShelf = () => {
     });
 };
 
-export const useAddToBookShelf = () => {
-    const queryClient = useQueryClient();
-    const { profile } = useAuth();
-    const user_id = profile?.id;
-
-    return useMutation({
-        async mutationFn({
-            user_book_id,
-            bookshelf_id,
-        }: {
-            user_book_id: number;
-            bookshelf_id: number;
-        }) {
-            if (!user_id) throw new Error('User not found');
-            const { error, data } = await supabase
-                .from('bookshelf_books')
-                .insert({
-                    user_book_id,
-                    bookshelf_id,
-                })
-                .select();
-            if (error) {
-                throw new Error(error.message);
-            }
-            return data;
-        },
-        async onSuccess() {
-            await queryClient.invalidateQueries({
-                queryKey: ['user_books', user_id],
-            });
-        },
-    });
-};
-
 export const useGetUserBooks = (bookId?: number) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
@@ -123,6 +89,7 @@ export const useGetBookShelves = (limit?: number) => {
             if (error) {
                 throw new Error(error.message);
             }
+            console.log({data});
             return data;
         },
     });
@@ -284,6 +251,34 @@ export const useRemoveBookFromShelf = () => {
             queryClient.invalidateQueries({
                 queryKey: ['book_shelves', user_id],
             });
+        },
+    });
+};
+
+export const useGetBooksOfShelf = (shelfId: number) => {
+    const { profile } = useAuth();
+    const user_id = profile?.id;
+
+    return useQuery({
+        queryKey: ['bookshelf_books', user_id, shelfId],
+        queryFn: async () => {
+            if (!user_id) throw new Error('User not found');
+            // return books of the shelf
+            const { data, error } = await supabase
+                .from('bookshelf_books')
+                .select(
+                    `
+                    user_book_id,
+                    
+                    `,
+                )
+                .eq('bookshelf_id', shelfId);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+            console.log(data);
+            return data;
         },
     });
 };

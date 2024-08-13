@@ -20,9 +20,6 @@ const BookPageButtons = ({ bookId }: { bookId: number}) => {
             addToExclusiveShelf({
                 book_id: bookId,
                 exclusive_shelf: 'to-read',
-            }, {
-                onSuccess: (resp) => console.log(resp),
-                onError: (err) => console.log(err),
             })
         }
     }

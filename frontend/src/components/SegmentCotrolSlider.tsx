@@ -107,7 +107,6 @@ const styles = StyleSheet.create({
     },
     labelContainer: { justifyContent: 'center', alignItems: 'center' },
     label: {
-        fontFamily: 'SF-Compact-Rounded-Medium',
         fontSize: 16,
     },
 });

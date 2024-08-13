@@ -19,7 +19,6 @@ import {
 } from '@/api/bookshelves';
 import { ExclusiveSelfOptions } from '@/constants';
 import type { ExclusiveSelf } from '@/types/index';
-import { createExclusiveShelfName } from '@/utils/helpers';
 
 
 const RightIcon = ({ onPress }: { onPress: () => void }) => (
