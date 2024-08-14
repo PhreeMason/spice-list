@@ -67,7 +67,7 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                         <RenderStars rating={book.good_reads_rating || 0} />
                     </View>
                     <View className="flex flex-row flex-wrap gap-1 mb-1">
-                        {book.genres.slice(0, 7).map(trope => (
+                        {book.genres && book.genres.length ? book.genres.slice(0, 7).map(trope => (
                             <Text
                                 key={uuidv4()}
                                 className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
@@ -77,7 +77,7 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                                     : // @ts-ignore
                                       trope.genre?.name}
                             </Text>
-                        ))}
+                        )): null}
                     </View>
                 </View>
             </View>

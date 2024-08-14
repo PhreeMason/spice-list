@@ -1,5 +1,5 @@
 import { Text, View, FlatList } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -11,12 +11,13 @@ export default function SearchScreen() {
     const { data: scans, isLoading, error } = useMyScanList();
     const queryClient = useQueryClient();
 
+
     if (error) {
         return <Text>{error.message}</Text>;
     }
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 w-full">
             <View className="border border-gray-200 bg-white px-4 p-2 rounded-md mb-2 items-center w-full self-center flex-row">
                 <Link asChild href={'/search/books'}>
                     <TouchableOpacity className="flex-1 flex-row items-center p-2">
@@ -51,9 +52,9 @@ export default function SearchScreen() {
                 }
                 data={scans}
                 renderItem={({ item }) => (
-                    <Link href={`/books/${item.book.id}`}>
+                    <TouchableOpacity onPress={() => router.push(`/books/${item.book.id}`)}>
                         <ScanListItem item={item} />
-                    </Link>
+                    </TouchableOpacity>
                 )}
                 ItemSeparatorComponent={() => (
                     <View className="h-1 w-full border-b" />

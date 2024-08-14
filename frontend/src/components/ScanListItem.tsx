@@ -3,6 +3,7 @@ import { Image, Text, View } from 'react-native';
 import RenderStars from '@/components/RenderStars';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
+
 dayjs.extend(relativeTime);
 
 export default function ScanListItem({ item }: { item: ScanResponseItem }) {
@@ -43,4 +44,4 @@ export default function ScanListItem({ item }: { item: ScanResponseItem }) {
             </View>
         </View>
     );
-}
+};
