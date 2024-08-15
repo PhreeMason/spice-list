@@ -177,6 +177,9 @@ export const useGetCurrentlyReadingBooks = () => {
                 .select(
                     `
                     id,
+                    start_date,
+                    exclusive_shelf,
+                    end_date,
                     book:book_id(
                         id,
                         title,
@@ -184,18 +187,18 @@ export const useGetCurrentlyReadingBooks = () => {
                         good_reads_image_url,
                         num_pages
                     ),
-                    exclusive_shelf,
-                    end_date,
                     reading_sessions(
-                        end_page
+                        start_page,
+                        end_page,
+                        pages_read,
+                        time_spent
                     )
                 `,
                 )
                 .eq('user_id', user_id)
                 .eq('exclusive_shelf', 'reading')
-                .order('created_at', { ascending: false })
                 .returns<CurrentReadsQuery>();
-
+            
             if (error) {
                 throw new Error(error.message);
             }
@@ -208,6 +211,7 @@ export const useGetCurrentlyReadingBooks = () => {
                     ? item.reading_sessions[item.reading_sessions.length - 1]
                     : null;
                 return {
+                    startDate: item.start_date,
                     coverUrl: item.book.good_reads_image_url,
                     title: item.book.title,
                     authors: item.book.authors,
@@ -215,6 +219,7 @@ export const useGetCurrentlyReadingBooks = () => {
                     currentPage: lastReadingSession?.end_page,
                     deadline: item.end_date,
                     bookId: item.book.id,
+                    readingSessions: item.reading_sessions
                 };
             });
         },

@@ -26,7 +26,15 @@ export type ExclusiveSelf = 'to-read' | 'read' | 'reading' | 'did-not-finish';
 export type UserBook = Tables<'user_books'>;
 export type UserBookWithBook = UserBook & { book: Book };
 
+
+type ReadingSessions = {
+    start_page: number;
+    end_page: number | null;
+    pages_read: number;
+    time_spent: number;
+}
 export type CurrentlyReadingBook = {
+    startDate: string;
     coverUrl: string;
     title: string;
     authors: string;
@@ -34,6 +42,7 @@ export type CurrentlyReadingBook = {
     currentPage?: number | null;
     deadline?: string | null;
     bookId: number;
+    readingSessions: ReadingSessions[]
 };
 
 export type CurrentReadsQuery = {
@@ -45,11 +54,10 @@ export type CurrentReadsQuery = {
         good_reads_image_url: string;
         num_pages: number;
     };
+    start_date: string;
     exclusive_shelf: string;
     end_date: string | null;
-    reading_sessions: {
-        end_page: number | null;
-    }[];
+    reading_sessions: ReadingSessions[];
 }[];
 
 export type ScanItem = {

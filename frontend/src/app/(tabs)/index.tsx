@@ -5,7 +5,7 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { useGetBookShelves } from '@/api/bookshelves';
@@ -15,7 +15,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ImageTextBar from '@/components/ImageTextBar';
 import { FlashList } from '@shopify/flash-list';
-import BookCoverCard from '@/components/BookCoverCard';
+// import BookCoverCard from '@/components/BookCoverCard';
+import CurrentlyReadingCard from '@/components/CurrentlyReadingCard';
 
 dayjs.extend(relativeTime);
 
@@ -26,7 +27,6 @@ export default function LibraryScreen() {
         isLoading: isLoadingCurrentlyReading,
         error: errorCurrentlyReading,
     } = useGetCurrentlyReadingBooks();
-
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
@@ -48,7 +48,8 @@ export default function LibraryScreen() {
     }
 
     return (
-        <LinearGradient colors={['#f8fafc', '#f5f3ff']} style={{ flex: 1 }}>
+        // <LinearGradient colors={['#f8fafc', '#f5f3ff']} style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
             <ScrollView style={{ marginTop: 50 }}>
                 {/* Header */}
                 <View
@@ -90,7 +91,7 @@ export default function LibraryScreen() {
                     />
                 </View>
                 {/* current reads */}
-                <Text
+                {/* <Text
                     style={{
                         color: 'black',
                         fontSize: 19,
@@ -100,22 +101,23 @@ export default function LibraryScreen() {
                     }}
                 >
                     Currently Reading
-                </Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                </Text> */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{backgroundColor: 'white'}}>
                     {currentlyReadingBooks?.map(book => (
-                        <Link
+                        <TouchableOpacity
                             key={`${book.bookId}-${book.title}`}
-                            href={`/books/${book.bookId}`}
-                            className="m-2"
+                            onPress={() => router.push(`/books/${book.bookId}`)}
+                            className="p-2 mb-3"
                         >
-                            <BookCoverCard
+                            {/* <BookCoverCard
                                 title={book.title}
                                 imageUrl={book.coverUrl || ''}
                                 bookPages={book.pages || 0}
                                 authors={book.authors}
                                 currentPage={book.currentPage || 0}
-                            />
-                        </Link>
+                            /> */}
+                            <CurrentlyReadingCard item={book} />
+                        </TouchableOpacity>
                     ))}
                 </ScrollView>
                 <Text
@@ -158,6 +160,7 @@ export default function LibraryScreen() {
                     />
                 </View>
             </ScrollView>
-        </LinearGradient>
+        </View>
+        // </LinearGradient>
     );
 }
