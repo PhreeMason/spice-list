@@ -12,7 +12,7 @@ export default function AuthStackLayout() {
     return (
         <>
             <Stack />
-            <StatusBar style="light" />
+            <StatusBar style="auto" />
         </>
     );
 }

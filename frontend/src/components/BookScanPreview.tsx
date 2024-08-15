@@ -1,8 +1,9 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import RenderStars from '@/components/RenderStars';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { v4 as uuidv4 } from 'uuid';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Book = {
     id: number;
@@ -47,7 +48,7 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
     let { book } = currentBook;
     console.log(JSON.stringify(book, null, 2));
     return (
-        <Link href={`/books/${book.id}`}>
+        <TouchableOpacity onPress={() => router.push(`/books/${book.id}`)}>
             <View className="flex flex-row bg-white w-full p-2">
                 <Image
                     source={{
@@ -57,7 +58,9 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                     className="w-20 h-30 object-cover rounded-md mr-4 "
                 />
                 <View className="flex-1 bg-white">
-                    <Text className="text-lg font-spice-semibold">
+                    <Text className="text-lg font-spice-semibold"
+                    numberOfLines={1}
+                    >
                         {book.title}
                     </Text>
                     <Text className="text-sm text-gray-600 mb-1">
@@ -81,7 +84,7 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                     </View>
                 </View>
             </View>
-        </Link>
+        </TouchableOpacity>
     );
 }
 

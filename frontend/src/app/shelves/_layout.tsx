@@ -13,7 +13,7 @@ export default function Layout() {
                     }}
                 />
             </Stack>
-            <StatusBar style="light" />
+            <StatusBar style="auto" />
         </>
     );
 }

@@ -49,6 +49,7 @@ const CreateShelfComponent = ({
                 onChangeText={setShelfName}
                 placeholder="Enter shelf name"
                 placeholderTextColor="#9CA3AF"
+                autoFocus
             />
             {error ? (
                 <Text className="text-red-500 mb-4 text-center">{error}</Text>

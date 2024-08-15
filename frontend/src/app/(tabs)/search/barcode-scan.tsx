@@ -63,7 +63,7 @@ export default function BarCodeScanner() {
                     )}
                 </View>
             </CameraView>
-            <StatusBar style="light" />
+            <StatusBar style="auto" />
         </View>
     );
 }
