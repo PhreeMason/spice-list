@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import {
-    useGetPreviousReadingSession,
     useUpsertReadingSession,
 } from '@/api/reading-log';
 
-const ReadingSessionTracker = ({ userBookId }: { userBookId: number }) => {
+type PreviousReadingSession = {
+    created_at: string;
+    end_page: number | null;
+    id: number;
+    notes: string | null;
+    pages_read: number | null;
+    start_page: number | null;
+    time_spent: number | null;
+    user_book_id: number;
+};
+
+const ReadingSessionTracker = ({ userBookId, previousSession }: { userBookId: number, previousSession: PreviousReadingSession | null }) => {
     const [startPage, setStartPage] = useState('');
     const [endPage, setEndPage] = useState('');
     const [timeSpent, setTimeSpent] = useState('');
     const [notes, setNotes] = useState('');
 
-    const {
-        data: previousSession,
-        isLoading,
-        error,
-    } = useGetPreviousReadingSession(userBookId);
     const upsertReadingSession = useUpsertReadingSession();
 
     useEffect(() => {
@@ -33,9 +38,6 @@ const ReadingSessionTracker = ({ userBookId }: { userBookId: number }) => {
             notes,
         });
     };
-
-    if (isLoading) return <Text>Loading...</Text>;
-    if (error) return <Text>Error: {error.message}</Text>;
 
     return (
         <View style={styles.container}>

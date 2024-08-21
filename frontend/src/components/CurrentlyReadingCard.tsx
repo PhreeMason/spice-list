@@ -3,9 +3,11 @@ import { View, Text, Image, Platform } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import ProgressBar from '@/components/ProgressBar'
 import { SCREEN_WIDTH } from '@/constants/screen'
+import { router } from 'expo-router'
 
 export default function CurrentlyReadingCard({ item }: { item: CurrentlyReadingBook }) {
     const {
+        userBookId,
         startDate,
         coverUrl,
         title,
@@ -16,34 +18,48 @@ export default function CurrentlyReadingCard({ item }: { item: CurrentlyReadingB
         bookId,
         readingSessions,
     } = item
-    const progressPercentage: number | null = currentPage ? Math.min((currentPage / pages) * 100, 100) : null
+    const progressPercentage: number | null = currentPage ? Math.floor(Math.min((currentPage / pages) * 100, 100)) : null
     const cardWidth = SCREEN_WIDTH - 10
     const shadowStyle = Platform.OS === 'ios' ? 'shadow' : 'shadow-md shadow-black/60'
     return (
         <View className={`bg-white ${shadowStyle} w-80 border border-slate-100 rounded-xl p-2 pb-4`}>
             <View className='flex-row'>
-                <Image
-                    source={{ uri: coverUrl }}
-                    resizeMode="contain"
-                    alt={`${title} cover`}
-                    className="w-20 h-30 object-cover rounded-md mr-4 shadow-md"
-                />
+                <TouchableOpacity
+                    key={`${userBookId}-${title}`}
+                    onPress={() => router.push(`/books/${bookId}`)}
+                    className="p-2 mb-3"
+                >
+                    <Image
+                        source={{ uri: coverUrl }}
+                        resizeMode="contain"
+                        alt={`${title} cover`}
+                        className="w-20 h-30 object-cover rounded-md mr-4 shadow-md"
+                    />
+                </TouchableOpacity>
+
                 <View className="flex-1 w-full">
                     <View className="flex justify-items-start">
-                        <Text className="text-lg font-spice-semibold" numberOfLines={1}>
+                        <Text
+                            className="text-lg font-spice-semibold"
+                            numberOfLines={1}
+                            onPress={() => router.push(`/books/${bookId}`)}
+                        >
                             {title}
                         </Text>
                         <Text className="text-sm text-gray-500 mb-2" numberOfLines={1}>
                             {authors.replace(/\s+/g, ' ').split(',')}
                         </Text>
                     </View>
-                    <TouchableOpacity className='p-2 bg-blue-500 rounded w-20'>
+                    <TouchableOpacity
+                        onPress={() => router.push(`/reading-sessions/add/${userBookId}`)}
+                        className='p-2 bg-blue-500 rounded w-20'
+                    >
                         <Text className="text-white self-center">Update</Text>
                     </TouchableOpacity>
                     <ProgressBar
-                        progressPercentage={67}
+                        progressPercentage={progressPercentage || 0}
                         progressColor={'text-purple-500'}
-                    />
+                    /> 
                 </View>
             </View>
             <View className='w-full my-2 border border-slate-200' />

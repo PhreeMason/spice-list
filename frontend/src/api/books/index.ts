@@ -211,6 +211,7 @@ export const useGetCurrentlyReadingBooks = () => {
                     ? item.reading_sessions[item.reading_sessions.length - 1]
                     : null;
                 return {
+                    userBookId: item.id,
                     startDate: item.start_date,
                     coverUrl: item.book.good_reads_image_url,
                     title: item.book.title,

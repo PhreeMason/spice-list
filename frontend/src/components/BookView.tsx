@@ -48,7 +48,7 @@ type Props = {
         | undefined;
 };
 
-const BookView = ({ book, user_books }: Props) => {
+const BookView = ({ book }: Props) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     return (
@@ -120,7 +120,7 @@ const BookView = ({ book, user_books }: Props) => {
                 ))}
             </View>
 
-            <Link href={`/books/logs/${book.id}`}>
+            <Link href={`/reading-sessions/view/${book.id}`}>
                 <Text className='text-blue-500 underline'> Logs </Text>
             </Link>
 

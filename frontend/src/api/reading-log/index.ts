@@ -41,6 +41,7 @@ export const useGetReadingSessions = (bookId: number) => {
                 .from('reading_sessions')
                 .select('*, user_books(*)')
                 .eq('user_books.book_id', bookId)
+                .order('created_at', { ascending: false });
 
             if (error) throw new Error(error.message);
             return data;
@@ -57,12 +58,14 @@ export const useUpsertReadingSession = () => {
 
     return useMutation({
         mutationFn: async ({
+            date_time,
             user_book_id,
             start_page,
             end_page,
             time_spent,
             notes,
         }: {
+            date_time?: string,
             user_book_id: number;
             start_page?: number;
             end_page: number;

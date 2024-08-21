@@ -34,6 +34,7 @@ type ReadingSessions = {
     time_spent: number;
 }
 export type CurrentlyReadingBook = {
+    userBookId: number;
     startDate: string;
     coverUrl: string;
     title: string;

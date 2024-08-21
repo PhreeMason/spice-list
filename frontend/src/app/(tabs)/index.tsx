@@ -21,7 +21,7 @@ import CurrentlyReadingCard from '@/components/CurrentlyReadingCard';
 dayjs.extend(relativeTime);
 
 export default function LibraryScreen() {
-    const { data: bookshelves, isLoading, error } = useGetBookShelves(6);
+    const { data: bookshelves, isLoading, error } = useGetBookShelves();
     const {
         data: currentlyReadingBooks,
         isLoading: isLoadingCurrentlyReading,
@@ -91,33 +91,11 @@ export default function LibraryScreen() {
                     />
                 </View>
                 {/* current reads */}
-                {/* <Text
-                    style={{
-                        color: 'black',
-                        fontSize: 19,
-                        fontWeight: 'bold',
-                        marginHorizontal: 10,
-                        marginTop: 10,
-                    }}
-                >
-                    Currently Reading
-                </Text> */}
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{backgroundColor: 'white'}}>
                     {currentlyReadingBooks?.map(book => (
-                        <TouchableOpacity
-                            key={`${book.bookId}-${book.title}`}
-                            onPress={() => router.push(`/books/${book.bookId}`)}
-                            className="p-2 mb-3"
-                        >
-                            {/* <BookCoverCard
-                                title={book.title}
-                                imageUrl={book.coverUrl || ''}
-                                bookPages={book.pages || 0}
-                                authors={book.authors}
-                                currentPage={book.currentPage || 0}
-                            /> */}
+                        <View key={`${book.bookId}-${book.title}`} className="p-2 mb-3">
                             <CurrentlyReadingCard item={book} />
-                        </TouchableOpacity>
+                        </View>
                     ))}
                 </ScrollView>
                 <Text
