@@ -23,10 +23,10 @@ export default function CurrentlyReadingCard({ item }: { item: CurrentlyReadingB
     return (
         <View className={`bg-white ${shadowStyle} w-80 border border-slate-100 rounded-xl p-2 pb-4`}>
             <View className='flex-row'>
-                <Link
+                <Pressable
                     key={`${userBookId}-${title}`}
-                    className="p-2 mb-3 mr-4 shadow-sm"
-                    href={`/books/${bookId}`}
+                    className="mr-4 shadow-sm"
+                    onPress={ () => router.push(`/books/${bookId}`)}
                 >
                     <Image
                         source={{ uri: coverUrl }}
@@ -35,7 +35,7 @@ export default function CurrentlyReadingCard({ item }: { item: CurrentlyReadingB
                         className="rounded-md"
                         style={{ width: 80, height: 128 }}
                     />
-                </Link>
+                </Pressable>
 
                 <View className="flex-1 w-full">
                     <View className="flex justify-items-start">
