@@ -32,25 +32,25 @@ type Props = {
         }[];
     };
     user_books:
-        | {
-              book_id: number;
-              created_at: string;
-              end_date: string | null;
-              exclusive_shelf: string;
-              id: number;
-              my_rating: number | null;
-              my_review: string | null;
-              owned_copies: number | null;
-              read_count: number | null;
-              start_date: string | null;
-              user_id: string;
-          }[]
-        | undefined;
+    | {
+        book_id: number;
+        created_at: string;
+        end_date: string | null;
+        exclusive_shelf: string;
+        id: number;
+        my_rating: number | null;
+        my_review: string | null;
+        owned_copies: number | null;
+        read_count: number | null;
+        start_date: string | null;
+        user_id: string;
+    }[]
+    | undefined;
 };
 
 const BookView = ({ book }: Props) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
-
+    const user_books = book.user_books?.[0]
     return (
         <View className="p-4">
             {book.good_reads_image_url && (
@@ -120,7 +120,7 @@ const BookView = ({ book }: Props) => {
                 ))}
             </View>
 
-            <Link href={`/reading-sessions/view/${book.id}`}>
+            <Link href={`/reading-sessions/view/${user_books.id}`}>
                 <Text className='text-blue-500 underline'> Logs </Text>
             </Link>
 

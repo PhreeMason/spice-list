@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar, DateData } from 'react-native-calendars';
-import { useUpsertReadingSession } from '@/api/reading-log';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useUpsertReadingSession, useGetPreviousReadingSession } from '@/api/reading-log';
+import { Stack, useLocalSearchParams, router } from 'expo-router';
 
 const AddReadingSessionScreen = () => {
+    // TODO: check what im doing with submitted it mig
     const { userBookId } = useLocalSearchParams();
     const userBookIdNumber = Number(userBookId);
     const [submitting, setSubmitting] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
     const [sessionData, setSessionData] = useState({
         date_time: '',
         start_page: '',
@@ -18,6 +20,15 @@ const AddReadingSessionScreen = () => {
         user_book_id: userBookIdNumber,
     });
 
+    const { data: previousSession } = useGetPreviousReadingSession(userBookIdNumber);
+    useEffect(() => {
+        if (previousSession) {
+            setSessionData(prev => ({
+                ...prev,
+                start_page: previousSession.end_page.toString(),
+            }));
+        }
+    }, [previousSession]);
     const [showCalendar, setShowCalendar] = useState(false);
     const upsertReadingSession = useUpsertReadingSession();
 
@@ -45,6 +56,9 @@ const AddReadingSessionScreen = () => {
     const handleSubmit = () => {
         // Here you would typically send the data to your Supabase backend
         console.log('Submitting session data:', sessionData);
+        if (!isValidFormSubmitted()) {
+            return;
+        }
         // Convert string properties to numbers
         const convertedSessionData = {
             ...sessionData,
@@ -54,8 +68,40 @@ const AddReadingSessionScreen = () => {
             time_spent: Number(sessionData.time_spent),
         };
         setSubmitting(true);
-        upsertReadingSession.mutate(convertedSessionData);
+        upsertReadingSession.mutate(convertedSessionData, {
+            onSuccess: () => {
+                setSubmitting(false);
+                router.replace(`/reading-sessions/view/${userBookId}`);
+            },
+            onError: (error) => {
+                console.error('Error submitting reading session:', error);
+                setSubmitting(false);
+            },
+        });
     };
+
+    const isValidFormSubmitted = () => {
+        // validate that start page is less than end page
+        // validate that end page is populated
+        // validate that date is selected
+
+        const errors: Record<string, string> = {};
+        if (!sessionData.date_time) {
+            errors.date_time = 'Date is required';
+        }
+        if (!sessionData.start_page) {
+            errors.start_page = 'Start page is required';
+        }
+        if (!sessionData.end_page) {
+            errors.end_page = 'End page is required';
+        }
+        if (parseInt(sessionData.start_page) >= parseInt(sessionData.end_page)) {
+            errors.start_page = 'Start page must be less than end page';
+        }
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
+
 
     return (
         <ScrollView className="flex-1 bg-white p-4">
@@ -64,6 +110,7 @@ const AddReadingSessionScreen = () => {
 
             <View className="mb-4">
                 <Text className="text-sm font-medium text-gray-700 mb-1">Date</Text>
+                <Text className="text-sm text-red-500">{validationErrors.date_time}</Text>
                 <TouchableOpacity
                     onPress={() => setShowCalendar(true)}
                     className="border border-gray-300 rounded-md p-2"
@@ -85,6 +132,7 @@ const AddReadingSessionScreen = () => {
 
             <View className="mb-4">
                 <Text className="text-sm font-medium text-gray-700 mb-1">Start Page</Text>
+                <Text className="text-sm text-red-500">{validationErrors.start_page}</Text>
                 <TextInput
                     className="border border-gray-300 rounded-md p-2"
                     value={sessionData.start_page}
@@ -95,6 +143,7 @@ const AddReadingSessionScreen = () => {
 
             <View className="mb-4">
                 <Text className="text-sm font-medium text-gray-700 mb-1">End Page</Text>
+                <Text className="text-sm text-red-500">{validationErrors.end_page}</Text>
                 <TextInput
                     className="border border-gray-300 rounded-md p-2"
                     value={sessionData.end_page}

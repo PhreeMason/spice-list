@@ -28,25 +28,25 @@ export const useGetPreviousReadingSession = (user_book_id: number) => {
     });
 };
 
-export const useGetReadingSessions = (bookId: number) => {
+export const useGetReadingSessions = (userBookId: number) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
 
     return useQuery({
-        queryKey: ['reading_sessions', bookId],
+        queryKey: ['reading_sessions', userBookId],
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
 
             const { data, error } = await supabase
                 .from('reading_sessions')
-                .select('*, user_books(*)')
-                .eq('user_books.book_id', bookId)
+                .select('*, user_books(*, books(*))')
+                .eq('user_books.id', userBookId)
                 .order('created_at', { ascending: false });
 
             if (error) throw new Error(error.message);
             return data;
         },
-        enabled: !!user_id && !!bookId,
+        enabled: !!user_id && !!userBookId,
     });
 };
 

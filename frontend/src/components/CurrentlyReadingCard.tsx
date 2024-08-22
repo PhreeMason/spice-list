@@ -1,9 +1,8 @@
 import { CurrentlyReadingBook } from '@/types/index'
-import { View, Text, Image, Platform } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { View, Text, Image, Platform, Pressable, TouchableOpacity } from 'react-native'
 import ProgressBar from '@/components/ProgressBar'
 import { SCREEN_WIDTH } from '@/constants/screen'
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
 
 export default function CurrentlyReadingCard({ item }: { item: CurrentlyReadingBook }) {
     const {
@@ -24,18 +23,19 @@ export default function CurrentlyReadingCard({ item }: { item: CurrentlyReadingB
     return (
         <View className={`bg-white ${shadowStyle} w-80 border border-slate-100 rounded-xl p-2 pb-4`}>
             <View className='flex-row'>
-                <TouchableOpacity
+                <Link
                     key={`${userBookId}-${title}`}
-                    onPress={() => router.push(`/books/${bookId}`)}
-                    className="p-2 mb-3"
+                    className="p-2 mb-3 mr-4 shadow-sm"
+                    href={`/books/${bookId}`}
                 >
                     <Image
                         source={{ uri: coverUrl }}
                         resizeMode="contain"
                         alt={`${title} cover`}
-                        className="w-20 h-30 object-cover rounded-md mr-4 shadow-md"
+                        className="rounded-md"
+                        style={{ width: 80, height: 128 }}
                     />
-                </TouchableOpacity>
+                </Link>
 
                 <View className="flex-1 w-full">
                     <View className="flex justify-items-start">
