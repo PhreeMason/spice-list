@@ -51,6 +51,7 @@ type Props = {
 const BookView = ({ book }: Props) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
     const user_books = book.user_books?.[0]
+    console.log('user_books', user_books)
     return (
         <View className="p-4">
             {book.good_reads_image_url && (
@@ -120,9 +121,9 @@ const BookView = ({ book }: Props) => {
                 ))}
             </View>
 
-            <Link href={`/reading-sessions/view/${user_books.id}`}>
+            {user_books ? <Link href={`/reading-sessions/view/${user_books.id}`}>
                 <Text className='text-blue-500 underline'> Logs </Text>
-            </Link>
+            </Link> : null}
 
             <Text className="text-lg font-spice-semibold mb-2">
                 Description
