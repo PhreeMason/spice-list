@@ -408,6 +408,7 @@ export type Database = {
             reading_sessions: {
                 Row: {
                     created_at: string;
+                    date_time: string;
                     end_page: number | null;
                     id: number;
                     notes: string | null;
@@ -418,6 +419,7 @@ export type Database = {
                 };
                 Insert: {
                     created_at?: string;
+                    date_time?: string;
                     end_page?: number | null;
                     id?: number;
                     notes?: string | null;
@@ -428,6 +430,7 @@ export type Database = {
                 };
                 Update: {
                     created_at?: string;
+                    date_time?: string;
                     end_page?: number | null;
                     id?: number;
                     notes?: string | null;

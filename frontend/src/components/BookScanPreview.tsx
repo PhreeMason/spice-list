@@ -46,7 +46,6 @@ type BookScanPreviewProps = {
 
 function BookScanPreview({ currentBook }: BookScanPreviewProps) {
     let { book } = currentBook;
-    console.log(JSON.stringify(book, null, 2));
     return (
         <TouchableOpacity onPress={() => router.push(`/books/${book.id}`)}>
             <View className="flex flex-row bg-white w-full p-2">

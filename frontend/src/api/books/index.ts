@@ -266,3 +266,21 @@ export const useSearchBooks = (query: string) => {
         },
     });
 };
+
+export const useGetBookCoverImageByUserBookId = (userBookId: number) => {
+    return useQuery({
+        queryKey: ['user_books', userBookId, 'cover_image'],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('user_books')
+                .select('book:book_id(*)')
+                .eq('id', userBookId)
+                .single();
+            if (error) {
+                throw new Error(error.message);
+            }
+            // return image link
+            return data?.book.good_reads_image_url;
+        },
+    });
+};

@@ -3,7 +3,7 @@ import supabase from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 
 // Fetch Previous Reading Session
-export const useGetPreviousReadingSession = (user_book_id: number) => {
+export const useGetPreviousReadingSession = (user_book_id: number | undefined) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
 
@@ -11,7 +11,7 @@ export const useGetPreviousReadingSession = (user_book_id: number) => {
         queryKey: ['previous_reading_session', user_book_id],
         queryFn: async () => {
             if (!user_id) throw new Error('User not found');
-
+            if (!user_book_id) return null;
             const { data, error } = await supabase
                 .from('reading_sessions')
                 .select('*')
@@ -40,7 +40,7 @@ export const useGetReadingSessions = (userBookId: number) => {
             const { data, error } = await supabase
                 .from('reading_sessions')
                 .select('*, user_books(*, books(*))')
-                .eq('user_books.id', userBookId)
+                .eq('user_book_id', userBookId)
                 .order('created_at', { ascending: false });
 
             if (error) throw new Error(error.message);
@@ -256,5 +256,29 @@ export const useCheckAndUpdateLateStatus = () => {
                 queryKey: ['reading_goals', user_id],
             });
         },
+    });
+};
+
+export const useGetReadingSession = (sessionID: number | undefined) => {
+    const { profile } = useAuth();
+    const user_id = profile?.id;
+
+    return useQuery({
+        queryKey: ['reading_session', sessionID],
+        queryFn: async () => {
+            console.log({sessionID})
+            if (!user_id) throw new Error('User not found');
+            if (!sessionID) return null;
+            const { data, error } = await supabase
+                .from('reading_sessions')
+                .select('*')
+                .eq('id', sessionID)
+                .single();
+
+            if (error) throw new Error(error.message);
+            console.log({data})
+            return data;
+        },
+        enabled: !!user_id && !!sessionID,
     });
 };

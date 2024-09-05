@@ -1,13 +1,13 @@
-// AddReadingSessionScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { useUpsertReadingSession, useGetPreviousReadingSession } from '@/api/reading-log';
+import { useUpsertReadingSession, useGetReadingSession } from '@/api/reading-log';
 import { useLocalSearchParams, router } from 'expo-router';
 import ReadingSessionForm from '@/components/ReadingSessionForm';
 import { DateData } from 'react-native-calendars';
+import { Pressable, Text } from 'react-native';
 
-const AddReadingSessionScreen = () => {
-    const { userBookId } = useLocalSearchParams();
-    const userBookIdNumber = Number(userBookId);
+const EditReadingSessionScreen = () => {
+    const { sessionId } = useLocalSearchParams();
+    const sessionIdNumber = Number(sessionId);
     const [submitting, setSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
     const [sessionData, setSessionData] = useState({
@@ -17,18 +17,25 @@ const AddReadingSessionScreen = () => {
         pages_read: '',
         time_spent: '',
         notes: '',
-        user_book_id: userBookIdNumber,
+        id: sessionIdNumber,
     });
-
-    const { data: previousSession } = useGetPreviousReadingSession(userBookIdNumber);
+    const [isEditMode, setIsEditMode] = useState(false);
+    console.log('Session ID:', {sessionIdNumber, sessionId});
+    const { data: existingSession } = useGetReadingSession(sessionIdNumber);
     useEffect(() => {
-        if (previousSession) {
-            setSessionData(prev => ({
-                ...prev,
-                start_page: previousSession.end_page?.toString() || '',
-            }));
+        if (existingSession) {
+            setSessionData({
+                start_page: existingSession.start_page!.toString(),
+                end_page: existingSession.end_page!.toString(),
+                time_spent: existingSession.time_spent?.toString() || '',
+                notes: existingSession.notes || '',
+                date_time: existingSession.date_time.split('T')[0],
+                pages_read: existingSession.pages_read!.toString(),
+                id: sessionIdNumber 
+            });
         }
-    }, [previousSession]);
+    }, [existingSession]);
+
     const [showCalendar, setShowCalendar] = useState(false);
     const upsertReadingSession = useUpsertReadingSession();
 
@@ -66,10 +73,11 @@ const AddReadingSessionScreen = () => {
             time_spent: Number(sessionData.time_spent),
         };
         setSubmitting(true);
+        // @ts-ignore - TS doesn't know that id is a valid field
         upsertReadingSession.mutate(convertedSessionData, {
             onSuccess: () => {
                 setSubmitting(false);
-                router.replace(`/reading-sessions/view/${userBookId}`);
+                router.replace(`/reading-sessions/view/${sessionId}`);
             },
             onError: (error) => {
                 console.error('Error submitting reading session:', error);
@@ -98,6 +106,9 @@ const AddReadingSessionScreen = () => {
 
     return (
         <>
+            <Pressable onPress={() => setIsEditMode(!isEditMode)}>
+                <Text>{isEditMode ? 'Switch to View Mode' : 'Switch to Edit Mode'}</Text>
+            </Pressable>
             <ReadingSessionForm
                 sessionData={sessionData}
                 validationErrors={validationErrors}
@@ -107,10 +118,10 @@ const AddReadingSessionScreen = () => {
                 submitting={submitting}
                 showCalendar={showCalendar}
                 handleDateSelect={handleDateSelect}
-                isEditMode
+                isEditMode={isEditMode}
             />
         </>
     );
 };
 
-export default AddReadingSessionScreen;
+export default EditReadingSessionScreen;

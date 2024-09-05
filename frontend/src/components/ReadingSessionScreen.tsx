@@ -1,13 +1,15 @@
-// AddReadingSessionScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { useUpsertReadingSession, useGetPreviousReadingSession } from '@/api/reading-log';
+import { useUpsertReadingSession, useGetReadingSession, useGetPreviousReadingSession } from '@/api/reading-log';
 import { useLocalSearchParams, router } from 'expo-router';
 import ReadingSessionForm from '@/components/ReadingSessionForm';
 import { DateData } from 'react-native-calendars';
 
-const AddReadingSessionScreen = () => {
-    const { userBookId } = useLocalSearchParams();
-    const userBookIdNumber = Number(userBookId);
+const ReadingSessionScreen = () => {
+    const { sessionId, userBookId } = useLocalSearchParams();
+    const sessionIdNumber = sessionId ? Number(sessionId) : undefined;
+    const userBookIdNumber = userBookId ? Number(userBookId) : undefined;
+    const isEditMode = !!sessionId;
+
     const [submitting, setSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
     const [sessionData, setSessionData] = useState({
@@ -17,26 +19,31 @@ const AddReadingSessionScreen = () => {
         pages_read: '',
         time_spent: '',
         notes: '',
+        id: sessionIdNumber,
         user_book_id: userBookIdNumber,
     });
 
+    const [showCalendar, setShowCalendar] = useState(false);
+    const upsertReadingSession = useUpsertReadingSession();
+
+    const { data: existingSession } = useGetReadingSession(sessionIdNumber);
     const { data: previousSession } = useGetPreviousReadingSession(userBookIdNumber);
+
     useEffect(() => {
-        if (previousSession) {
+        if (isEditMode && existingSession) {
+            // @ts-ignore - Fields are valid
+            setSessionData({ ...existingSession, id: sessionIdNumber });
+        } else if (!isEditMode && previousSession) {
             setSessionData(prev => ({
                 ...prev,
                 start_page: previousSession.end_page?.toString() || '',
             }));
         }
-    }, [previousSession]);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const upsertReadingSession = useUpsertReadingSession();
+    }, [existingSession, previousSession, isEditMode]);
 
     useEffect(() => {
         if (sessionData.start_page && sessionData.end_page) {
-            const pagesRead =
-                parseInt(sessionData.end_page) -
-                parseInt(sessionData.start_page);
+            const pagesRead = parseInt(sessionData.end_page) - parseInt(sessionData.start_page);
             setSessionData(prev => ({
                 ...prev,
                 pages_read: pagesRead.toString(),
@@ -66,10 +73,11 @@ const AddReadingSessionScreen = () => {
             time_spent: Number(sessionData.time_spent),
         };
         setSubmitting(true);
+        // @ts-ignore - TS doesn't know that fields are valid
         upsertReadingSession.mutate(convertedSessionData, {
             onSuccess: () => {
                 setSubmitting(false);
-                router.replace(`/reading-sessions/view/${userBookId}`);
+                router.replace(`/reading-sessions/view/${isEditMode ? sessionId : userBookId}`);
             },
             onError: (error) => {
                 console.error('Error submitting reading session:', error);
@@ -97,20 +105,17 @@ const AddReadingSessionScreen = () => {
     }
 
     return (
-        <>
-            <ReadingSessionForm
-                sessionData={sessionData}
-                validationErrors={validationErrors}
-                handleInputChange={handleInputChange}
-                handleSubmit={handleSubmit}
-                setShowCalendar={setShowCalendar}
-                submitting={submitting}
-                showCalendar={showCalendar}
-                handleDateSelect={handleDateSelect}
-                isEditMode
-            />
-        </>
+        <ReadingSessionForm
+            sessionData={sessionData}
+            validationErrors={validationErrors}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            setShowCalendar={setShowCalendar}
+            submitting={submitting}
+            showCalendar={showCalendar}
+            handleDateSelect={handleDateSelect}
+        />
     );
 };
 
-export default AddReadingSessionScreen;
+export default ReadingSessionScreen;
