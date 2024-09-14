@@ -51,7 +51,6 @@ type Props = {
 const BookView = ({ book }: Props) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
     const user_books = book.user_books?.[0];
-    console.log({ book });
     return (
         <View className="p-4">
             {book.good_reads_image_url ? (
