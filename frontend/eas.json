@@ -1,0 +1,30 @@
+{
+    "cli": {
+        "version": ">= 10.2.3"
+    },
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal"
+        },
+        "preview": {
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            },
+            "env": {
+                "EXPO_PUBLIC_SUPABASE_URL": "https://rcxcwcbdhekimpyappji.supabase.co",
+                "EXPO_PUBLIC_SUPABASE_ANON": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGN3Y2JkaGVraW1weWFwcGppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg5MDYwMjEsImV4cCI6MjAzNDQ4MjAyMX0.xjNfTLD4t1qLUrmHCqFiE0301tV7y-6ZwDR07P6VAmc"
+            }
+        },
+        "production": {
+            "env": {
+                "EXPO_PUBLIC_SUPABASE_URL": "https://rcxcwcbdhekimpyappji.supabase.co",
+                "EXPO_PUBLIC_SUPABASE_ANON": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGN3Y2JkaGVraW1weWFwcGppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg5MDYwMjEsImV4cCI6MjAzNDQ4MjAyMX0.xjNfTLD4t1qLUrmHCqFiE0301tV7y-6ZwDR07P6VAmc"
+            }
+        }
+    },
+    "submit": {
+        "production": {}
+    }
+}

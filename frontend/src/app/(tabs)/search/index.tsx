@@ -11,7 +11,6 @@ export default function SearchScreen() {
     const { data: scans, isLoading, error } = useMyScanList();
     const queryClient = useQueryClient();
 
-
     if (error) {
         return <Text>{error.message}</Text>;
     }
@@ -52,7 +51,9 @@ export default function SearchScreen() {
                 }
                 data={scans}
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => router.push(`/books/${item.book.id}`)}>
+                    <TouchableOpacity
+                        onPress={() => router.push(`/books/${item.book.id}`)}
+                    >
                         <ScanListItem item={item} />
                     </TouchableOpacity>
                 )}

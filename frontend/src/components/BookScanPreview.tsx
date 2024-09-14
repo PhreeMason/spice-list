@@ -57,8 +57,9 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                     className="w-20 h-30 object-cover rounded-md mr-4 "
                 />
                 <View className="flex-1 bg-white">
-                    <Text className="text-lg font-spice-semibold"
-                    numberOfLines={1}
+                    <Text
+                        className="text-lg font-spice-semibold"
+                        numberOfLines={1}
                     >
                         {book.title}
                     </Text>
@@ -69,17 +70,19 @@ function BookScanPreview({ currentBook }: BookScanPreviewProps) {
                         <RenderStars rating={book.good_reads_rating || 0} />
                     </View>
                     <View className="flex flex-row flex-wrap gap-1 mb-1">
-                        {book.genres && book.genres.length ? book.genres.slice(0, 7).map(trope => (
-                            <Text
-                                key={uuidv4()}
-                                className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
-                            >
-                                {typeof trope === 'string'
-                                    ? trope
-                                    : // @ts-ignore
-                                      trope.genre?.name}
-                            </Text>
-                        )): null}
+                        {book.genres && book.genres.length
+                            ? book.genres.slice(0, 7).map(trope => (
+                                  <Text
+                                      key={uuidv4()}
+                                      className="px-2 py-0.5 bg-gray-200 rounded-full text-xs"
+                                  >
+                                      {typeof trope === 'string'
+                                          ? trope
+                                          : // @ts-ignore
+                                            trope.genre?.name}
+                                  </Text>
+                              ))
+                            : null}
                     </View>
                 </View>
             </View>

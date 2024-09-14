@@ -3,7 +3,9 @@ import supabase from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 
 // Fetch Previous Reading Session
-export const useGetPreviousReadingSession = (user_book_id: number | undefined) => {
+export const useGetPreviousReadingSession = (
+    user_book_id: number | undefined,
+) => {
     const { profile } = useAuth();
     const user_id = profile?.id;
 
@@ -65,7 +67,7 @@ export const useUpsertReadingSession = () => {
             time_spent,
             notes,
         }: {
-            date_time?: string,
+            date_time?: string;
             user_book_id: number;
             start_page?: number;
             end_page: number;
@@ -266,7 +268,7 @@ export const useGetReadingSession = (sessionID: number | undefined) => {
     return useQuery({
         queryKey: ['reading_session', sessionID],
         queryFn: async () => {
-            console.log({sessionID})
+            console.log({ sessionID });
             if (!user_id) throw new Error('User not found');
             if (!sessionID) return null;
             const { data, error } = await supabase
@@ -276,7 +278,7 @@ export const useGetReadingSession = (sessionID: number | undefined) => {
                 .single();
 
             if (error) throw new Error(error.message);
-            console.log({data})
+            console.log({ data });
             return data;
         },
         enabled: !!user_id && !!sessionID,

@@ -58,9 +58,9 @@ export default function BarCodeScanner() {
 
                 {/* Container for BookScanPreview at the bottom */}
                 <View className="absolute bottom-0 left-0 right-0">
-                    {currentBook && (
+                    {currentBook ? (
                         <BookScanPreview currentBook={currentBook} />
-                    )}
+                    ) : null}
                 </View>
             </CameraView>
             <StatusBar style="auto" />

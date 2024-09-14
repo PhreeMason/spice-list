@@ -9,7 +9,7 @@ const ProgressBar = ({
     progressPercentage: number;
 }) => {
     return (
-        <View className='flex-row pt-2 pr-2'>
+        <View className="flex-row pt-2 pr-2">
             <View className="w-10/12 bg-gray-200 rounded-sm h-3.5 flex-row mt-1">
                 <View
                     className={`bg-blue-500 h-3.5 rounded-sm ${progressColor} `}

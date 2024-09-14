@@ -5,12 +5,11 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-import { Link, router } from 'expo-router';
+import { Link } from 'expo-router';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { useGetBookShelves } from '@/api/bookshelves';
 import { useGetCurrentlyReadingBooks } from '@/api/books';
-import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ImageTextBar from '@/components/ImageTextBar';
@@ -22,11 +21,7 @@ dayjs.extend(relativeTime);
 
 export default function LibraryScreen() {
     const { data: bookshelves, isLoading, error } = useGetBookShelves();
-    const {
-        data: currentlyReadingBooks,
-        isLoading: isLoadingCurrentlyReading,
-        error: errorCurrentlyReading,
-    } = useGetCurrentlyReadingBooks();
+    const { data: currentlyReadingBooks } = useGetCurrentlyReadingBooks();
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
@@ -91,9 +86,16 @@ export default function LibraryScreen() {
                     />
                 </View>
                 {/* current reads */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{backgroundColor: 'white'}}>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={{ backgroundColor: 'white' }}
+                >
                     {currentlyReadingBooks?.map(book => (
-                        <View key={`${book.bookId}-${book.title}`} className="p-2 mb-3">
+                        <View
+                            key={`${book.bookId}-${book.title}`}
+                            className="p-2 mb-3"
+                        >
                             <CurrentlyReadingCard item={book} />
                         </View>
                     ))}

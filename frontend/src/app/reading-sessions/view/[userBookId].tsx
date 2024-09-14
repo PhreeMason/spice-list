@@ -7,16 +7,19 @@ import { useGetBookCoverImageByUserBookId } from '@/api/books';
 
 const NoReadingSessions = ({ userBookId }: { userBookId: number }) => {
     return (
-        <View className='flex-1 justify-center align-center' >
-            <Text className='text-center'>No reading sessions found</Text>
+        <View className="flex-1 justify-center align-center">
+            <Text className="text-center">No reading sessions found</Text>
             <Text
-                onPress={() => router.push(`/reading-sessions/add/${userBookId}`)}
-                className='text-center underline font-spice-bold text-blue-500 cursor-pointer'>
+                onPress={() =>
+                    router.push(`/reading-sessions/add/${userBookId}`)
+                }
+                className="text-center underline font-spice-bold text-blue-500 cursor-pointer"
+            >
                 Add new reading session
             </Text>
         </View>
     );
-}
+};
 
 const LoadingReadingSessions = () => {
     return (
@@ -24,7 +27,7 @@ const LoadingReadingSessions = () => {
             <Text>Loading reading sessions...</Text>
         </View>
     );
-}
+};
 
 export default function ReadingSessions() {
     const { userBookId } = useLocalSearchParams();
@@ -52,21 +55,27 @@ export default function ReadingSessions() {
 
     const lastStartDate = items ? Object.keys(items)[1] : undefined;
     return (
-        <View className='flex-1'>
+        <View className="flex-1">
             <Stack.Screen
                 options={{
-                    title: title ? `${title} Reading Sessions` : 'Reading Sessions',
+                    title: title
+                        ? `${title} Reading Sessions`
+                        : 'Reading Sessions',
                     headerRight: () => (
                         <MaterialCommunityIcons
-                            name='plus'
+                            name="plus"
                             size={24}
-                            color='black'
-                            onPress={() => router.push(`/reading-sessions/add/${userBookIdNumber}`)}
+                            color="black"
+                            onPress={() =>
+                                router.push(
+                                    `/reading-sessions/add/${userBookIdNumber}`,
+                                )
+                            }
                         />
-                    )
+                    ),
                 }}
             />
-            {data?.length ?
+            {data?.length ? (
                 <Agenda
                     items={items}
                     selected={lastStartDate}
@@ -81,25 +90,45 @@ export default function ReadingSessions() {
                     }) => {
                         return (
                             // open edit page on press
-                            <TouchableOpacity onPress={() => router.push(`/reading-sessions/edit/${item.id}`)}>
-
+                            <TouchableOpacity
+                                onPress={() =>
+                                    router.push(
+                                        `/reading-sessions/edit/${item.id}`,
+                                    )
+                                }
+                            >
                                 <View style={styles.item}>
                                     <View style={styles.itemContent}>
-                                        <Text style={styles.itemTitle}>Reading Session</Text>
-                                        <Text>Pages: {item.start_page} - {item.end_page}</Text>
-                                        <Text>Pages Read: {item.pages_read}</Text>
-                                        <Text>Time Spent: {item.time_spent} minutes</Text>
-                                        <Text numberOfLines={3}>Notes: {item.notes}</Text>
+                                        <Text style={styles.itemTitle}>
+                                            Reading Session
+                                        </Text>
+                                        <Text>
+                                            Pages: {item.start_page} -{' '}
+                                            {item.end_page}
+                                        </Text>
+                                        <Text>
+                                            Pages Read: {item.pages_read}
+                                        </Text>
+                                        <Text>
+                                            Time Spent: {item.time_spent}{' '}
+                                            minutes
+                                        </Text>
+                                        <Text numberOfLines={3}>
+                                            Notes: {item.notes}
+                                        </Text>
                                     </View>
                                     <Image
-                                        source={{ uri: image || 'https://via.placeholder.com/50x75' }}
+                                        source={{
+                                            uri:
+                                                image ||
+                                                'https://via.placeholder.com/50x75',
+                                        }}
                                         style={styles.coverImage}
                                     />
                                 </View>
                             </TouchableOpacity>
-                        )
-                    }
-                    }
+                        );
+                    }}
                     renderEmptyDate={() => {
                         return (
                             <View style={styles.emptyDate}>
@@ -110,11 +139,12 @@ export default function ReadingSessions() {
                     rowHasChanged={(r1: any, r2: any) => {
                         return r1.date_time !== r2.date_time;
                     }}
-                /> :
+                />
+            ) : (
                 <NoReadingSessions userBookId={userBookIdNumber} />
-            }
+            )}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -144,7 +174,7 @@ const styles = StyleSheet.create({
     emptyDate: {
         height: 15,
         flex: 1,
-        paddingTop: 30
+        paddingTop: 30,
     },
     loadingContainer: {
         flex: 1,

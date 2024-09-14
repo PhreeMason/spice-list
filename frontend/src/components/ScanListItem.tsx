@@ -11,7 +11,10 @@ export default function ScanListItem({ item }: { item: ScanResponseItem }) {
         <View className="flex flex-row bg-white w-full p-2">
             <Image
                 source={{
-                    uri: item.book.good_reads_image_url || '',
+                    // placeholder image if no image is found
+                    uri:
+                        item.book.good_reads_image_url ||
+                        'https://via.placeholder.com/50x75',
                 }}
                 resizeMode="contain"
                 className="w-20 h-30 object-cover rounded-md mr-4 "
@@ -24,9 +27,9 @@ export default function ScanListItem({ item }: { item: ScanResponseItem }) {
                     {item.book.authors.replace(/\s+/g, ' ').split(',')}
                 </Text>
                 <View className="flex mb-1">
-                    {item.book.good_reads_rating && (
+                    {item.book.good_reads_rating ? (
                         <RenderStars rating={item.book.good_reads_rating} />
-                    )}
+                    ) : null}
                 </View>
                 <View className="flex flex-row flex-wrap gap-1 mb-1">
                     {item.book.genres.slice(0, 3).map((genre, index) => (
@@ -44,4 +47,4 @@ export default function ScanListItem({ item }: { item: ScanResponseItem }) {
             </View>
         </View>
     );
-};
+}

@@ -1,4 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    ScrollView,
+} from 'react-native';
 import { Stack } from 'expo-router';
 import DatePicker from '@/components/DatePicker';
 
@@ -12,7 +18,7 @@ const ReadingSessionForm = ({
     showCalendar,
     handleDateSelect,
     isEditMode = false,
-} : {
+}: {
     sessionData: any;
     validationErrors: Record<string, string>;
     handleInputChange: (field: string, value: string) => void;
@@ -25,11 +31,21 @@ const ReadingSessionForm = ({
 }) => {
     return (
         <ScrollView className="flex-1 bg-white p-4">
-            <Stack.Screen options={{ title: isEditMode ? 'Edit Reading Session' : 'View Reading Session' }} />
+            <Stack.Screen
+                options={{
+                    title: isEditMode
+                        ? 'Edit Reading Session'
+                        : 'View Reading Session',
+                }}
+            />
 
             <View className="mb-4">
-                <Text className="text-sm font-medium text-gray-700 mb-1">Date</Text>
-                <Text className="text-sm text-red-500">{validationErrors.date_time}</Text>
+                <Text className="text-sm font-medium text-gray-700 mb-1">
+                    Date
+                </Text>
+                <Text className="text-sm text-red-500">
+                    {validationErrors.date_time}
+                </Text>
                 {isEditMode ? (
                     <TouchableOpacity
                         onPress={() => setShowCalendar(true)}
@@ -49,16 +65,22 @@ const ReadingSessionForm = ({
                     handleDateSelect={handleDateSelect}
                     setShowCalendar={setShowCalendar}
                 />
-            ): null}
+            ) : null}
 
             <View className="mb-4">
-                <Text className="text-sm font-medium text-gray-700 mb-1">Start Page</Text>
-                <Text className="text-sm text-red-500">{validationErrors.start_page}</Text>
+                <Text className="text-sm font-medium text-gray-700 mb-1">
+                    Start Page
+                </Text>
+                <Text className="text-sm text-red-500">
+                    {validationErrors.start_page}
+                </Text>
                 {isEditMode ? (
                     <TextInput
                         className="border border-gray-300 rounded-md p-2"
                         value={sessionData.start_page}
-                        onChangeText={(text) => handleInputChange('start_page', text)}
+                        onChangeText={text =>
+                            handleInputChange('start_page', text)
+                        }
                         keyboardType="numeric"
                     />
                 ) : (
@@ -67,13 +89,19 @@ const ReadingSessionForm = ({
             </View>
 
             <View className="mb-4">
-                <Text className="text-sm font-medium text-gray-700 mb-1">End Page</Text>
-                <Text className="text-sm text-red-500">{validationErrors.end_page}</Text>
+                <Text className="text-sm font-medium text-gray-700 mb-1">
+                    End Page
+                </Text>
+                <Text className="text-sm text-red-500">
+                    {validationErrors.end_page}
+                </Text>
                 {isEditMode ? (
                     <TextInput
                         className="border border-gray-300 rounded-md p-2"
                         value={sessionData.end_page}
-                        onChangeText={(text) => handleInputChange('end_page', text)}
+                        onChangeText={text =>
+                            handleInputChange('end_page', text)
+                        }
                         keyboardType="numeric"
                     />
                 ) : (
@@ -82,7 +110,9 @@ const ReadingSessionForm = ({
             </View>
 
             <View className="mb-4">
-                <Text className="text-sm font-medium text-gray-700 mb-1">Pages Read</Text>
+                <Text className="text-sm font-medium text-gray-700 mb-1">
+                    Pages Read
+                </Text>
                 <TextInput
                     className="border border-gray-300 rounded-md p-2 bg-gray-100"
                     value={sessionData.pages_read}
@@ -91,12 +121,16 @@ const ReadingSessionForm = ({
             </View>
 
             <View className="mb-4">
-                <Text className="text-sm font-medium text-gray-700 mb-1">Time Spent (minutes)</Text>
+                <Text className="text-sm font-medium text-gray-700 mb-1">
+                    Time Spent (minutes)
+                </Text>
                 {isEditMode ? (
                     <TextInput
                         className="border border-gray-300 rounded-md p-2"
                         value={sessionData.time_spent}
-                        onChangeText={(text) => handleInputChange('time_spent', text)}
+                        onChangeText={text =>
+                            handleInputChange('time_spent', text)
+                        }
                         keyboardType="numeric"
                     />
                 ) : (
@@ -105,12 +139,14 @@ const ReadingSessionForm = ({
             </View>
 
             <View className="mb-4">
-                <Text className="text-sm font-medium text-gray-700 mb-1">Notes</Text>
+                <Text className="text-sm font-medium text-gray-700 mb-1">
+                    Notes
+                </Text>
                 {isEditMode ? (
                     <TextInput
                         className="border border-gray-300 rounded-md p-2 h-24"
                         value={sessionData.notes}
-                        onChangeText={(text) => handleInputChange('notes', text)}
+                        onChangeText={text => handleInputChange('notes', text)}
                         multiline
                     />
                 ) : (
@@ -128,7 +164,7 @@ const ReadingSessionForm = ({
                         {submitting ? 'Submitting...' : 'Save Session'}
                     </Text>
                 </TouchableOpacity>
-            ): null}
+            ) : null}
         </ScrollView>
     );
 };

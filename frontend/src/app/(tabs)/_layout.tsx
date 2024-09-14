@@ -1,8 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Link, Redirect, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Redirect, Tabs } from 'expo-router';
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useAuth } from '@/providers/AuthProvider';

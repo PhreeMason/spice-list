@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useUpsertReadingSession, useGetReadingSession, useGetPreviousReadingSession } from '@/api/reading-log';
+import {
+    useUpsertReadingSession,
+    useGetReadingSession,
+    useGetPreviousReadingSession,
+} from '@/api/reading-log';
 import { useLocalSearchParams, router } from 'expo-router';
 import ReadingSessionForm from '@/components/ReadingSessionForm';
 import { DateData } from 'react-native-calendars';
@@ -11,7 +15,9 @@ const ReadingSessionScreen = () => {
     const isEditMode = !!sessionId;
 
     const [submitting, setSubmitting] = useState(false);
-    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+    const [validationErrors, setValidationErrors] = useState<
+        Record<string, string>
+    >({});
     const [sessionData, setSessionData] = useState({
         date_time: '',
         start_page: '',
@@ -27,7 +33,8 @@ const ReadingSessionScreen = () => {
     const upsertReadingSession = useUpsertReadingSession();
 
     const { data: existingSession } = useGetReadingSession(sessionIdNumber);
-    const { data: previousSession } = useGetPreviousReadingSession(userBookIdNumber);
+    const { data: previousSession } =
+        useGetPreviousReadingSession(userBookIdNumber);
 
     useEffect(() => {
         if (isEditMode && existingSession) {
@@ -39,11 +46,13 @@ const ReadingSessionScreen = () => {
                 start_page: previousSession.end_page?.toString() || '',
             }));
         }
-    }, [existingSession, previousSession, isEditMode]);
+    }, [existingSession, previousSession, isEditMode, sessionIdNumber]);
 
     useEffect(() => {
         if (sessionData.start_page && sessionData.end_page) {
-            const pagesRead = parseInt(sessionData.end_page) - parseInt(sessionData.start_page);
+            const pagesRead =
+                parseInt(sessionData.end_page) -
+                parseInt(sessionData.start_page);
             setSessionData(prev => ({
                 ...prev,
                 pages_read: pagesRead.toString(),
@@ -77,9 +86,11 @@ const ReadingSessionScreen = () => {
         upsertReadingSession.mutate(convertedSessionData, {
             onSuccess: () => {
                 setSubmitting(false);
-                router.replace(`/reading-sessions/view/${isEditMode ? sessionId : userBookId}`);
+                router.replace(
+                    `/reading-sessions/view/${isEditMode ? sessionId : userBookId}`,
+                );
             },
-            onError: (error) => {
+            onError: error => {
                 console.error('Error submitting reading session:', error);
                 setSubmitting(false);
             },
@@ -97,12 +108,14 @@ const ReadingSessionScreen = () => {
         if (!sessionData.end_page) {
             errors.end_page = 'End page is required';
         }
-        if (parseInt(sessionData.start_page) >= parseInt(sessionData.end_page)) {
+        if (
+            parseInt(sessionData.start_page) >= parseInt(sessionData.end_page)
+        ) {
             errors.start_page = 'Start page must be less than end page';
         }
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
-    }
+    };
 
     return (
         <ReadingSessionForm

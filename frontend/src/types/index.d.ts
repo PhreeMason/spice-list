@@ -26,13 +26,12 @@ export type ExclusiveSelf = 'to-read' | 'read' | 'reading' | 'did-not-finish';
 export type UserBook = Tables<'user_books'>;
 export type UserBookWithBook = UserBook & { book: Book };
 
-
 type ReadingSessions = {
     start_page: number;
     end_page: number | null;
     pages_read: number;
     time_spent: number;
-}
+};
 export type CurrentlyReadingBook = {
     userBookId: number;
     startDate: string;
@@ -43,7 +42,7 @@ export type CurrentlyReadingBook = {
     currentPage?: number | null;
     deadline?: string | null;
     bookId: number;
-    readingSessions: ReadingSessions[]
+    readingSessions: ReadingSessions[];
 };
 
 export type CurrentReadsQuery = {

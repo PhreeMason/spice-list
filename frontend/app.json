@@ -19,7 +19,12 @@
             "adaptiveIcon": {
                 "foregroundImage": "./src/assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "permissions": [
+                "android.permission.CAMERA",
+                "android.permission.RECORD_AUDIO"
+            ],
+            "package": "com.grizzylabs.spicelist"
         },
         "web": {
             "bundler": "metro",
@@ -41,6 +46,14 @@
         "experiments": {
             "typedRoutes": true,
             "tsconfigPaths": true
+        },
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "657ef063-e93a-44c2-857e-ebc7e3b719f7"
+            }
         }
     }
 }

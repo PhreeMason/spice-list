@@ -32,28 +32,29 @@ type Props = {
         }[];
     };
     user_books:
-    | {
-        book_id: number;
-        created_at: string;
-        end_date: string | null;
-        exclusive_shelf: string;
-        id: number;
-        my_rating: number | null;
-        my_review: string | null;
-        owned_copies: number | null;
-        read_count: number | null;
-        start_date: string | null;
-        user_id: string;
-    }[]
-    | undefined;
+        | {
+              book_id: number;
+              created_at: string;
+              end_date: string | null;
+              exclusive_shelf: string;
+              id: number;
+              my_rating: number | null;
+              my_review: string | null;
+              owned_copies: number | null;
+              read_count: number | null;
+              start_date: string | null;
+              user_id: string;
+          }[]
+        | undefined;
 };
 
 const BookView = ({ book }: Props) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
-    const user_books = book.user_books?.[0]
+    const user_books = book.user_books?.[0];
+    console.log({ book });
     return (
         <View className="p-4">
-            {book.good_reads_image_url && (
+            {book.good_reads_image_url ? (
                 <Image
                     source={{ uri: book.good_reads_image_url }}
                     className="rounded-lg"
@@ -64,25 +65,25 @@ const BookView = ({ book }: Props) => {
                     }}
                     resizeMode="contain"
                 />
-            )}
+            ) : null}
 
             <Text className="text-2xl font-spice-bold mb-1">{book.title}</Text>
-            {book.series_name && (
+            {book.series_name ? (
                 <Text className="text-sm text-gray-600 mb-2">
                     {book.series_name}
                 </Text>
-            )}
+            ) : null}
             <Text className="text-lg mb-2">{book.authors}</Text>
 
             <View className="flex-row items-center justify-between mb-4">
-                {book.good_reads_rating && (
+                {book.good_reads_rating ? (
                     <View>
                         <RenderStars rating={book.good_reads_rating} />
                         <Text className="text-sm text-gray-600">
                             {book.good_reads_rating_count} ratings
                         </Text>
                     </View>
-                )}
+                ) : null}
             </View>
 
             <View className="flex-row items-center mb-4">
@@ -120,9 +121,11 @@ const BookView = ({ book }: Props) => {
                 ))}
             </View>
 
-            {user_books ? <Link href={`/reading-sessions/view/${user_books.id}`}>
-                <Text className='text-blue-500 underline'> Logs </Text>
-            </Link> : null}
+            {user_books ? (
+                <Link href={`/reading-sessions/view/${user_books.id}`}>
+                    <Text className="text-blue-500 underline"> Logs </Text>
+                </Link>
+            ) : null}
 
             <Text className="text-lg font-spice-semibold mb-2">
                 Description

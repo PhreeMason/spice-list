@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import {
-    useUpsertReadingSession,
-} from '@/api/reading-log';
+import { useUpsertReadingSession } from '@/api/reading-log';
 
 type PreviousReadingSession = {
     created_at: string;
@@ -15,7 +13,13 @@ type PreviousReadingSession = {
     user_book_id: number;
 };
 
-const ReadingSessionTracker = ({ userBookId, previousSession }: { userBookId: number, previousSession: PreviousReadingSession | null }) => {
+const ReadingSessionTracker = ({
+    userBookId,
+    previousSession,
+}: {
+    userBookId: number;
+    previousSession: PreviousReadingSession | null;
+}) => {
     const [startPage, setStartPage] = useState('');
     const [endPage, setEndPage] = useState('');
     const [timeSpent, setTimeSpent] = useState('');

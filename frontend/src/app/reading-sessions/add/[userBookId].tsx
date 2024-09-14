@@ -1,6 +1,9 @@
 // AddReadingSessionScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { useUpsertReadingSession, useGetPreviousReadingSession } from '@/api/reading-log';
+import {
+    useUpsertReadingSession,
+    useGetPreviousReadingSession,
+} from '@/api/reading-log';
 import { useLocalSearchParams, router } from 'expo-router';
 import ReadingSessionForm from '@/components/ReadingSessionForm';
 import { DateData } from 'react-native-calendars';
@@ -9,7 +12,9 @@ const AddReadingSessionScreen = () => {
     const { userBookId } = useLocalSearchParams();
     const userBookIdNumber = Number(userBookId);
     const [submitting, setSubmitting] = useState(false);
-    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+    const [validationErrors, setValidationErrors] = useState<
+        Record<string, string>
+    >({});
     const [sessionData, setSessionData] = useState({
         date_time: '',
         start_page: '',
@@ -20,7 +25,8 @@ const AddReadingSessionScreen = () => {
         user_book_id: userBookIdNumber,
     });
 
-    const { data: previousSession } = useGetPreviousReadingSession(userBookIdNumber);
+    const { data: previousSession } =
+        useGetPreviousReadingSession(userBookIdNumber);
     useEffect(() => {
         if (previousSession) {
             setSessionData(prev => ({
@@ -71,7 +77,7 @@ const AddReadingSessionScreen = () => {
                 setSubmitting(false);
                 router.replace(`/reading-sessions/view/${userBookId}`);
             },
-            onError: (error) => {
+            onError: error => {
                 console.error('Error submitting reading session:', error);
                 setSubmitting(false);
             },
@@ -89,12 +95,14 @@ const AddReadingSessionScreen = () => {
         if (!sessionData.end_page) {
             errors.end_page = 'End page is required';
         }
-        if (parseInt(sessionData.start_page) >= parseInt(sessionData.end_page)) {
+        if (
+            parseInt(sessionData.start_page) >= parseInt(sessionData.end_page)
+        ) {
             errors.start_page = 'Start page must be less than end page';
         }
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
-    }
+    };
 
     return (
         <>

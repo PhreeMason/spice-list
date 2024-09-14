@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Text, View, FlatList } from 'react-native';
 
 import SearchBar from '@/components/SearchBar';
@@ -10,11 +10,7 @@ export default function SearchScreen() {
     const [search, setSearch] = useState('');
 
     const debouncedSearchTerm = useDebounce(search, 350);
-    const {
-        data: onLineBooks,
-        error,
-        isLoading,
-    } = useSearchBooks(debouncedSearchTerm);
+    const { data: onLineBooks, error } = useSearchBooks(debouncedSearchTerm);
 
     if (error) {
         return <Text>{error.message}</Text>;

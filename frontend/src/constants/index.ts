@@ -9,6 +9,10 @@ const ExclusiveSelfOptions: ExclusiveSelf[] = [
     'did-not-finish',
 ];
 
+const badImageUrls = [
+    'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1690846794i/157094281.jpg',
+];
+
 const ExclusiveSelfNameMap: Record<ExclusiveSelf, string> = {
     reading: 'Currently reading',
     'to-read': 'Want to read',
@@ -16,4 +20,10 @@ const ExclusiveSelfNameMap: Record<ExclusiveSelf, string> = {
     'did-not-finish': 'Did not finish',
 };
 
-export { icons, images, ExclusiveSelfOptions, ExclusiveSelfNameMap };
+export {
+    icons,
+    images,
+    ExclusiveSelfOptions,
+    ExclusiveSelfNameMap,
+    badImageUrls,
+};

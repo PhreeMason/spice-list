@@ -198,7 +198,7 @@ export const useGetCurrentlyReadingBooks = () => {
                 .eq('user_id', user_id)
                 .eq('exclusive_shelf', 'reading')
                 .returns<CurrentReadsQuery>();
-            
+
             if (error) {
                 throw new Error(error.message);
             }
@@ -220,7 +220,7 @@ export const useGetCurrentlyReadingBooks = () => {
                     currentPage: lastReadingSession?.end_page,
                     deadline: item.end_date,
                     bookId: item.book.id,
-                    readingSessions: item.reading_sessions
+                    readingSessions: item.reading_sessions,
                 };
             });
         },
