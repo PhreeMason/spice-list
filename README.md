@@ -43,3 +43,8 @@ bunx supabase functions new hello-world
       start_date
       end_date
       status (e.g., "in progress", "completed", "failed")
+
+## Build Preview
+```bash
+eas build -p android --profile preview
+```
