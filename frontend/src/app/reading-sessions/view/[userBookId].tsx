@@ -53,7 +53,7 @@ export default function ReadingSessions() {
         return acc;
     }, {});
 
-    const lastStartDate = items ? Object.keys(items)[1] : undefined;
+    const lastStartDate = items ? Object.keys(items)[0] : undefined;
     return (
         <View className="flex-1">
             <Stack.Screen
