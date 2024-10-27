@@ -60,6 +60,15 @@ export default function TabLayout() {
                     ),
                 }}
             />
+            <Tabs.Screen
+                name="reader"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <TabBarIcon name="book" color={color} />
+                    ),
+                    headerShown: false,
+                }}
+            />
         </Tabs>
     );
 }

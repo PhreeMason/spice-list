@@ -9,6 +9,7 @@ import { NativeWindStyleSheet } from 'nativewind';
 import AuthProvider from '@/providers/AuthProvider';
 import QueryProvider from '@/providers/QueryProvider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ReaderProvider } from '@epubjs-react-native/core';
 
 NativeWindStyleSheet.setOutput({
     default: 'native',
@@ -64,27 +65,29 @@ function RootLayoutNav() {
     return (
         <AuthProvider>
             <QueryProvider>
-                <GestureHandlerRootView>
-                    <Stack>
-                        <Stack.Screen
-                            name="(tabs)"
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="(auth)"
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen name="books/[bookId]" />
-                        <Stack.Screen
-                            name="shelves"
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="modal"
-                            options={{ presentation: 'modal' }}
-                        />
-                    </Stack>
-                </GestureHandlerRootView>
+                <ReaderProvider>
+                    <GestureHandlerRootView>
+                        <Stack>
+                            <Stack.Screen
+                                name="(tabs)"
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="(auth)"
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen name="books/[bookId]" />
+                            <Stack.Screen
+                                name="shelves"
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="modal"
+                                options={{ presentation: 'modal' }}
+                            />
+                        </Stack>
+                    </GestureHandlerRootView>
+                </ReaderProvider>
             </QueryProvider>
         </AuthProvider>
     );
